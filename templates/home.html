@@ -12,8 +12,17 @@
 {% endblock %}
 
 {% block content %}
-  <!-- 네비바 -->
-  {% include 'partials/navbar.html' %}
+  <!-- 레이아웃 -->
+  <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+    <div class="layout-container">
+      <!-- 네비바 -->
+      {% include 'partials/navbar.html' %}
+      <!-- 콘텐츠 -->
+      {% comment %} {% endcomment %}
+
+      <!--  -->
+    </div>
+  </div>
 {% endblock %}
 
 {% block vendor_js %}
