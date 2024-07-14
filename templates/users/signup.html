@@ -108,7 +108,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const sendBtn = document.getElementById('send-verification-email-btn');
         sendBtn.addEventListener('click', function() {
-            const emailField = document.getElementById('email');  // Updated to match Django's default id format
+            const emailField = document.getElementById('email');  
             const email = emailField.value;
             const verificationContainer = document.getElementById('verification-code-container');
             const messageDiv = document.getElementById('email-verification-message');
@@ -140,7 +140,7 @@
 
         const verifyBtn = document.getElementById('verify-code-btn');
         verifyBtn.addEventListener('click', function() {
-            const emailField = document.getElementById('id_email');  // Updated to match Django's default id format
+            const emailField = document.getElementById('email');  
             const email = emailField.value;
             const codeField = document.getElementById('verification_code');
             const code = codeField.value;
