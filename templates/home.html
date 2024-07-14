@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block vendor_css %}
+  <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
+{% endblock %}
+
+{% block page_css %}
+
+{% endblock %}
+
+{% block content %}
+  <!-- 네비바 -->
+  {% include 'partials/navbar.html' %}
+{% endblock %}
+
+{% block vendor_js %}
+
+{% endblock %}
+
+{% block page_js %}
+
+{% endblock %}

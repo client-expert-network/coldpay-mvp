@@ -1,0 +1,39 @@
+{% load pwa %}
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-wide customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="../static/" data-template="horizontal-menu-template-no-customizer" data-style="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% progressive_web_app_meta %}
+    <title>
+      {% block title %}
+        콜드페이
+      {% endblock %}
+    </title>
+    {% comment %}스타일 설정{% endcomment %}
+    {% include 'includes/styles.html' %}
+
+    {% block vendor_css %}
+
+    {% endblock %}
+
+    {% block page_css %}
+
+    {% endblock %}
+  </head>
+  <body>
+    {% block content %}
+
+    {% endblock %}
+
+    {% include 'includes/scripts.html' %}
+
+    {% block vendor_js %}
+
+    {% endblock %}
+
+    {% block page_js %}
+
+    {% endblock %}
+  </body>
+</html>
