@@ -166,6 +166,10 @@
 {% endblock %}
 
 {% block page_js %}
-  <script src="{% static 'js/app-calendar-events.js' %}"></script>
+{% csrf_token %}
+  <!-- <script src="{% static 'js/app-calendar-events.js' %}"></script> -->
   <script src="{% static 'js/app-calendar.js' %}"></script>
 {% endblock %}
+
+
+
