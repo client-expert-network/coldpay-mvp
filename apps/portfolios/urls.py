@@ -1,6 +1,7 @@
 from django.urls import path
+
 # from api.portfolios.views import get_portfolios
-from apps.portfolios.views import *
+from .views import *
 
 urlpatterns = [
     path("portfolios/create/", create_portfolio, name="create_portfolio"),
