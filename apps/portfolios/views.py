@@ -67,7 +67,6 @@ def get_top_portfolios(request):
         {"portfolios": top_portfolios},
     )
 
-    # 게시물 READ_상세보기
 
 
 @require_http_methods(["GET", "POST"])
@@ -103,7 +102,7 @@ def portfolio_detail(request, portfolio_id):
 
 
 
-@require_http_methods(["GET", "POST"])
+@require_http_methods(["GET", "POST"])  # 게시물 수정 페이지
 def update_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
     
@@ -123,12 +122,10 @@ def update_portfolio(request, portfolio_id):
 
 
 
-@require_http_methods(["POST"])  # 게시물 UPDATE
+@require_http_methods(["POST"])  # 게시물 수정 후 저장역할
 def edit_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
 
-    
-    # Directly use request.POST, which is already populated with the form data
     portfolio.title = request.POST.get("title")
     portfolio.content = request.POST.get("content")
     portfolio.price = request.POST.get("price")
