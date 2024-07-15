@@ -28,7 +28,6 @@ urlpatterns = (
         path("", include("apps.users.urls")),
         path("", include("apps.chats.urls")),
         path("", include("apps.calendars.urls")),
-        path("", include("apps.portfolios.urls")),
     ]
     + [
         path("", include("pwa.urls")),

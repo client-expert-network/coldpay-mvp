@@ -31,12 +31,12 @@
             <h4 class="mb-1">Adventure starts here 🚀</h4>
             <p class="mb-6">Make your app management easy and fun!</p>
 
-            <form id="formAuthentication" method="post" action="{% url 'accounts:signup' %}" id="signup-form" class="mb-6">
+            <form id="formAuthentication" method="POST" action="{% url 'accounts:signup' %}" id="signup-form" class="mb-6">
               {% csrf_token %}
-              <div class="mb-6">
+              {% comment %} <div class="mb-6">
                 <label for="username" class="form-label">닉네임</label>
                 {{ form.username }}
-              </div>
+              </div> {% endcomment %}
               <div class="row mb-6">
                 <div class="col">
                   <label for="last_name" class="form-label">성</label>
@@ -106,7 +106,6 @@
   </div>
 
   <script>
-
     document.addEventListener('DOMContentLoaded', () => {
       const emailField = document.getElementById('email')
       const sendBtn = document.getElementById('send-verification-email-btn')
@@ -158,14 +157,14 @@
     
         verificationContainer.style.display = 'flex'
         displayMessage('인증 코드가 메일로 발송되었습니다.', false)
-        emailField.disabled = true
+        emailField.readOnly = true
         sendBtn.disabled = true
     
         const data = await fetchData(`{% url 'accounts:send-verification-email' %}?email=${email}`)
         if (data?.status !== 'sent') {
           displayMessage('인증 메일 발송에 실패했습니다. 다시 시도해주세요.')
           verificationContainer.style.display = 'none'
-          emailField.disabled = false
+          emailField.readOnly = false
           sendBtn.disabled = false
         }
       })
@@ -180,13 +179,13 @@
           submitBtn.disabled = false
           verificationCodeField.disabled = true
           verifyBtn.disabled = true
+          emailField.readOnly = true
         } else {
           displayMessage('인증번호가 올바르지 않습니다.')
           submitBtn.disabled = true
         }
       })
     })
-
   </script>
 {% endblock %}
 

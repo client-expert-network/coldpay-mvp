@@ -14,18 +14,31 @@ User = get_user_model()
 
 
 def signup_view(request):
+
     form = SignupForm(request.POST or None)
 
     if request.method == "POST":
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False
+            user.username = user.email.split("@")[0]
+            user.set_password(form.cleaned_data["password"])
             user.save()
-            return HttpResponse("생성 완료. 이메일을 확인하세요.")
 
-    context = {
-        "form": form,
-    }
+            user = authenticate(
+                request, email=user.email, password=form.cleaned_data["password"]
+            )
+            if user is not None:
+                login(
+                    request, user, backend="django.contrib.auth.backends.ModelBackend"
+                )
+                return HttpResponse("회원가입이 완료되었습니다.")
+            else:
+                return HttpResponse("사용자 인증에 실패했습니다.")
+        else:
+            # 폼 에러 확인
+            print(form.errors)
+
+    context = {"form": form}
 
     return render(request, "users/signup.html", context=context)
 

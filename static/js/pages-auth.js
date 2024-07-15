@@ -90,9 +90,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
             eleValidClass: '',
             rowSelector: '.mb-6'
           }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
+          // submitButton: new FormValidation.plugins.SubmitButton(),
 
-          defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+          // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
           autoFocus: new FormValidation.plugins.AutoFocus()
         },
         init: instance => {
