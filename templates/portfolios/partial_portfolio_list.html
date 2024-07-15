@@ -1,0 +1,19 @@
+{% for portfolio in portfolios %}
+    <div class="portfolio-item">
+        <h2>{{ portfolio.title }}</h2>
+        <p>{{ portfolio.description }}</p>
+        <!-- 포트폴리오 이미지 표시 -->
+        {% for image in portfolio.portfolioimage_set.all %}
+            <img src="{{ image.image.url }}" alt="{{ portfolio.title }}">
+        {% endfor %}
+        <!-- 포트폴리오 비디오 표시 -->
+        {% for video in portfolio.portfoliovideo_set.all %}
+            <video controls>
+                <source src="{{ video.video.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% endfor %}
+    </div>
+{% empty %}
+    <p>No portfolios found.</p>
+{% endfor %}
