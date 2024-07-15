@@ -38,7 +38,7 @@ INTERNAL_IPS = [
 ]
 
 SITE_ID = 1
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 # Application definition
 
