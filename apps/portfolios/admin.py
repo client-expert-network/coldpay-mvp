@@ -1,7 +1,6 @@
 from django.contrib import admin
-from apps.portfolios.models import Portfolio, PortfolioImage, PortfolioVideo
+from .models import *
 
 admin.site.register(Portfolio)
 admin.site.register(PortfolioImage)
 admin.site.register(PortfolioVideo)
-

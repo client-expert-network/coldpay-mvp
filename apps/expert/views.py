@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import ExpertConversionForm
 from .models import Expert
@@ -13,8 +13,10 @@ def convert_to_expert(request):
     if hasattr(request.user, 'applyexpert'):
         return HttpResponse("이미 전문가 전환 신청을 하셨습니다.")
 
+    form = ExpertConversionForm(request.POST or None, request.FILES or None)
+
     if request.method == "POST":
-        form = ExpertConversionForm(request.POST, request.FILES)
+
         if form.is_valid():
             expert = form.save(commit=False)
             expert.user = request.user
@@ -27,6 +29,7 @@ def convert_to_expert(request):
     context = {"form": form}
     # 임시 주소로 return, html 작성 필요
     return render(request, "expert/convert_to_expert.html", context)
+
 
 @login_required
 def expert_approval(request, apply_id):

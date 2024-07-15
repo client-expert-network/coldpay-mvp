@@ -1,11 +1,13 @@
 from django.db import models
-from apps.users.models import CustomUser
-import uuid
+from shortuuid.django_fields import ShortUUIDField
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Portfolio(models.Model):
     id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
-    expert = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    expert = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
     price = models.IntegerField()
@@ -17,7 +19,6 @@ class Portfolio(models.Model):
 
     def get_duration(self):
         return self.portfolio_end - self.portfolio_start
-    
 
 
 class PortfolioImage(models.Model):
