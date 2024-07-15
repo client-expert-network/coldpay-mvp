@@ -1,7 +1,6 @@
 from django.db import models
 from apps.users.models import CustomUser
-import uuid
-
+from shortuuid.django_fields import ShortUUIDField
 
 class Portfolio(models.Model):
     id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
