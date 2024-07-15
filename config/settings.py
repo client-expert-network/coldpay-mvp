@@ -65,6 +65,7 @@ DJANGO_APPS = [
     "apps.users",
     "apps.chats",
     "apps.calendars",
+    "apps.expert",
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + DJANGO_APPS
