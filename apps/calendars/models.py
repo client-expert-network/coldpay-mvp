@@ -1,5 +1,5 @@
 from django.db import models
-import shortuuid
+from shortuuid.django_fields import ShortUUIDField
 
 from django.contrib.auth import get_user_model
 
@@ -16,9 +16,7 @@ class Event(models.Model):
         ("기타", "기타"),
     ]
 
-    id = models.CharField(
-        primary_key=True, default=shortuuid.uuid, editable=False, max_length=128
-    )
+    id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name="제목")
     label = models.CharField(max_length=20, choices=LABEL_CHOICES, verbose_name="라벨")
