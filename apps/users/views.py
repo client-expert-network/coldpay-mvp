@@ -1,20 +1,17 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login
+import random
+import string
+from django.core.cache import cache
+from django.core.mail import EmailMessage
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from django.template.loader import render_to_string
-from django.core.mail import EmailMessage
-from .forms import *
-from .tokens import *
-
+from .forms import SignupForm
 from django.contrib.auth import get_user_model
-from .forms import *
 
 User = get_user_model()
 
-
-# 회원가입
 def signup_view(request):
     form = SignupForm(request.POST or None)
 
@@ -23,19 +20,46 @@ def signup_view(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            send_activation_email(request, user)
-            return HttpResponse("생성 완료")
+            return HttpResponse("생성 완료. 이메일을 확인하세요.")
 
     context = {
         "form": form,
     }
 
     return render(request, "users/signup.html", context=context)
+import logging
 
+logger = logging.getLogger(__name__)
+
+def send_verification_email(request):
+    email = request.GET.get('email', None)
+    if email:
+        try:
+            verification_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            cache.set(email, verification_code, timeout=600)  # Cache the code for 10 minutes
+            
+            email_title = "Your Coldpay Verification Code"
+            message = f"Your verification code is {verification_code}"
+            email_message = EmailMessage(email_title, message, to=[email])
+            email_message.send()
+            
+            return JsonResponse({'status': 'sent'})
+        except Exception as e:
+            logger.error(f"Failed to send email to {email}: {e}")
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    return JsonResponse({'status': 'error', 'message': 'No email provided'})
+
+
+def verify_code(request):
+    email = request.GET.get('email', None)
+    code = request.GET.get('code', None)
+    cached_code = cache.get(email)
+    if cached_code and cached_code == code:
+        return JsonResponse({'status': 'verified'})
+    return JsonResponse({'status': 'invalid'})
 
 # 로그인
 def login_view(request):
-
     form = LoginForm(request.POST or None)
     next_url = request.GET.get("next", "/")
 
@@ -48,50 +72,10 @@ def login_view(request):
                 login(request, user)
                 return HttpResponseRedirect(next_url)
             else:
-                # 로그인 실패 처리
-                return HttpResponse("로그인 실패")
+                return HttpResponse("로그인 실패")  # You might want to render a template with an error message
 
     context = {
         "form": form,
     }
 
     return render(request, "users/login.html", context=context)
-
-
-# 인증 메일 발송 함수
-def send_activation_email(request, user):
-
-    email_title = "Coldpay - Activate Your Account!"
-    activation_link = f"http://127.0.0.1:8000/accounts/user/activate/{urlsafe_base64_encode(force_bytes(user.pk))}/{account_activation_token.make_token(user)}/"
-
-    message = render_to_string(
-        "users/activation_email.html",
-        {
-            "user": user,
-            "activation_link": activation_link,
-        },
-    )
-    email = EmailMessage(email_title, message, to=[user.email])
-    email.send()
-
-
-# 유저 활성화 함수
-def activate(request, uidb64, token):
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        message = "Thank you for confirming your email. Your account is now active."
-        detail = "You can now log in using your credentials."
-    else:
-        message = "Activation link is invalid!"
-        detail = "Please try registering again or contact support for assistance."
-
-    return render(
-        request, "users/activation_result.html", {"message": message, "detail": detail}
-    )

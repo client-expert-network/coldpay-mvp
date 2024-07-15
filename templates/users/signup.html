@@ -30,7 +30,7 @@
             <h4 class="mb-1">Adventure starts here 🚀</h4>
             <p class="mb-6">Make your app management easy and fun!</p>
 
-            <form id="formAuthentication" class="mb-6" method="POST">
+            <form method="post" action="{% url 'accounts:signup' %}" id="signup-form" class="mb-6">
               {% csrf_token %}
               <div class="mb-6">
                 <label for="username" class="form-label">닉네임</label>
@@ -48,11 +48,23 @@
               </div>
               <div class="row mb-6">
                 <label for="email" class="form-label">이메일</label>
-                <div class="col-9">{{ form.email }}</div>
+                <div class="col-9">
+                  {{ form.email }}
+                </div>
                 <div class="col-3">
-                  <a class="btn btn-primary text-white">인증</a>
+                  <button type="button" class="btn btn-primary text-white" id="send-verification-email-btn">인증</button>
                 </div>
               </div>
+              <div class="row mb-6" id="verification-code-container" style="display: none;">
+                <label for="verification_code" class="form-label">인증 코드</label>
+                <div class="col-9">
+                  <input type="text" id="verification_code" class="form-control">
+                </div>
+                <div class="col-3">
+                  <button type="button" class="btn btn-primary text-white" id="verify-code-btn">확인</button>
+                </div>
+              </div>
+              <div id="email-verification-message" class="text-danger mb-6" style="display: none;"></div>
               <div class="mb-6 form-password-toggle">
                 <label class="form-label" for="password">패스워드</label>
                 <div class="input-group input-group-merge">
@@ -67,7 +79,7 @@
                   <label class="form-check-label" for="terms-conditions"><a href="javascript:void(0);">이용약관 및 개인정보처리 방침</a>에 동의합니다.</label>
                 </div>
               </div>
-              <button class="btn btn-primary d-grid w-100" type="submit">가입하기</button>
+              <button class="btn btn-primary d-grid w-100" type="submit" id="signup-submit" disabled>가입하기</button>
             </form>
 
             <p class="text-center">
@@ -81,11 +93,8 @@
 
             <div class="d-flex justify-content-center">
               <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-facebook me-1_5"><i class="tf-icons ti ti-brand-facebook-filled"></i></a>
-
               <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-twitter me-1_5"><i class="tf-icons ti ti-brand-twitter-filled"></i></a>
-
               <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-github me-1_5"><i class="tf-icons ti ti-brand-github-filled"></i></a>
-
               <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-google-plus"><i class="tf-icons ti ti-brand-google-filled"></i></a>
             </div>
           </div>
@@ -94,6 +103,76 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sendBtn = document.getElementById('send-verification-email-btn');
+        sendBtn.addEventListener('click', function() {
+            const emailField = document.getElementById('email');  
+            const email = emailField.value;
+            const verificationContainer = document.getElementById('verification-code-container');
+            const messageDiv = document.getElementById('email-verification-message');
+
+            fetch(`{% url 'accounts:send_verification_email' %}?email=${email}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'sent') {
+                    verificationContainer.style.display = 'flex';
+                    messageDiv.style.display = 'none';
+                } else {
+                    messageDiv.style.display = 'block';
+                    messageDiv.innerText = 'Failed to send verification email. Please try again.';
+                    verificationContainer.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageDiv.style.display = 'block';
+                messageDiv.innerText = 'Failed to send verification email. Please try again.';
+                verificationContainer.style.display = 'none';
+            });
+        });
+
+        const verifyBtn = document.getElementById('verify-code-btn');
+        verifyBtn.addEventListener('click', function() {
+            const emailField = document.getElementById('email');  
+            const email = emailField.value;
+            const codeField = document.getElementById('verification_code');
+            const code = codeField.value;
+            const submitBtn = document.getElementById('signup-submit');
+            const messageDiv = document.getElementById('email-verification-message');
+
+            fetch(`{% url 'accounts:verify_code' %}?email=${email}&code=${code}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'verified') {
+                    messageDiv.style.display = 'none';
+                    submitBtn.disabled = false;
+                } else {
+                    messageDiv.style.display = 'block';
+                    messageDiv.innerText = 'Invalid verification code. Please try again.';
+                    submitBtn.disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageDiv.style.display = 'block';
+                messageDiv.innerText = 'Invalid verification code. Please try again.';
+                submitBtn.disabled = true;
+            });
+        });
+    });
+  </script>
 {% endblock %}
 
 {% block vendor_js %}
