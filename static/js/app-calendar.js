@@ -24,11 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
       addEventSidebar = document.getElementById('addEventSidebar'),
       appOverlay = document.querySelector('.app-overlay'),
       calendarsColor = {
-        Business: 'primary',
-        Holiday: 'success',
-        Personal: 'danger',
-        Family: 'warning',
-        ETC: 'info'
+        '업무': 'primary',
+        '휴일': 'success',
+        '개인': 'danger',
+        '가족': 'warning',
+        '기타': 'info'
       },
       offcanvasTitle = document.querySelector('.offcanvas-title'),
       btnToggleSidebar = document.querySelector('.btn-toggle-sidebar'),
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
       inlineCalendar = document.querySelector('.inline-calendar');
 
     let eventToUpdate,
-      currentEvents = events, // Assign app-calendar-events.js file events (assume events from API) to currentEvents (browser store/object) to manage and update calender events
+      currentEvents = fetchEvents(), // Assign app-calendar-events.js file events (assume events from API) to currentEvents (browser store/object) to manage and update calender events
       isFormValid = false,
       inlineCalInstance;
 
@@ -149,10 +149,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event click function
     function eventClick(info) {
       eventToUpdate = info.event;
-      if (eventToUpdate.url) {
-        info.jsEvent.preventDefault();
-        window.open(eventToUpdate.url, '_blank');
-      }
+      // if (eventToUpdate.url) {
+      //   info.jsEvent.preventDefault();
+      //   window.open(eventToUpdate.url, '_blank');
+      // }
+      info.jsEvent.preventDefault();
       bsAddEventSidebar.show();
       // For update event set offcanvas title text: Update Event
       if (offcanvasTitle) {
@@ -180,12 +181,13 @@ document.addEventListener('DOMContentLoaded', function () {
         ? (eventDescription.value = eventToUpdate.extendedProps.description)
         : null;
 
+      
       // // Call removeEvent function
-      // btnDeleteEvent.addEventListener('click', e => {
-      //   removeEvent(parseInt(eventToUpdate.id));
-      //   // eventToUpdate.remove();
-      //   bsAddEventSidebar.hide();
-      // });
+      btnDeleteEvent.addEventListener('click', e => {
+        removeEvent(parseInt(eventToUpdate.id));
+        eventToUpdate.remove();
+        bsAddEventSidebar.hide();
+      });
     }
 
     // Modify sidebar toggler
@@ -235,16 +237,45 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         }
       ); */
+      fetch('/calendar/events/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(response => response.json())
+        .then(data => {
+          // console.log(data);
+    
+          // Get requested calendars as Array
+          let calendars = selectedCalendars();
+    
+          // Filter events based on selected calendars
+          let selectedEvents = data.filter(function (event) {
+            // console.log(event);
+            // console.log(event.extendedProps);
+            // console.log(event.extendedProps.calendar);
+            return calendars
+          });
+          // console.log(selectedEvents);
+    
+          // Call the successCallback with the filtered events
+          successCallback(selectedEvents);
+        })
+        .catch(error => {
+          console.error('Error fetching events:', error);
+        });
+    
 
-      let calendars = selectedCalendars();
+      // let calendars = selectedCalendars();
       // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
       // You should make an API call, look into above commented API call for reference
-      let selectedEvents = currentEvents.filter(function (event) {
+      // let selectedEvents = currentEvents.filter(function (event) {
         // console.log(event.extendedProps.calendar.toLowerCase());
-        return calendars.includes(event.extendedProps.calendar.toLowerCase());
-      });
+        // return calendars.includes(event.extendedProps.calendar.toLowerCase());
+      // });
       // if (selectedEvents.length > 0) {
-      successCallback(selectedEvents);
+      // successCallback(selectedEvents);
       // }
     }
 
@@ -256,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
       plugins: [dayGridPlugin, interactionPlugin, listPlugin, timegridPlugin],
       editable: true,
       dragScroll: true,
-      dayMaxEvents: 2,
+      dayMaxEvents: 10,
       eventResizableFromStart: true,
       customButtons: {
         sidebarToggle: {
@@ -365,33 +396,66 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Add Event
-    // ------------------------------------------------
-    function addEvent(eventData) {
-      // ? Add new event data to current events object and refetch it to display on calender
-      // ? You can write below code to AJAX call success response
-
-      currentEvents.push(eventData);
+// ------------------------------------------------
+function addEvent(eventData) {
+  // Add new event data to current events object and refetch it to display on calendar
+  // Make an AJAX call to create the event
+  fetch('/calendar/events/create/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(eventData),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
       calendar.refetchEvents();
+    })
+    .catch(error => {
+      console.error('Error creating event:', error);
+    });
+}
+
+      // currentEvents.push(eventData);
+      // calendar.refetchEvents();
 
       // ? To add event directly to calender (won't update currentEvents object)
       // calendar.addEvent(eventData);
-    }
+    // }
 
     // Update Event
     // ------------------------------------------------
     function updateEvent(eventData) {
+      fetch(`/calendar/events/${eventData.id}/update/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(eventData),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          calendar.refetchEvents();
+        })
+        .catch(error => {
+          console.error('Error updating event:', error);
+        });
+    }
+    
       // ? Update existing event data to current events object and refetch it to display on calender
       // ? You can write below code to AJAX call success response
-      eventData.id = parseInt(eventData.id);
-      currentEvents[currentEvents.findIndex(el => el.id === eventData.id)] = eventData; // Update event by id
-      calendar.refetchEvents();
+      // eventData.id = parseInt(eventData.id);
+      // currentEvents[currentEvents.findIndex(el => el.id === eventData.id)] = eventData; // Update event by id
+      // calendar.refetchEvents();
 
       // ? To update event directly to calender (won't update currentEvents object)
       // let propsToUpdate = ['id', 'title', 'url'];
       // let extendedPropsToUpdate = ['calendar', 'guests', 'location', 'description'];
 
       // updateEventInCalendar(eventData, propsToUpdate, extendedPropsToUpdate);
-    }
+    
 
     // Remove Event
     // ------------------------------------------------
@@ -399,10 +463,24 @@ document.addEventListener('DOMContentLoaded', function () {
     function removeEvent(eventId) {
       // ? Delete existing event data to current events object and refetch it to display on calender
       // ? You can write below code to AJAX call success response
-      currentEvents = currentEvents.filter(function (event) {
-        return event.id != eventId;
-      });
-      calendar.refetchEvents();
+      // currentEvents = currentEvents.filter(function (event) {
+        fetch(`/calendar/events/${eventId}/delete/`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            calendar.refetchEvents();
+          })
+          .catch(error => {
+            console.error('Error deleting event:', error);
+          });
+        // return event.id != eventId;
+      // });
+      // calendar.refetchEvents();
 
       // ? To delete event directly to calender (won't update currentEvents object)
       // removeEventInCalendar(eventId);
@@ -447,30 +525,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // ------------------------------------------------
     btnSubmit.addEventListener('click', e => {
       if (btnSubmit.classList.contains('btn-add-event')) {
-        if (isFormValid) {
-          let newEvent = {
-            id: calendar.getEvents().length + 1,
-            title: eventTitle.value,
-            start: eventStartDate.value,
-            end: eventEndDate.value,
-            startStr: eventStartDate.value,
-            endStr: eventEndDate.value,
-            display: 'block',
-            extendedProps: {
-              location: eventLocation.value,
-              guests: eventGuests.val(),
-              calendar: eventLabel.val(),
-              description: eventDescription.value
-            }
-          };
-          if (eventUrl.value) {
-            newEvent.url = eventUrl.value;
-          }
-          if (allDaySwitch.checked) {
-            newEvent.allDay = true;
-          }
-          addEvent(newEvent);
-          bsAddEventSidebar.hide();
+        console.log('add event');
+          if (isFormValid) {
+            let newEvent = {
+              title: document.getElementById('eventTitle').value,
+              start_date: document.getElementById('eventStartDate').value,
+              end_date: document.getElementById('eventEndDate').value,
+              url: document.getElementById('eventURL').value,
+              label: document.getElementById('eventLabel').value,
+              
+              location: document.getElementById('eventLocation').value,
+              
+              description: document.getElementById('eventDescription').value,
+              
+              allDay: document.querySelector('.allDay-switch').checked
+            };
+            addEvent(newEvent);
+            bsAddEventSidebar.hide();
         }
       } else {
         // Update event
@@ -478,21 +549,19 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isFormValid) {
           let eventData = {
             id: eventToUpdate.id,
-            title: eventTitle.value,
-            start: eventStartDate.value,
-            end: eventEndDate.value,
-            url: eventUrl.value,
-            extendedProps: {
-              location: eventLocation.value,
-              guests: eventGuests.val(),
-              calendar: eventLabel.val(),
-              description: eventDescription.value
-            },
-            display: 'block',
-            allDay: allDaySwitch.checked ? true : false
+            title: document.getElementById('eventTitle').value,
+            start_date: document.getElementById('eventStartDate').value,
+            end_date: document.getElementById('eventEndDate').value,
+            url: document.getElementById('eventURL').value,
+            label: document.getElementById('eventLabel').value,
+            location: document.getElementById('eventLocation').value,
+            
+            description: document.getElementById('eventDescription').value,
+            allDay: document.querySelector('.allDay-switch').checked
           };
 
           updateEvent(eventData);
+          calendar.refetchEvents();
           bsAddEventSidebar.hide();
         }
       }

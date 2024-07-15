@@ -53,6 +53,7 @@
                 </div>
                 <div class="col-3">
                   <button type="button" class="btn btn-primary text-white" id="send-verification-email-btn">인증</button>
+                  <span id="email-verification-loading" class="spinner-border spinner-border-sm text-primary" style="display: none;"></span>
                 </div>
               </div>
               <div class="row mb-6" id="verification-code-container" style="display: none;">
@@ -62,6 +63,7 @@
                 </div>
                 <div class="col-3">
                   <button type="button" class="btn btn-primary text-white" id="verify-code-btn">확인</button>
+                  <span id="code-verification-loading" class="spinner-border spinner-border-sm text-primary" style="display: none;"></span>
                 </div>
               </div>
               <div id="email-verification-message" class="text-danger mb-6" style="display: none;"></div>
@@ -107,11 +109,16 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
         const sendBtn = document.getElementById('send-verification-email-btn');
+        const emailLoading = document.getElementById('email-verification-loading');
+        const codeLoading = document.getElementById('code-verification-loading');
         sendBtn.addEventListener('click', function() {
-            const emailField = document.getElementById('email');  
+            const emailField = document.getElementById('{{ form.email.id_for_label }}');
             const email = emailField.value;
             const verificationContainer = document.getElementById('verification-code-container');
             const messageDiv = document.getElementById('email-verification-message');
+
+            emailLoading.style.display = 'inline-block';
+            messageDiv.style.display = 'none';
 
             fetch(`{% url 'accounts:send_verification_email' %}?email=${email}`, {
                 method: 'GET',
@@ -121,31 +128,33 @@
             })
             .then(response => response.json())
             .then(data => {
+                emailLoading.style.display = 'none';
                 if (data.status === 'sent') {
                     verificationContainer.style.display = 'flex';
-                    messageDiv.style.display = 'none';
                 } else {
                     messageDiv.style.display = 'block';
                     messageDiv.innerText = 'Failed to send verification email. Please try again.';
-                    verificationContainer.style.display = 'none';
                 }
             })
             .catch(error => {
+                emailLoading.style.display = 'none';
                 console.error('Error:', error);
                 messageDiv.style.display = 'block';
                 messageDiv.innerText = 'Failed to send verification email. Please try again.';
-                verificationContainer.style.display = 'none';
             });
         });
 
         const verifyBtn = document.getElementById('verify-code-btn');
         verifyBtn.addEventListener('click', function() {
-            const emailField = document.getElementById('email');  
+            const emailField = document.getElementById('{{ form.email.id_for_label }}');
             const email = emailField.value;
             const codeField = document.getElementById('verification_code');
             const code = codeField.value;
             const submitBtn = document.getElementById('signup-submit');
             const messageDiv = document.getElementById('email-verification-message');
+
+            codeLoading.style.display = 'inline-block';
+            messageDiv.style.display = 'none';
 
             fetch(`{% url 'accounts:verify_code' %}?email=${email}&code=${code}`, {
                 method: 'GET',
@@ -155,8 +164,10 @@
             })
             .then(response => response.json())
             .then(data => {
+                codeLoading.style.display = 'none';
                 if (data.status === 'verified') {
                     messageDiv.style.display = 'none';
+                    messageDib.innerText="인증이 완료되었습니다"
                     submitBtn.disabled = false;
                 } else {
                     messageDiv.style.display = 'block';
@@ -165,6 +176,7 @@
                 }
             })
             .catch(error => {
+                codeLoading.style.display = 'none';
                 console.error('Error:', error);
                 messageDiv.style.display = 'block';
                 messageDiv.innerText = 'Invalid verification code. Please try again.';
