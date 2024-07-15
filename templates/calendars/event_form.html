@@ -1,0 +1,69 @@
+<form class="event-form pt-0" id="eventForm">
+  {% csrf_token %}
+  <div class="mb-5">
+    <label class="form-label" for="eventTitle">제목</label>
+    {% comment %} <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="이벤트 제목" /> {% endcomment %}
+    {{ form.title }}
+  </div>
+  <div class="mb-5">
+    <label class="form-label" for="eventLabel">라벨</label>
+    {% comment %} <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
+      <option data-label="primary" value="Business" selected>업무</option>
+      <option data-label="danger" value="Personal">개인</option>
+      <option data-label="warning" value="Family">가족</option>
+      <option data-label="success" value="Holiday">휴일</option>
+      <option data-label="info" value="ETC">기타</option>
+    </select> {% endcomment %}
+    {{ form.label }}
+  </div>
+  <div class="mb-5">
+    <label class="form-label" for="eventStartDate">시작일</label>
+    {% comment %} <input type="text" class="form-control" id="eventStartDate" name="eventStartDate" placeholder="시작일" /> {% endcomment %}
+    {{ form.start_date }}
+  </div>
+  <div class="mb-5">
+    <label class="form-label" for="eventEndDate">종료일</label>
+    {% comment %} <input type="text" class="form-control" id="eventEndDate" name="eventEndDate" placeholder="종료일" /> {% endcomment %}
+    {{ form.end_date }}
+  </div>
+  <div class="mb-5">
+    <div class="form-check form-switch">
+      {% comment %} <input type="checkbox" class="form-check-input allDay-switch" id="allDaySwitch" /> {% endcomment %}
+      {{ form.all_day }}
+      <label class="form-check-label" for="allDaySwitch">종일</label>
+    </div>
+  </div>
+  <div class="mb-5">
+    <label class="form-label" for="eventURL">이벤트 URL</label>
+    {% comment %} <input type="url" class="form-control" id="eventURL" name="eventURL" placeholder="https://www.example.com" /> {% endcomment %}
+    {{ form.event_url }}
+  </div>
+  {% comment %} <div class="mb-4 select2-primary">
+    <label class="form-label" for="eventGuests">게스트 추가</label>
+    <select class="select2 select-event-guests form-select" id="eventGuests" name="eventGuests" multiple>
+      <option data-avatar="1.png" value="Jane Foster">Jane Foster</option>
+      <option data-avatar="3.png" value="Donna Frank">Donna Frank</option>
+      <option data-avatar="5.png" value="Gabrielle Robertson">Gabrielle Robertson</option>
+      <option data-avatar="7.png" value="Lori Spears">Lori Spears</option>
+      <option data-avatar="9.png" value="Sandy Vega">Sandy Vega</option>
+      <option data-avatar="11.png" value="Cheryl May">Cheryl May</option>
+    </select>
+  </div> {% endcomment %}
+  <div class="mb-5">
+    <label class="form-label" for="eventLocation">위치</label>
+    {% comment %} <input type="text" class="form-control" id="eventLocation" name="eventLocation" placeholder="위치 입력" /> {% endcomment %}
+    {{ form.location }}
+  </div>
+  <div class="mb-5">
+    <label class="form-label" for="eventDescription">설명</label>
+    {% comment %} <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea> {% endcomment %}
+    {{ form.description }}
+  </div>
+  <div class="d-flex justify-content-sm-between justify-content-start mt-6 gap-2">
+    <div class="d-flex">
+      <button type="submit" id="addEventBtn" class="btn btn-primary btn-add-event me-4">추가</button>
+      <button type="reset" class="btn btn-label-secondary btn-cancel me-sm-0 me-1" data-bs-dismiss="offcanvas">취소</button>
+    </div>
+    <button class="btn btn-label-danger btn-delete-event d-none">삭제</button>
+  </div>
+</form>

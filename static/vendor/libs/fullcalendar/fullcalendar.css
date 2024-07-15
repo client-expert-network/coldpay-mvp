@@ -26,7 +26,9 @@
   background-color: transparent;
   border-color: transparent;
 }
-.fc .fc-toolbar .fc-prev-button:hover, .fc .fc-toolbar .fc-prev-button:active, .fc .fc-toolbar .fc-prev-button:focus,
+.fc .fc-toolbar .fc-prev-button:hover,
+.fc .fc-toolbar .fc-prev-button:active,
+.fc .fc-toolbar .fc-prev-button:focus,
 .fc .fc-toolbar .fc-next-button:hover,
 .fc .fc-toolbar .fc-next-button:active,
 .fc .fc-toolbar .fc-next-button:focus {
@@ -40,13 +42,14 @@
 .fc .fc-toolbar .fc-button:not(.fc-next-button):not(.fc-prev-button) {
   padding: 0.485rem 1.25rem;
 }
-.fc .fc-toolbar .fc-button:not(.fc-next-button):not(.fc-prev-button):active, .fc .fc-toolbar .fc-button:not(.fc-next-button):not(.fc-prev-button):focus {
+.fc .fc-toolbar .fc-button:not(.fc-next-button):not(.fc-prev-button):active,
+.fc .fc-toolbar .fc-button:not(.fc-next-button):not(.fc-prev-button):focus {
   box-shadow: none !important;
 }
 .fc .fc-toolbar > * > :not(:first-child) {
   margin-left: 0 !important;
 }
-[dir=rtl] .fc .fc-toolbar > * > :not(:first-child) {
+[dir="rtl"] .fc .fc-toolbar > * > :not(:first-child) {
   margin-right: 0 !important;
 }
 .fc .fc-toolbar .fc-toolbar-chunk {
@@ -78,10 +81,10 @@
   padding-bottom: 3px;
   padding-top: 3px;
 }
-html:not([dir=rtl]) .fc .fc-view-harness .fc-scrollgrid-section-header > * {
+html:not([dir="rtl"]) .fc .fc-view-harness .fc-scrollgrid-section-header > * {
   border-inline-end-width: 0px;
 }
-[dir=rtl] .fc .fc-view-harness .fc-scrollgrid-section-header > * {
+[dir="rtl"] .fc .fc-view-harness .fc-scrollgrid-section-header > * {
   border-inline-start-width: 0px;
 }
 .fc .fc-view-harness .fc-timegrid-event .fc-event-time {
@@ -120,11 +123,21 @@ html:not([dir=rtl]) .fc .fc-view-harness .fc-scrollgrid-section-header > * {
 .fc .fc-view-harness .fc-daygrid-body .fc-daygrid-day .fc-daygrid-day-top {
   flex-direction: row;
 }
-.fc .fc-view-harness .fc-daygrid-body .fc-daygrid-day .fc-daygrid-day-top .fc-daygrid-day-number {
+.fc
+  .fc-view-harness
+  .fc-daygrid-body
+  .fc-daygrid-day
+  .fc-daygrid-day-top
+  .fc-daygrid-day-number {
   float: left;
   padding: 0.5rem;
 }
-.fc .fc-view-harness .fc-daygrid-body .fc-daygrid-day .fc-daygrid-day-bottom .fc-daygrid-more-link {
+.fc
+  .fc-view-harness
+  .fc-daygrid-body
+  .fc-daygrid-day
+  .fc-daygrid-day-bottom
+  .fc-daygrid-more-link {
   margin-top: 0.625rem;
 }
 .fc .fc-view-harness .fc-event {

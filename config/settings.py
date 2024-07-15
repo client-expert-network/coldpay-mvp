@@ -58,6 +58,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
     "pwa",
+    "django_htmx",
 ]
 
 DJANGO_APPS = [
