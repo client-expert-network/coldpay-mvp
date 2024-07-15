@@ -28,11 +28,11 @@ urlpatterns = (
         path("", include("apps.users.urls")),
         path("", include("apps.chats.urls")),
         path("", include("apps.calendars.urls")),
+        path("", include("apps.portfolios.urls")),
     ]
     + [
         path("", include("pwa.urls")),
         path("accounts/", include("allauth.urls")),
-        path("portfolios/", include("apps.portfolios.urls")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 )

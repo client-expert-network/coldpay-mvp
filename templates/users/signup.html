@@ -52,6 +52,7 @@
                 <div class="col-9">{{ form.email }}</div>
                 <div class="col-3">
                   <button type="button" class="btn btn-primary text-white" id="send-verification-email-btn">인증</button>
+                  <span id="email-verification-loading" class="spinner-border spinner-border-sm text-primary" style="display: none;"></span>
                 </div>
               </div>
               <div class="row mb-6" id="verification-code-container" style="display: none;">
@@ -61,6 +62,7 @@
                 </div>
                 <div class="col-3">
                   <button type="button" class="btn btn-primary text-white" id="verify-code-btn">확인</button>
+                  <span id="code-verification-loading" class="spinner-border spinner-border-sm text-primary" style="display: none;"></span>
                 </div>
               </div>
               <div id="email-verification-message" class="mb-6" style="display: none;"></div>
@@ -104,6 +106,7 @@
   </div>
 
   <script>
+
     document.addEventListener('DOMContentLoaded', () => {
       const emailField = document.getElementById('email')
       const sendBtn = document.getElementById('send-verification-email-btn')
@@ -183,6 +186,7 @@
         }
       })
     })
+
   </script>
 {% endblock %}
 
