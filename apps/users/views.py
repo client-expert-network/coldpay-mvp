@@ -90,3 +90,11 @@ def login_view(request):
     }
 
     return render(request, "users/login.html", context=context)
+
+
+def check_user_exists(request):
+    email = request.GET.get("email", None)
+    if email:
+        user_exists = User.objects.filter(email=email).exists()
+        return JsonResponse({"exists": user_exists})
+    return JsonResponse({"exists": False})

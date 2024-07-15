@@ -279,7 +279,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let date = moment(info.date).format('YYYY-MM-DD');
         resetValues();
         bsAddEventSidebar.show();
-
         // For new event set offcanvas title text: Add Event
         if (offcanvasTitle) {
           offcanvasTitle.innerHTML = '이벤트 추가';
@@ -293,6 +292,7 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       eventClick: function (info) {
         eventClick(info);
+        console.log('안녕하세요.');
       },
       datesSet: function () {
         modifyToggler();

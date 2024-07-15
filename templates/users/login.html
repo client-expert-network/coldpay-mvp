@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
+{% load socialaccount %}
 {% load static %}
 
 {% block vendor_css %}
   <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
-  <link rel="stylesheet" href="vendor/libs/typeahead-js/typeahead.css" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/@form-validation/form-validation.css' %}" />
 {% endblock %}
 
@@ -73,7 +74,7 @@
 
               <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-github me-1_5"><i class="tf-icons ti ti-brand-github-filled"></i></a>
 
-              <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-google-plus"><i class="tf-icons ti ti-brand-google-filled"></i></a>
+              <a href="{% provider_login_url 'google' %}" class="btn btn-sm btn-icon rounded-pill btn-text-google-plus"><i class="tf-icons ti ti-brand-google-filled"></i></a>
             </div>
           </div>
         </div>
