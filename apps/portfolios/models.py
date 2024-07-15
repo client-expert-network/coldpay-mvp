@@ -29,7 +29,7 @@ class PortfolioImage(models.Model):
 
 
 class PortfolioVideo(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
     portfolio = models.ForeignKey(
         Portfolio, related_name="videos", on_delete=models.CASCADE
     )
