@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST, require_GET, require_http
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import json
-
+from .forms import PortfolioForm
 
 
 @login_required 
@@ -16,13 +16,13 @@ import json
 def create_portfolio(request):
     # 전문가인지 확인
     if not request.user.is_expert:
-        return HttpResponseForbidden({"error": "User is not a seller"})
+        return HttpResponseForbidden({"error": "User is not a expert"})
 
-    seller = request.user
+    expert = request.user
 
     # request.POST와 request.FILES를 사용하여 데이터 처리
     portfolio = Portfolio.objects.create(
-        seller=seller,
+        expert=expert,
         title=request.POST.get("title"),
         content=request.POST.get("content"),
         price=request.POST.get("price"),
@@ -105,12 +105,15 @@ def portfolio_detail(request, portfolio_id):
 
 def update_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
+    if request.method == "POST":
+        form = PortfolioForm(request.POST, instance=portfolio)
+        if form.is_valid():
+            portfolio = form.save()
+            return redirect("portfolios/portfolio_detail", portfolio_id=portfolio.id)
+    else:
+        form = PortfolioForm(instance=portfolio)
+    return render(request, 'portfolios/update_portfolio.html', {'form': form, 'portfolio': portfolio})
 
-    return render(
-        request,
-        "portfolios/update_portfolio.html",
-        {"portfolio": portfolio},
-    )
 
 
 @require_http_methods(["POST", "PUT"])  # 게시물 UPDATE
