@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 from django.core.validators import RegexValidator
-import shortuuid
+from shortuuid.django_fields import ShortUUIDField
 
 
 # Create your models here.
@@ -30,9 +30,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    id = models.CharField(
-        primary_key=True, default=shortuuid.uuid, editable=False, max_length=128
-    )
+    id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=50)
     first_name = models.CharField(max_length=50)
@@ -50,6 +48,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    is_expert = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
