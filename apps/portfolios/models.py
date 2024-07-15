@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
 class Portfolio(models.Model):
     id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
     expert = models.ForeignKey(User, on_delete=models.CASCADE)
