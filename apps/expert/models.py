@@ -14,3 +14,4 @@ class ApplyExpert(models.Model):
     video = models.FileField(upload_to="expert_portfolios/", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    approved = models.BooleanField(default=False)
