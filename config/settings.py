@@ -224,7 +224,7 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-# SOCIALACCOUNT_ADAPTER = "accounts.adapter.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "oauth.adapter.SocialAccountAdapter"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"

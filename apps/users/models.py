@@ -36,6 +36,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
 
+    profile_picture = models.URLField(max_length=200, blank=True, null=True)
+
     # 전화번호 유효성 검사 010-1111-1111, 02-111-1111 지역번호까지 포함
     phone_regex = RegexValidator(
         regex=r"^\d{2,3}-\d{3,4}-\d{4}$",
@@ -45,6 +47,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         validators=[phone_regex], max_length=13, blank=True
     )  # blank = True
 
+    date_joined = models.DateTimeField(auto_now_add=True)
+
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -53,7 +57,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "username"]
 
     def __str__(self):
         return self.email

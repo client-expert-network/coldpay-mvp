@@ -6,6 +6,7 @@ from .models import *
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 
 
@@ -19,6 +20,7 @@ def calendar_view(request):
 
 
 import json
+
 
 @login_required
 def event_list(request):
@@ -34,30 +36,32 @@ def event_list(request):
                 "end": event.end_date.isoformat(),
                 "allDay": event.all_day,
                 "url": event.event_url,
-                "extendedProps":{
+                "extendedProps": {
                     "calendar": event.label,
                     "description": event.description,
-                    "location": event.location
-                }
+                    "location": event.location,
+                },
             }
         )
     return JsonResponse(event_list, safe=False)
 
-@csrf_exempt    
+
+@csrf_exempt
 @login_required
 def event_create(request):
     if request.method == "POST":
         data = json.loads(request.body)
         form = EventForm(data)
         if form.is_valid():
-            user = User.objects.get(username=request.user)
-            print (user)
+            user = User.objects.get(email=request.user.email)
+            print(user)
             form.instance.user = user
             form.save()
             return JsonResponse({"message": "Event created successfully"}, status=201)
         else:
             return JsonResponse({"errors": form.errors}, status=400)
-    return HttpResponse(status=405) 
+    return HttpResponse(status=405)
+
 
 @csrf_exempt
 @login_required
@@ -71,7 +75,7 @@ def event_update(request, id):
             return JsonResponse({"message": "Event updated successfully"}, status=200)
         else:
             return JsonResponse({"errors": form.errors}, status=400)
-    return HttpResponse(status=405) 
+    return HttpResponse(status=405)
 
 
 @csrf_exempt
@@ -81,7 +85,9 @@ def event_delete(request, id):
         event = get_object_or_404(Event, id=id)
         event.delete()
         return JsonResponse({"message": "Event deleted successfully"}, status=204)
-    return HttpResponse(status=405)  
+    return HttpResponse(status=405)
+
+
 # @login_required
 # def event_update(request, id):
 #     event = get_object_or_404(Event, id=id)
