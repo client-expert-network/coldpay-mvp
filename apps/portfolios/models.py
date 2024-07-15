@@ -1,6 +1,6 @@
 from django.db import models
 from apps.users.models import CustomUser
-import uuid
+from shortuuid.django_fields import ShortUUIDField
 
 
 class Portfolio(models.Model):
@@ -17,7 +17,6 @@ class Portfolio(models.Model):
 
     def get_duration(self):
         return self.portfolio_end - self.portfolio_start
-    
 
 
 class PortfolioImage(models.Model):

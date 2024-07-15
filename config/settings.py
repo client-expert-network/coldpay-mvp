@@ -43,6 +43,7 @@ APPEND_SLASH = False
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -106,13 +107,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "config.wsgi.application"
+# WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.asgi.application"
 
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
     }
 }
 
@@ -143,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
     # {
     #     "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    # },  
+    # },
     {
         "NAME": "apps.users.validators.CustomPasswordValidator",
     },
