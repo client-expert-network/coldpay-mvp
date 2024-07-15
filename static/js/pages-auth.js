@@ -25,10 +25,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
           email: {
             validators: {
               notEmpty: {
-                message: 'Please enter your email'
+                message: '이메일을 입력해주세요'
               },
               emailAddress: {
-                message: 'Please enter valid email address'
+                message: '올바른 이메일 주소를 입력해주세요'
               }
             }
           },
@@ -46,35 +46,40 @@ document.addEventListener('DOMContentLoaded', function (e) {
           password: {
             validators: {
               notEmpty: {
-                message: 'Please enter your password'
+                message: '비밀번호를 입력해주세요'
               },
               stringLength: {
-                min: 6,
-                message: 'Password must be more than 6 characters'
-              }
+                min: 8,
+                max: 32,
+                message: '비밀번호는 8자 이상입니다'
+              },
+              regexp: {
+                regexp: /^(?:(?=.*[A-Za-z])(?=.*\d)|(?=.*[A-Za-z])(?=.*[!@#$%^&*(),.?":{}|<>])|(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]))[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,32}$/,
+                message: '비밀번호는 영문, 숫자, 특수문자 중 2가지 이상을 포함해야 합니다.'
+              },
             }
           },
           'confirm-password': {
             validators: {
               notEmpty: {
-                message: 'Please confirm password'
+                message: '비밀번호를 다시 입력해주세요'
               },
               identical: {
                 compare: function () {
                   return formAuthentication.querySelector('[name="password"]').value;
                 },
-                message: 'The password and its confirm are not the same'
+                message: '비밀번호가 일치하지 않습니다'
               },
               stringLength: {
-                min: 6,
-                message: 'Password must be more than 6 characters'
+                min: 8,
+                message: '비밀번호는 8자 이상입니다'
               }
             }
           },
           terms: {
             validators: {
               notEmpty: {
-                message: 'Please agree terms & conditions'
+                message: '약관에 동의해주세요'
               }
             }
           }

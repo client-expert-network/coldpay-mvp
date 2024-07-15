@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load socialaccount %}
 {% load static %}
 
 {% block vendor_css %}
@@ -30,7 +31,7 @@
             <h4 class="mb-1">Adventure starts here 🚀</h4>
             <p class="mb-6">Make your app management easy and fun!</p>
 
-            <form method="post" action="{% url 'accounts:signup' %}" id="signup-form" class="mb-6">
+            <form id="formAuthentication" method="post" action="{% url 'accounts:signup' %}" id="signup-form" class="mb-6">
               {% csrf_token %}
               <div class="mb-6">
                 <label for="username" class="form-label">닉네임</label>
@@ -48,9 +49,7 @@
               </div>
               <div class="row mb-6">
                 <label for="email" class="form-label">이메일</label>
-                <div class="col-9">
-                  {{ form.email }}
-                </div>
+                <div class="col-9">{{ form.email }}</div>
                 <div class="col-3">
                   <button type="button" class="btn btn-primary text-white" id="send-verification-email-btn">인증</button>
                   <span id="email-verification-loading" class="spinner-border spinner-border-sm text-primary" style="display: none;"></span>
@@ -59,14 +58,14 @@
               <div class="row mb-6" id="verification-code-container" style="display: none;">
                 <label for="verification_code" class="form-label">인증 코드</label>
                 <div class="col-9">
-                  <input type="text" id="verification_code" class="form-control">
+                  <input type="text" id="verification_code" class="form-control" />
                 </div>
                 <div class="col-3">
                   <button type="button" class="btn btn-primary text-white" id="verify-code-btn">확인</button>
                   <span id="code-verification-loading" class="spinner-border spinner-border-sm text-primary" style="display: none;"></span>
                 </div>
               </div>
-              <div id="email-verification-message" class="text-danger mb-6" style="display: none;"></div>
+              <div id="email-verification-message" class="mb-6" style="display: none;"></div>
               <div class="mb-6 form-password-toggle">
                 <label class="form-label" for="password">패스워드</label>
                 <div class="input-group input-group-merge">
@@ -97,7 +96,7 @@
               <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-facebook me-1_5"><i class="tf-icons ti ti-brand-facebook-filled"></i></a>
               <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-twitter me-1_5"><i class="tf-icons ti ti-brand-twitter-filled"></i></a>
               <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-github me-1_5"><i class="tf-icons ti ti-brand-github-filled"></i></a>
-              <a href="javascript:;" class="btn btn-sm btn-icon rounded-pill btn-text-google-plus"><i class="tf-icons ti ti-brand-google-filled"></i></a>
+              <a href="{% provider_login_url 'google' %}" class="btn btn-sm btn-icon rounded-pill btn-text-google-plus"><i class="tf-icons ti ti-brand-google-filled"></i></a>
             </div>
           </div>
         </div>
@@ -107,83 +106,87 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sendBtn = document.getElementById('send-verification-email-btn');
-        const emailLoading = document.getElementById('email-verification-loading');
-        const codeLoading = document.getElementById('code-verification-loading');
-        sendBtn.addEventListener('click', function() {
-            const emailField = document.getElementById('{{ form.email.id_for_label }}');
-            const email = emailField.value;
-            const verificationContainer = document.getElementById('verification-code-container');
-            const messageDiv = document.getElementById('email-verification-message');
 
-            emailLoading.style.display = 'inline-block';
-            messageDiv.style.display = 'none';
+    document.addEventListener('DOMContentLoaded', () => {
+      const emailField = document.getElementById('email')
+      const sendBtn = document.getElementById('send-verification-email-btn')
+      const verificationContainer = document.getElementById('verification-code-container')
+      const messageDiv = document.getElementById('email-verification-message')
+      const verifyBtn = document.getElementById('verify-code-btn')
+      const submitBtn = document.getElementById('signup-submit')
+      const verificationCodeField = document.getElementById('verification_code')
+    
+      const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase())
+    
+      const displayMessage = (message, isError = true) => {
+        messageDiv.style.display = 'block'
+        messageDiv.style.color = isError ? 'red' : 'green'
+        messageDiv.innerText = message
+      }
+    
+      const fetchData = async (url) => {
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          })
+          return await response.json()
+        } catch (error) {
+          console.error('Error:', error)
+          displayMessage('오류가 발생했습니다. 다시 시도해주세요.')
+        }
+      }
+    
+      emailField.addEventListener('input', async () => {
+        const email = emailField.value
+    
+        const data = await fetchData(`{% url 'accounts:check-user-exists' %}?email=${email}`)
+        if (data?.exists) {
+          displayMessage('이미 가입한 계정이 있습니다.')
+        } else {
+          messageDiv.style.display = 'none'
+          messageDiv.innerText = ''
+        }
+      })
+    
+      sendBtn.addEventListener('click', async () => {
+        const email = emailField.value
+        if (!validateEmail(email)) {
+          displayMessage('이메일 형식이 맞지 않습니다.')
+          return
+        }
+    
+        verificationContainer.style.display = 'flex'
+        displayMessage('인증 코드가 메일로 발송되었습니다.', false)
+        emailField.disabled = true
+        sendBtn.disabled = true
+    
+        const data = await fetchData(`{% url 'accounts:send-verification-email' %}?email=${email}`)
+        if (data?.status !== 'sent') {
+          displayMessage('인증 메일 발송에 실패했습니다. 다시 시도해주세요.')
+          verificationContainer.style.display = 'none'
+          emailField.disabled = false
+          sendBtn.disabled = false
+        }
+      })
+    
+      verifyBtn.addEventListener('click', async () => {
+        const email = emailField.value
+        const code = verificationCodeField.value
+    
+        const data = await fetchData(`{% url 'accounts:verify-code' %}?email=${email}&code=${code}`)
+        if (data?.status === 'verified') {
+          messageDiv.style.display = 'none'
+          submitBtn.disabled = false
+          verificationCodeField.disabled = true
+          verifyBtn.disabled = true
+        } else {
+          displayMessage('인증번호가 올바르지 않습니다.')
+          submitBtn.disabled = true
+        }
+      })
+    })
 
-            fetch(`{% url 'accounts:send_verification_email' %}?email=${email}`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                emailLoading.style.display = 'none';
-                if (data.status === 'sent') {
-                    verificationContainer.style.display = 'flex';
-                } else {
-                    messageDiv.style.display = 'block';
-                    messageDiv.innerText = 'Failed to send verification email. Please try again.';
-                }
-            })
-            .catch(error => {
-                emailLoading.style.display = 'none';
-                console.error('Error:', error);
-                messageDiv.style.display = 'block';
-                messageDiv.innerText = 'Failed to send verification email. Please try again.';
-            });
-        });
-
-        const verifyBtn = document.getElementById('verify-code-btn');
-        verifyBtn.addEventListener('click', function() {
-            const emailField = document.getElementById('{{ form.email.id_for_label }}');
-            const email = emailField.value;
-            const codeField = document.getElementById('verification_code');
-            const code = codeField.value;
-            const submitBtn = document.getElementById('signup-submit');
-            const messageDiv = document.getElementById('email-verification-message');
-
-            codeLoading.style.display = 'inline-block';
-            messageDiv.style.display = 'none';
-
-            fetch(`{% url 'accounts:verify_code' %}?email=${email}&code=${code}`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                codeLoading.style.display = 'none';
-                if (data.status === 'verified') {
-                    messageDiv.style.display = 'none';
-                    messageDib.innerText="인증이 완료되었습니다"
-                    submitBtn.disabled = false;
-                } else {
-                    messageDiv.style.display = 'block';
-                    messageDiv.innerText = 'Invalid verification code. Please try again.';
-                    submitBtn.disabled = true;
-                }
-            })
-            .catch(error => {
-                codeLoading.style.display = 'none';
-                console.error('Error:', error);
-                messageDiv.style.display = 'block';
-                messageDiv.innerText = 'Invalid verification code. Please try again.';
-                submitBtn.disabled = true;
-            });
-        });
-    });
   </script>
 {% endblock %}
 
