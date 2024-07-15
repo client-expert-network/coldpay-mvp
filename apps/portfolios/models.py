@@ -4,7 +4,7 @@ import uuid
 
 
 class Portfolio(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
     expert = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -21,7 +21,7 @@ class Portfolio(models.Model):
 
 
 class PortfolioImage(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
     portfolio = models.ForeignKey(
         Portfolio, related_name="images", on_delete=models.CASCADE
     )
