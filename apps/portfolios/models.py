@@ -1,5 +1,4 @@
 from django.db import models
-from apps.users.models import CustomUser
 from shortuuid.django_fields import ShortUUIDField
 from django.contrib.auth import get_user_model
 
