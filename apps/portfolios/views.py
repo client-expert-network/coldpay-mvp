@@ -16,9 +16,9 @@ User = get_user_model()
 def create_portfolio(request):
 
     # 전문가인지 확인하는 과정 점검 필요함
-    # if not request.user.is_expert:
-    #     return HttpResponseForbidden({"error": "User is not a expert"})
-
+    if not request.user.is_expert:
+        return HttpResponseForbidden({"error": "User is not a expert"})
+    
     if request.method == "GET":
         form = PortfolioForm()
         return render(request, "portfolios/create_portfolio.html", {"form": form})
@@ -115,30 +115,23 @@ def update_portfolio(request, portfolio_id):
     if portfolio.expert != request.user:
         return HttpResponseForbidden("편집 권한이 없습니다.")
     
-    if request.method == "POST":
+    if request.method == "GET":
         form = PortfolioForm(request.POST, instance=portfolio)
         if form.is_valid():
             portfolio = form.save()
             return redirect("portfolios/portfolio_detail", portfolio_id=portfolio.id)
     else:
         form = PortfolioForm(instance=portfolio)
+
+    if request.method == "POST":
+        form = PortfolioForm(request.POST, request.FILES, instance=portfolio)
+        if form.is_valid():
+            portfolio = form.save()
+            return redirect("/portfolios/")
         
     return render(request, 'portfolios/update_portfolio.html', {'form': form, 'portfolio': portfolio})
 
 
-
-@require_http_methods(["POST"])  # 게시물 수정 후 저장
-def edit_portfolio(request, portfolio_id):
-    portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
-
-    portfolio.title = request.POST.get("title")
-    portfolio.content = request.POST.get("content")
-    portfolio.price = request.POST.get("price")
-    portfolio.portfolio_start = request.POST.get("portfolio_start")
-    portfolio.portfolio_end = request.POST.get("portfolio_end")
-    portfolio.save()
-
-    return redirect("/portfolios/")
 
 
 @require_http_methods(["POST"])  # 게시물 DELETE

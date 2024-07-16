@@ -41,12 +41,11 @@
             </p>
 
             <h2>Images</h2>
-            {% for image in portfolio.portfolioimage_set.all %}
+            {% for image in portfolio.images.all %}
                 <img src="{{ image.image.url }}" alt="Portfolio Image" class="img-fluid">
             {% endfor %}
 
-            <h2>Videos</h2>
-            {% for video in portfolio.portfoliovideo_set.all %}
+            {% for video in portfolio.videos.all %}
                 <video controls class="img-fluid">
                     <source src="{{ video.video.url }}" type="video/mp4">
                     Your browser does not support the video tag.

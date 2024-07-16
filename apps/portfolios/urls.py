@@ -9,7 +9,7 @@ urlpatterns = [
     path('portfolios/top/', get_top_portfolios, name='top_portfolios'),
     path('portfolios/read/<str:portfolio_id>/', portfolio_detail, name='portfolio_detail'),
     path('portfolios/update/<str:portfolio_id>/', update_portfolio, name='update_portfolio'),
-    path('portfolios/edit/<str:portfolio_id>/', edit_portfolio, name='edit_portfolio'),
+    # path('portfolios/edit/<str:portfolio_id>/', edit_portfolio, name='edit_portfolio'),
     path('portfolios/delete/<str:portfolio_id>/', delete_portfolio, name='delete_portfolio'),
 
 ]
