@@ -31,13 +31,13 @@ def convert_to_expert(request):
     return render(request, "expert/convert_to_expert.html", context)
 
 
+# 지원서를 승인
 @login_required
 def expert_approval(request, apply_id):
     if not request.user.is_staff:
         return HttpResponse("권한이 없습니다.", status=403)
 
     # ApplyExpert 객체 - 일종의 지원서
-    # 지원서를 승인하는 로직
     # 지원서
     apply_expert = get_object_or_404(ApplyExpert, id=apply_id)
     # 지원서의 유저를 expert로 변경
