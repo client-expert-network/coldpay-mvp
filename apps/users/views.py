@@ -9,6 +9,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .forms import SignupForm, LoginForm
 from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth.hashers import make_password
+from django.utils.timezone import now
 
 User = get_user_model()
 
