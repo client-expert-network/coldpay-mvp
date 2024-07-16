@@ -27,6 +27,7 @@ urlpatterns = (
         path("", home, name="home"),
         path("", include("apps.users.urls")),
         path("", include("apps.chats.urls")),
+        path("", include("apps.profiles.urls")),
         path("", include("apps.calendars.urls")),
         path("", include("apps.portfolios.urls")),
     ]
