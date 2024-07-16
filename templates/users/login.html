@@ -32,7 +32,7 @@
             <h4 class="mb-1">Welcome to Coldpay! 👋</h4>
             <p class="mb-6">Please sign-in to your account and start the adventure</p>
 
-            <form id="formAuthentication" class="mb-4" action="{% url 'login' %}" method="POST">
+            <form id="formAuthentication" class="mb-4" action="{% url 'accounts:login' %}" method="POST">
               {% csrf_token %}
               <div class="mb-6">
                 <label for="email" class="form-label">이메일</label>
@@ -61,7 +61,7 @@
 
             <p class="text-center">
               <span>New on our platform?</span>
-              <a href="{% url 'signup' %}"><span>Create an account</span></a>
+              <a href="{% url 'accounts:signup' %}"><span>Create an account</span></a>
             </p>
 
             <div class="divider my-6">
