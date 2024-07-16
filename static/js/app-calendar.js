@@ -249,13 +249,14 @@ document.addEventListener('DOMContentLoaded', function () {
     
           // Get requested calendars as Array
           let calendars = selectedCalendars();
+          // console.log("calanders:",calendars);
     
           // Filter events based on selected calendars
           let selectedEvents = data.filter(function (event) {
-            // console.log(event);
+            
             // console.log(event.extendedProps);
             // console.log(event.extendedProps.calendar);
-            return calendars
+            return calendars.includes(event.extendedProps.calendar);
           });
           // console.log(selectedEvents);
     
@@ -620,6 +621,7 @@ function addEvent(eventData) {
 
     if (filterInput) {
       filterInput.forEach(item => {
+        console.log(item);
         item.addEventListener('click', () => {
           document.querySelectorAll('.input-filter:checked').length < document.querySelectorAll('.input-filter').length
             ? (selectAll.checked = false)
