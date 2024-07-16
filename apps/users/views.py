@@ -9,6 +9,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .forms import SignupForm, LoginForm
 from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth.hashers import make_password
+from django.utils.timezone import now
 
 User = get_user_model()
 
@@ -111,3 +113,48 @@ def check_user_exists(request):
         user_exists = User.objects.filter(email=email).exists()
         return JsonResponse({"exists": user_exists})
     return JsonResponse({"exists": False})
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        user = User.objects.filter(email=email).first()
+
+        if user:
+            print("USER: ", user.id, user.username)
+            email_title = "Coldpay Password Reset"
+            message = f"Please click the link below to reset your password: http://localhost:8000/accounts/reset-password/{urlsafe_base64_encode(force_bytes(user.id))}/"    
+            email_message = EmailMessage(email_title, message, to=[email])
+            email_message.send()
+            message = "Check your email for a password reset link."    
+        else:
+            message = "No user with that email address exists."
+        print(message)
+        return render(request, 'users/forgot_password.html', {'message': message})
+    else:
+        return render(request, 'users/forgot_password.html')
+
+def reset_password(request, uidb64):
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        if new_password != confirm_password:
+            message = "Passwords do not match."
+            return render(request, 'users/reset_password.html', {'uidb64': uidb64, 'message': message})
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and new_password:
+            if user.date_joined is None:
+                user.date_joined = now()
+            user.password = make_password(new_password)
+            user.save()
+            message = "Password reset successful."
+            return redirect('accounts:login')
+        else:
+            message = "Invalid user or password."
+            return render(request, 'users/reset_password.html', {'uidb64': uidb64, 'message': message})
+    else:    
+        return render(request, 'users/reset_password.html', {'uidb64': uidb64})
