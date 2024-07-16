@@ -2,9 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import F
 from django.http import HttpResponseForbidden, JsonResponse
-from django.views.decorators.http import require_POST, require_GET, require_http_methods
+from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-import json
 from .forms import PortfolioForm
 from apps.portfolios.models import Portfolio, PortfolioImage, PortfolioVideo
 from django.contrib.auth import get_user_model
@@ -12,12 +11,17 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-@login_required
+# @login_required
 @require_http_methods(["GET", "POST"])
 def create_portfolio(request):
 
-    if not request.user.is_expert:
-        return HttpResponseForbidden({"error": "User is not a expert"})
+    # 전문가인지 확인하는 과정 점검 필요함
+    # if not request.user.is_expert:
+    #     return HttpResponseForbidden({"error": "User is not a expert"})
+
+    if request.method == "GET":
+        form = PortfolioForm()
+        return render(request, "portfolios/create_portfolio.html", {"form": form})
 
     if request.method == "POST":
         form = PortfolioForm(request.POST, request.FILES)
@@ -67,6 +71,8 @@ def get_top_portfolios(request):
         {"portfolios": top_portfolios},
     )
 
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 @require_http_methods(["GET", "POST"])
@@ -86,19 +92,18 @@ def portfolio_detail(request, portfolio_id):
             portfolio.like += 1
             request.session[session_key] = True
         portfolio.save()
-        return JsonResponse({"likes": portfolio.like, "shows": portfolio.show})
+        return HttpResponseRedirect(reverse('portfolio_detail', args=[portfolio_id]))
+    
     else:
         # 사용자가 방문시 조회수 증가를 위한 세션 키 생성
         session_key = f"shown_{portfolio_id}"
         if not request.session.get(session_key):
-            # 세션 키가 없다면, 사용자가 이 포트폴리오를 처음 방문한 것임
+            # 세션 키가 없다면, 사용자가 이 포트폴리오를 처음 방문한 것
             portfolio.show += 1
             portfolio.save()
             request.session[session_key] = True  # 세션에 키 설정하여 재방문 추적
 
-        return render(
-            request, "portfolios/portfolio_detail.html", {"portfolio": portfolio}
-        )
+        return render(request, "portfolios/portfolio_detail.html", {"portfolio": portfolio})
 
 
 
@@ -122,7 +127,7 @@ def update_portfolio(request, portfolio_id):
 
 
 
-@require_http_methods(["POST"])  # 게시물 수정 후 저장역할
+@require_http_methods(["POST"])  # 게시물 수정 후 저장
 def edit_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
 

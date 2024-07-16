@@ -7,7 +7,9 @@
 
 {% block page_css %}
   <link rel="stylesheet" href="{% static 'css/custom-styles.css' %}" />
+  
 {% endblock %}
+
 
 {% block content %}
   <div class="layout-wrapper layout-content-navbar">
@@ -59,6 +61,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit" class="btn btn-danger">Delete</button>
+                    <!-- <button type="submit" class="btn btn-danger" hx-confirm="정말로 삭제하시겠습니까?" >Delete</button> -->
                 </form>
             </div>
           </div>
