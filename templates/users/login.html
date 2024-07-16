@@ -32,7 +32,7 @@
             <h4 class="mb-1">Welcome to Coldpay! 👋</h4>
             <p class="mb-6">Please sign-in to your account and start the adventure</p>
 
-            <form id="formAuthentication" class="mb-4" action="{% url 'accounts:login' %}" method="POST">
+            <form id="formAuthentication" class="mb-4" action="{% url 'login' %}" method="POST">
               {% csrf_token %}
               <div class="mb-6">
                 <label for="email" class="form-label">이메일</label>
@@ -51,7 +51,7 @@
                     <input class="form-check-input" type="checkbox" id="remember-me" />
                     <label class="form-check-label" for="remember-me">아이디 저장</label>
                   </div>
-                  <a href="{% url 'accounts:forgot-password' %}"><p class="mb-0">비밀번호를 잊으셨나요?</p></a>
+                  <a href="{% url 'password_reset' %}"><p class="mb-0">비밀번호를 잊으셨나요?</p></a>
                 </div>
               </div>
               <div class="mb-6">
@@ -61,7 +61,7 @@
 
             <p class="text-center">
               <span>New on our platform?</span>
-              <a href="{% url 'accounts:signup' %}"><span>Create an account</span></a>
+              <a href="{% url 'signup' %}"><span>Create an account</span></a>
             </p>
 
             <div class="divider my-6">

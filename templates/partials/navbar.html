@@ -336,7 +336,7 @@
               </li>
               <li>
                 <div class="d-grid px-2 pt-2 pb-1">
-                  <form action="{% url 'accounts:logout' %}" method="post">
+                  <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-danger d-flex w-100">
                       <small class="align-middle">Logout</small>
@@ -353,8 +353,8 @@
           </li>
         {% else %}
           <div>
-            <span><a href="{% url 'accounts:login' %}">로그인</a></span>
-            <span><a href="{% url 'accounts:signup' %}">회원가입</a></span>
+            <span><a href="{% url 'login' %}">로그인</a></span>
+            <span><a href="{% url 'signup' %}">회원가입</a></span>
           </div>
         {% endif %}
         <!-- / User -->
