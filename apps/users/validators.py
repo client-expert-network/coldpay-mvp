@@ -22,3 +22,6 @@ class CustomPasswordValidator:
         
         if re.search(r'(.)\1\1', password):
             raise ValidationError("비밀번호에 3번 연속으로 반복되는 문자가 있으면 안 됩니다.")
+        
+    def get_help_text(self):
+        return "Your password must meet the custom requirements you've set."
