@@ -6,6 +6,7 @@ from django.contrib.auth.models import (
 from django.db import models
 from django.core.validators import RegexValidator
 from shortuuid.django_fields import ShortUUIDField
+from django.core.exceptions import ValidationError
 
 
 # Create your models here.
@@ -46,8 +47,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             "unique": "이 유저명은 이미 사용 중입니다.",
         },
     )
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
 
     profile_picture = models.URLField(max_length=200, blank=True, null=True)
 
