@@ -20,7 +20,9 @@ def signup_view(request):
     if request.method == "POST":
         if form.is_valid():
             user = form.save(commit=False)
-            user.username = user.email.split("@")[0]
+            username_part1 = user.email.split("@")[0]
+            username_part2 = user.email.split("@")[1].split(".")[0]
+            user.username = f"{username_part1}{username_part2}"
             user.set_password(form.cleaned_data["password"])
             user.save()
 
