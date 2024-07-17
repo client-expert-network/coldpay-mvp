@@ -30,6 +30,7 @@ urlpatterns = (
         path("", include("apps.chats.urls")),
         path("", include("apps.calendars.urls")),
         path("", include("apps.portfolios.urls")),
+        path("", include("apps.profiles.urls")),
     ]
     + [
         path(
