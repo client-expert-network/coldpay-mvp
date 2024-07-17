@@ -207,20 +207,21 @@
           verifyBtn.disabled = true
           emailField.readOnly = true
           verifyComplete = true
+          checkFormValidity();  
         } else {
           displayMessage('인증번호가 올바르지 않습니다.')
           submitBtn.disabled = true
         }
       })
 
-      lastNameField.addEventListener('input', checkFormValidity);
-      firstNameField.addEventListener('input', checkFormValidity);
-
+      
       const checkFormValidity = () => {
         const isNameFilled = lastNameField.value.trim() !== '' && firstNameField.value.trim() !== '';
         submitBtn.disabled = !(verifyComplete && isNameFilled);
       };
-    
+      
+      lastNameField.addEventListener('input', checkFormValidity);
+      firstNameField.addEventListener('input', checkFormValidity);
 
 
     })
