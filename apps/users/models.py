@@ -37,7 +37,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # RegexValidator를 사용하여 username 필드에 특수문자( . 제외)가 들어오지 않도록 설정
     username_validator = RegexValidator(
         regex=r"^[\w.]+$",
-        message="유저명은 알파벳, 숫자, 밑줄 및 점만 포함할 수 있습니다.",
+        message="유저명은 한글, 알파벳, 숫자, 밑줄 및 점만 포함할 수 있습니다.",
     )
     username = models.CharField(
         max_length=50,
