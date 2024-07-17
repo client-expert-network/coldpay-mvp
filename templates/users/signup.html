@@ -151,9 +151,11 @@
         const data = await fetchData(`{% url 'accounts:check-user-exists' %}?email=${email}`);
         if (data?.exists) {
           displayMessage('이미 가입한 계정이 있습니다.');
+          return true;
         } else {
           messageDiv.style.display = 'none';
           messageDiv.innerText = '';
+          return false;
         }
       };
     
@@ -175,7 +177,7 @@
           displayMessage('이메일 형식이 맞지 않습니다.')
           return
         }
-        if (checkUserExists(email)) {
+        if (checkUserExists(email) == true) {
           displayMessage('이미 가입한 계정이 있습니다.')
           return
         }
