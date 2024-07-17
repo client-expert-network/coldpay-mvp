@@ -30,6 +30,7 @@ urlpatterns = (
         path("", include("apps.chats.urls")),
         path("", include("apps.calendars.urls")),
         path("", include("apps.portfolios.urls")),
+        path("", include("apps.profiles.urls")),
     ]
     + [
         path(
@@ -56,6 +57,7 @@ urlpatterns = (
     + [
         path("", include("pwa.urls")),
         path("accounts/", include("allauth.urls")),
+        path('tinymce/', include('tinymce.urls')),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 )

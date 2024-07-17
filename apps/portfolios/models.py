@@ -35,3 +35,11 @@ class PortfolioVideo(models.Model):
         Portfolio, related_name="videos", on_delete=models.CASCADE
     )
     video = models.FileField(upload_to="portfolio_videos")
+
+from tinymce.models import HTMLField
+
+class PortfolioEditor(models.Model):
+    htmlcontent = HTMLField()
+    portfolio = models.ForeignKey(
+        Portfolio, related_name="editors", on_delete=models.CASCADE
+    )

@@ -12,7 +12,7 @@ User = get_user_model()
 
 
 # @login_required
-@require_http_methods(["GET", "POST"])
+@require_http_methods(["GET", "POST"])  # 게시물 CREATE
 def create_portfolio(request):
 
     # 전문가인지 확인하는 과정 점검 필요함
@@ -61,7 +61,7 @@ def get_portfolios(request):
 
 
 @require_http_methods(["GET"])
-def get_top_portfolios(request):
+def get_top_portfolios(request):    
     top_portfolios = Portfolio.objects.annotate(
         popularity=F("show") + 5 * F("like")
     ).order_by("-popularity")[0:5]
@@ -75,8 +75,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
-@require_http_methods(["GET", "POST"])
-def portfolio_detail(request, portfolio_id):
+@require_http_methods(["GET", "POST"])  
+def portfolio_detail(request, portfolio_id):    # 게시물 READ
     # 특정 Portfolio 객체를 가져옴
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
 
@@ -107,7 +107,7 @@ def portfolio_detail(request, portfolio_id):
 
 
 
-@require_http_methods(["GET", "POST"])  # 게시물 수정 페이지
+@require_http_methods(["GET", "POST"])  # 게시물 UPDATE 수정
 def update_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
     
@@ -146,3 +146,18 @@ def delete_portfolio(request, portfolio_id):
         portfolio.delete()
         return redirect("/portfolios/")  # Django의 redirect 함수 사용
     
+
+
+@require_http_methods(["GET"])
+def test_portfolios(request):
+    page = request.GET.get("page", 1)
+    # Portfolio 객체를 가져올 때 관련된 PortfolioEditor 객체들도 함께 가져옵니다.
+    portfolios = Portfolio.objects.prefetch_related('editors').order_by("-created_at")
+    paginator = Paginator(portfolios, 10)
+    paginator_boards = paginator.get_page(page)
+
+    return render(
+        request,
+        "portfolios/porttest.html",
+        {"portfolios": paginator_boards},
+    )
