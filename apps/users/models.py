@@ -75,11 +75,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-
-    def clean(self):
-        super().clean()
-        if not self.first_name and not self.last_name:
-            raise ValidationError("성 또는 이름 중 하나는 반드시 입력되어야 합니다.")
-
-    def save(self, *args, **kwargs):
-        self.clean()
