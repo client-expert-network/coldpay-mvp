@@ -1,6 +1,9 @@
 # accounts/adapter.py 파일 생성
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from .utils import generate_random_korean_nickname
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
@@ -8,14 +11,11 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
         user = super().save_user(request, sociallogin, form)
         extra_data = sociallogin.account.extra_data
 
-        email = extra_data.get("email")
-
-        if email:
-            username_part1 = email.split("@")[0]
-            username_part2 = email.split("@")[1].split(".")[0]
-            user.username = f"{username_part1}{username_part2}"
-        else:
-            user.username = generate_random_korean_nickname()
+        while True:
+            username = generate_random_korean_nickname()
+            if not User.objects.filter(username=username).exists():
+                user.username = username
+                break
 
         user.first_name = extra_data.get("given_name")
         user.last_name = extra_data.get("family_name")

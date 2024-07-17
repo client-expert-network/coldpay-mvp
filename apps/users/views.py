@@ -11,6 +11,7 @@ from .forms import SignupForm, LoginForm
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import now
+from oauth.utils import generate_random_korean_nickname
 
 User = get_user_model()
 
@@ -22,9 +23,16 @@ def signup_view(request):
     if request.method == "POST":
         if form.is_valid():
             user = form.save(commit=False)
-            username_part1 = user.email.split("@")[0]
-            username_part2 = user.email.split("@")[1].split(".")[0]
-            user.username = f"{username_part1}{username_part2}"
+            # username_part1 = user.email.split("@")[0]
+            # username_part2 = user.email.split("@")[1].split(".")[0]
+            # user.username = f"{username_part1}{username_part2}"
+
+            while True:
+                username = generate_random_korean_nickname()
+                if not User.objects.filter(username=username).exists():
+                    user.username = username
+                    break
+
             user.set_password(form.cleaned_data["password"])
             user.save()
 
