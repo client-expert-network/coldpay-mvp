@@ -31,10 +31,26 @@ urlpatterns = (
         path("", include("apps.profiles.urls")),
         path("", include("apps.calendars.urls")),
         path("", include("apps.portfolios.urls")),
-        path('password_reset/', auth_views.PasswordResetView.as_view(), name="password_reset"),
-        path('password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"),
-        path('password_reset_confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(),name="password_reset_confirm"),
-        path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
+        path(
+            "password_reset/",
+            auth_views.PasswordResetView.as_view(),
+            name="password_reset",
+        ),
+        path(
+            "password_reset_done/",
+            auth_views.PasswordResetDoneView.as_view(),
+            name="password_reset_done",
+        ),
+        path(
+            "password_reset_confirm/<uidb64>/<token>/",
+            auth_views.PasswordResetConfirmView.as_view(),
+            name="password_reset_confirm",
+        ),
+        path(
+            "password_reset_complete/",
+            auth_views.PasswordResetCompleteView.as_view(),
+            name="password_reset_complete",
+        ),
     ]
     + [
         path("", include("pwa.urls")),
