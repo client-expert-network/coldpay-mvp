@@ -7,7 +7,16 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
     def save_user(self, request, sociallogin, form=None):
         user = super().save_user(request, sociallogin, form)
         extra_data = sociallogin.account.extra_data
-        user.username = generate_random_korean_nickname()
+
+        email = extra_data.get("email")
+
+        if email:
+            username_part1 = email.split("@")[0]
+            username_part2 = email.split("@")[1].split(".")[0]
+            user.username = f"{username_part1}{username_part2}"
+        else:
+            user.username = generate_random_korean_nickname()
+
         user.first_name = extra_data.get("given_name")
         user.last_name = extra_data.get("family_name")
         user.profile_picture = extra_data.get("picture")

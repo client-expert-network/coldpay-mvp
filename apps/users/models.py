@@ -32,7 +32,20 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=50, unique=True)
+
+    # RegexValidator를 사용하여 username 필드에 특수문자( . 제외)가 들어오지 않도록 설정
+    username_validator = RegexValidator(
+        regex=r"^[\w.]+$",
+        message="유저명은 알파벳, 숫자, 밑줄 및 점만 포함할 수 있습니다.",
+    )
+    username = models.CharField(
+        max_length=50,
+        unique=True,
+        validators=[username_validator],
+        error_messages={
+            "unique": "이 유저명은 이미 사용 중입니다.",
+        },
+    )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
 
