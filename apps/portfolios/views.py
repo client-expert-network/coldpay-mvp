@@ -226,3 +226,42 @@ def detail_test(request, portfolio_id):    # 게시물 READ
 
         return render(request, "portfolios/detail_test.html", {"portfolio": portfolio})
 
+
+
+@require_http_methods(["GET", "POST"])  # 게시물 UPDATE 수정
+def update_test(request, portfolio_id):
+    portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
+    
+    # 현재 접근한 user가 Portfolio의 작성자와 동일한지 확인
+    if portfolio.expert != request.user:
+        return HttpResponseForbidden("편집 권한이 없습니다.")
+    
+    if request.method == "GET":
+        form = PortfolioForm(request.POST, instance=portfolio)
+        if form.is_valid():
+            portfolio = form.save()
+            return redirect("portfolios/test_detail", portfolio_id=portfolio.id)
+    else:
+        form = PortfolioForm(instance=portfolio)
+
+    if request.method == "POST":
+        form = PortfolioForm(request.POST, request.FILES, instance=portfolio)
+        if form.is_valid():
+            portfolio = form.save()
+            return redirect("/portfolios/")
+        
+    return render(request, 'portfolios/test_update.html', {'form': form, 'portfolio': portfolio})
+
+
+
+@require_http_methods(["POST"])  # 게시물 DELETE
+def delete_test(request, portfolio_id):
+    portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
+
+    # 작성자와 현재 user가 일치하는지 확인
+    if portfolio.expert != request.user:
+        return HttpResponseForbidden("삭제 권한이 없습니다.")
+        
+    if request.method == "POST":
+        portfolio.delete()
+        return redirect("/portfolios/")

@@ -29,9 +29,9 @@
 
 <div class="action-buttons">
     <!-- Edit Button -->
-    <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
+    <a href="{% url 'update_test' portfolio.id %}" class="btn btn-secondary">Edit</a>
     <!-- Delete Button -->
-    <form action="{% url 'delete_portfolio' portfolio.id %}" method="post" style="display: inline;">
+    <form action="{% url 'delete_test' portfolio.id %}" method="post" style="display: inline;">
         {% csrf_token %}
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit" class="btn btn-danger">Delete</button>

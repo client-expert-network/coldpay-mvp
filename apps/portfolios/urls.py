@@ -13,4 +13,6 @@ urlpatterns = [
     path("portfolios/test/", test_portfolios, name="test_portfolios"),
     path("portfolios/test/create/", create_test, name="create_test"),
     path("portfolios/test/detail/<str:portfolio_id>/", detail_test, name="test_detail"),
+    path("portfolios/test/update/<str:portfolio_id>/", update_test, name="update_test"),
+    path("portfolios/test/delete/<str:portfolio_id>/", delete_test, name="delete_test"),
 ]
