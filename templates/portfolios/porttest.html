@@ -1,13 +1,34 @@
-{% for portfolio in portfolios %}
-  <div class="portfolio">
-    <h2>{{ portfolio.title }}</h2>
-    <!-- PortfolioEditor의 htmlcontent를 출력합니다. -->
-    {% for editor in portfolio.editors.all %}
-      <div class="editor-content">
-        {{ editor.htmlcontent|safe }}  <!-- HTML이 렌더링되도록 safe 필터를 사용합니다. -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block vendor_css %}
+<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+  <a href="{% url 'create_test' %}" class="btn btn-primary">글쓰기</a>
+
+<div class="container mt-4">
+  {% for portfolio in portfolios %}
+    <div class="card" style="width: 18rem; margin-bottom: 20px;">
+      <div class="card-body">
+        <h5 class="card-title">{{ portfolio.title }}</h5>
+        <p class="card-text">Show: {{ portfolio.show }}</p>
+        <p class="card-text">Likes: {{ portfolio.like }}</p>
+        <a href="{% url 'test_detail' portfolio.id %}" class="btn btn-primary">View Portfolio</a>
       </div>
-    {% endfor %}
-  </div>
-{% empty %}
-  <p>No portfolios available.</p>
-{% endfor %}
+    </div>
+  {% empty %}
+    <p>No portfolios available.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}
+
+
+
+

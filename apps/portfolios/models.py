@@ -1,6 +1,7 @@
 from django.db import models
 from shortuuid.django_fields import ShortUUIDField
 from django.contrib.auth import get_user_model
+from tinymce.models import HTMLField
 
 User = get_user_model()
 
@@ -10,6 +11,7 @@ class Portfolio(models.Model):
     expert = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
+    htmlcontent = HTMLField(default="")   #HTMLField 추가
     price = models.IntegerField()
     portfolio_start = models.DateTimeField()
     portfolio_end = models.DateTimeField()
@@ -36,7 +38,6 @@ class PortfolioVideo(models.Model):
     )
     video = models.FileField(upload_to="portfolio_videos")
 
-from tinymce.models import HTMLField
 
 class PortfolioEditor(models.Model):
     htmlcontent = HTMLField()

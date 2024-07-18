@@ -1,38 +1,31 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
 {% block vendor_css %}
-  <link rel="stylesheet" href="{% static 'vendor/libs/bootstrap/bootstrap.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
 {% endblock %}
 
-{% block page_css %}
-  <!-- <link rel="stylesheet" href="{% static 'css/custom-styles.css' %}" /> -->
-{% endblock %}
+
 
 {% block content %}
-  
-      <!-- Layout container -->
-      
-        <!-- Navbar -->
 
-        {% include 'partials/navbar.html' %}
+{% include 'partials/navbar.html' %}
 
-        <!-- / Navbar -->
-
-        <!-- Content wrapper -->
         <div class="content-wrapper">
-          <!-- Content -->
 
           <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="d-flex justify-content-between align-items-center py-3 mb-4">
+            
               
               <h4 class="fw-bold"><span class="text-muted fw-light">Portfolios /</span> Overview</h4>
               <a href="{% url 'create_portfolio' %}" class="btn btn-primary" style="background-color: purple; border-color: purple;">글쓰기</a>
-            </div>
+            
             <!-- Portfolios list -->
-            <div class="row">
+            <div class="row justify-content-center">
               {% for portfolio in portfolios %}
-                <div class="col-md-6 col-lg-4 mb-4">
+                
                   <div class="card">
                     <div class="card-body">
                       <h5 class="card-title"><a href="{% url 'portfolio_detail' portfolio.id %}" class="text-body">{{ portfolio.title }}</a></h5>
@@ -40,9 +33,9 @@
                       <!-- Additional information can go here -->
                     </div>
                   </div>
-                </div>
+                
               {% empty %}
-                <div class="col-12">
+                <div class="col-24">
                   <p>No portfolios available.</p>
                 </div>
               {% endfor %}
@@ -72,14 +65,8 @@
         <!-- Content wrapper -->
       
     
-    <div class="layout-overlay layout-menu-toggle"></div>
+    
   
 {% endblock %}
 
-{% block vendor_js %}
-  <script src="{% static 'vendor/libs/bootstrap/bootstrap.js' %}"></script>
-{% endblock %}
 
-{% block page_js %}
-  <!-- Page specific JavaScript files can be included here -->
-{% endblock %}

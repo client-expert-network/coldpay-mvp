@@ -13,7 +13,7 @@
 <h1>Create Test Page</h1>
 
 <!-- 폼 액션은 현재 URL로 설정, method는 POST로 설정 -->
-<form action="{% url 'create_portfolio' %}" method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
     <title>Portfolio Form</title>
     {{ form.media }}
     {% csrf_token %}  <!-- CSRF 토큰 추가 -->
