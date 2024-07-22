@@ -3,9 +3,10 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import ExpertConversionForm
-from .models import Expert
 from django.shortcuts import get_object_or_404
 from .models import ApplyExpert
+from django.contrib.auth.decorators import user_passes_test
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required
 @require_http_methods(["GET", "POST"])
@@ -33,6 +34,7 @@ def convert_to_expert(request):
 
 # 지원서를 승인
 @login_required
+@csrf_exempt
 def expert_approval(request, apply_id):
     if not request.user.is_staff:
         return HttpResponse("권한이 없습니다.", status=403)
@@ -50,3 +52,9 @@ def expert_approval(request, apply_id):
     apply_expert.save()
 
     return HttpResponse("전문가 승인이 완료되었습니다.")
+
+@user_passes_test(lambda u: u.is_staff)
+def admin_expert_applications(request):
+    applications = ApplyExpert.objects.all().order_by('-created_at')
+    return render(request, 'profiles/expert_approval.html', {'applications': applications})
+

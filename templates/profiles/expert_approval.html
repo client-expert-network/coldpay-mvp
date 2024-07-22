@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>전문가 지원서 목록</h1>
+
+{% for application in applications %}
+    <div class="application">
+        <h2>{{ application.title }}</h2>
+        <p>신청자: {{ application.user.username }}</p>
+        <p>설명: {{ application.description }}</p>
+        {% if application.image %}
+            <img src="{{ application.image.url }}" alt="포트폴리오 이미지" style="max-width: 300px;">
+        {% endif %}
+        {% if application.video %}
+            <video width="320" height="240" controls>
+                <source src="{{ application.video.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% endif %}
+        <p>신청일: {{ application.created_at }}</p>
+        {% if not application.approved %}
+            <button hx-post="{% url 'expert_approval' application.id %}"
+                    hx-target="#approval-status-{{ application.id }}"
+                    hx-swap="outerHTML">
+                승인
+            </button>
+        {% endif %}
+        <div id="approval-status-{{ application.id }}">
+            {% if application.approved %}
+                <p>승인됨</p>
+            {% else %}
+                <p>미승인</p>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+{% empty %}
+    <p>아직 지원서가 없습니다.</p>
+{% endfor %}
+{% endblock %}

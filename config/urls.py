@@ -31,6 +31,7 @@ urlpatterns = (
         path("", include("apps.calendars.urls")),
         path("", include("apps.portfolios.urls")),
         path("", include("apps.profiles.urls")),
+        path("", include("apps.expert.urls")),
     ]
     + [
         path(
