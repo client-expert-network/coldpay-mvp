@@ -26,6 +26,7 @@
           </div>
           <div class="card-body">
             <h5 class="card-title">{{ portfolio.title }}</h5>
+            <a href="" class="card-text">{{ portfolio.expert.first_name }} {{ portfolio.expert.last_name }}</a>
             <p class="card-text">Views: {{ portfolio.show }}</p>
             <p class="card-text">Likes: {{ portfolio.like }}</p>
             <a href="{% url 'portfolio_detail' portfolio.id %}" class="btn btn-outline-primary">View Portfolio</a>
