@@ -7,7 +7,9 @@
 <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
 {% endblock %}
 
+
 {% block content %}
+
 
 {% include 'partials/navbar.html' %}
 
@@ -28,6 +30,7 @@
                 <p>Likes: {{ portfolio.like }}</p>
                
             </div>
+            
         </div>
             
                 <form action="{% url 'portfolio_detail' portfolio.id %}" method="post">
@@ -38,16 +41,17 @@
 
            
 
-            <div class="action-buttons">
-                <!-- Edit Button -->
-                <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
-                <!-- Delete Button -->
-                <form action="{% url 'delete_portfolio' portfolio.id %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    <!-- <button type="submit" class="btn btn-danger" hx-confirm="정말로 삭제하시겠습니까?" >Delete</button> -->
-                </form>
-            </div>
+{% if portfolio.expert == request.user %}
+    <div class="action-buttons">
+        <!-- Edit Button -->
+        <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
+        <!-- Delete Button -->
+        <form action="{% url 'delete_portfolio' portfolio.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+{% endif %}
           
 {% endblock %}

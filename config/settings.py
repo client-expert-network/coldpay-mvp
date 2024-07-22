@@ -279,8 +279,8 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme_advanced_resizing': True,
     'image_class_list' : [{'title':"Fluid",'value':'img-fluid','style':{} }],
     'image_caption':True,
-    'width': '50%',
-    'height': 600,
+    'width': '100%',
+    'height': 1000,
 }
 
 

@@ -10,25 +10,34 @@
 {% block content %}
 
 {% include 'partials/navbar.html' %}
-  <a href="{% url 'create_portfolio' %}" class="btn btn-primary">글쓰기</a>
+
+<div style="text-align: right; margin-right: 270px;">
+  <a href="{% url 'create_portfolio' %}" class="btn btn-primary" style="font-weight: medium;">글쓰기</a>
+</div>
 
 <div class="container mt-4">
-  {% for portfolio in portfolios %}
-    <div class="card" style="width: 18rem; margin-bottom: 20px;">
-      <div class="card-body">
-        <h5 class="card-title">{{ portfolio.title }}</h5>
-        <p class="card-text">Show: {{ portfolio.show }}</p>
-        <p class="card-text">Likes: {{ portfolio.like }}</p>
-        <a href="{% url 'portfolio_detail' portfolio.id %}" class="btn btn-primary">View Portfolio</a>
+  <div class="row">
+    {% for portfolio in portfolios %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+          <!-- Assuming each portfolio has an 'image' attribute for the image URL -->
+          <div class="card-img-top" style="max-height: 350px; overflow: hidden;">
+            {{ portfolio.htmlcontent|safe }}
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ portfolio.title }}</h5>
+            <p class="card-text">Views: {{ portfolio.show }}</p>
+            <p class="card-text">Likes: {{ portfolio.like }}</p>
+            <a href="{% url 'portfolio_detail' portfolio.id %}" class="btn btn-outline-primary">View Portfolio</a>
+          </div>
+        </div>
       </div>
-    </div>
-  {% empty %}
-    <p>No portfolios available.</p>
-  {% endfor %}
+    {% empty %}
+      <div class="col-12">
+        <p>No portfolios available.</p>
+      </div>
+    {% endfor %}
+  </div>
 </div>
 
 {% endblock %}
-
-
-
-
