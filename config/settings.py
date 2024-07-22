@@ -32,10 +32,10 @@ else:
 
 ALLOWED_HOSTS = ["*"]
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-    "localhost:8000",
-]
+# INTERNAL_IPS = [
+#     "127.0.0.1",
+#     "localhost:8000",
+# ]
 
 SITE_ID = 1
 APPEND_SLASH = True
@@ -247,3 +247,19 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 # CSRF 세팅하기
+
+# Channels 레이어
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer",
+#     }
+# }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(config("REDIS_URL"))],
+        },
+    },
+}
