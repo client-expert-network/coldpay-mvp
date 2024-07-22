@@ -1,13 +1,14 @@
 from django import forms
 from .models import Portfolio
+from tinymce.widgets import TinyMCE
 
+class PortfolioForm(forms.ModelForm):   
 
-class PortfolioForm(forms.ModelForm):
     class Meta:
         model = Portfolio
         fields = [
             "title",
-            "content",
+            "htmlcontent",
             "price",
             "portfolio_start",
             "portfolio_end",

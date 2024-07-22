@@ -2,68 +2,33 @@
 {% load static %}
 
 {% block vendor_css %}
-  <link rel="stylesheet" href="{% static 'vendor/libs/bootstrap/bootstrap.css' %}" />
-{% endblock %}
-
-{% block page_css %}
-  <link rel="stylesheet" href="{% static 'css/custom-styles.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
 {% endblock %}
 
 {% block content %}
-  <div class="layout-wrapper layout-content-navbar">
-    <div class="layout-container">
-      <!-- Layout container -->
-      <div class="layout-page">
-        <!-- Navbar -->
-        {% include 'partials/navbar.html' %}
-        <!-- / Navbar -->
 
-        <!-- Content wrapper -->
-        <div class="content-wrapper">
-          <!-- Content -->
-          <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="d-flex justify-content-between align-items-center py-3 mb-4">
-              <h4 class="fw-bold"><span class="text-muted fw-light">Portfolios /</span> Create Portfolio</h4>
-            </div>
+{% include 'partials/navbar.html' %}
+<h1>Create Test Page</h1>
 
-            <div class="row">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <form action="{% url 'create_portfolio' %}" method="post" enctype="multipart/form-data">
-                      {% csrf_token %}
-                      {{ form.as_p }}
-                      <div class="mb-3">
-                        <label for="images" class="form-label">Images</label>
-                        <input class="form-control" type="file" id="images" name="images" multiple>
-                      </div>
-                      <div class="mb-3">
-                        <label for="videos" class="form-label">Videos</label>
-                        <input class="form-control" type="file" id="videos" name="videos" multiple>
-                      </div>
-                      <button type="submit" class="btn btn-primary" style="background-color: purple; border-color: purple;">Submit</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- / Content -->
-        </div>
-        <!-- Content wrapper -->
-      </div>
-      <!-- / Layout page -->
-    </div>
-
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle"></div>
-  </div>
-{% endblock %}
-
-{% block vendor_js %}
-  <script src="{% static 'vendor/libs/bootstrap/bootstrap.js' %}"></script>
-{% endblock %}
-
-{% block page_js %}
-  <!-- Page specific JavaScript files can be included here -->
+<!-- 폼 액션은 현재 URL로 설정, method는 POST로 설정 -->
+<form method="post" enctype="multipart/form-data">
+    <title>Portfolio Form</title>
+    {{ form.media }}
+    {% csrf_token %}  <!-- CSRF 토큰 추가 -->
+    
+    <!-- PortfolioForm의 필드를 렌더링 -->
+    {{ form.as_p }}
+    <!-- 이미지와 비디오를 위한 파일 입력 필드 추가
+    <label for="images">Images:</label>
+    <input type="file" name="images" multiple id="images">
+    
+    <label for="videos">Videos:</label>
+    <input type="file" name="videos" multiple id="videos">
+     -->
+    <!-- 폼 제출 버튼 -->
+    <button type="submit">Create Test</button>
+    
+</form>
 {% endblock %}
