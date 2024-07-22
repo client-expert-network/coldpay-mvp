@@ -284,5 +284,11 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 
-TINYMCE_JS_URL = 'https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js'
-TINYMCE_COMPRESSOR = False
+import os
+from dotenv import load_dotenv
+
+# Load .env file
+load_dotenv()
+
+# Accessing variables
+TINYMCE_API_KEY = os.getenv('TINYMCE_API_KEY')
