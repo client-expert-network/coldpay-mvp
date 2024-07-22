@@ -2,84 +2,56 @@
 {% load static %}
 
 {% block vendor_css %}
-  <link rel="stylesheet" href="{% static 'vendor/libs/bootstrap/bootstrap.css' %}" />
-{% endblock %}
-
-{% block page_css %}
-  <link rel="stylesheet" href="{% static 'css/custom-styles.css' %}" />
-  
+<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
 {% endblock %}
 
 
 {% block content %}
-  <div class="layout-wrapper layout-content-navbar">
-    <div class="layout-container">
-      <!-- Layout container -->
-      <div class="layout-page">
-        <!-- Navbar -->
 
-        {% include 'partials/navbar.html' %}
 
-        <!-- / Navbar -->
+{% include 'partials/navbar.html' %}
 
-        <!-- Content wrapper -->
-        <div class="content-wrapper">
+        
           <!-- Content -->
 
-          <div class="container-xxl flex-grow-1 container-p-y">
-            <h1>{{ portfolio.title }}</h1>
-            <p>{{ portfolio.content }}</p>
-            <p>Price: {{ portfolio.price }}</p>
-            <p>Start Date: {{ portfolio.portfolio_start }}</p>
-            <p>End Date: {{ portfolio.portfolio_end }}</p>
-            <p>Views: {{ portfolio.show }}</p>
-            <p>Likes: {{ portfolio.like }}
+          <div class="container mt-4">
+            <div class="portfolio-detail">
+                <h1>{{ portfolio.title }}</h1>
+                <div class="portfolio-content">
+                    {{ portfolio.htmlcontent|safe }}
+                </div>
+                <p>Price: {{ portfolio.price }}</p>
+                <p>Duration: {{ portfolio.get_duration }}</p>
+                <p>Start Date: {{ portfolio.portfolio_start }}</p>
+                <p>End Date: {{ portfolio.portfolio_end }}</p>
+                <p>Views: {{ portfolio.show }}</p>
+                <p>Likes: {{ portfolio.like }}</p>
+               
+            </div>
+            
+        </div>
+            
                 <form action="{% url 'portfolio_detail' portfolio.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary">Like</button>
                 </form>
             </p>
 
-            <h2>Images</h2>
-            {% for image in portfolio.images.all %}
-                <img src="{{ image.image.url }}" alt="Portfolio Image" class="img-fluid">
-            {% endfor %}
+           
 
-            {% for video in portfolio.videos.all %}
-                <video controls class="img-fluid">
-                    <source src="{{ video.video.url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            {% endfor %}
-
-            <div class="action-buttons">
-                <!-- Edit Button -->
-                <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
-                <!-- Delete Button -->
-                <form action="{% url 'delete_portfolio' portfolio.id %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    <!-- <button type="submit" class="btn btn-danger" hx-confirm="정말로 삭제하시겠습니까?" >Delete</button> -->
-                </form>
-            </div>
-          </div>
-          <!-- / Content -->
-        </div>
-        <!-- Content wrapper -->
-      </div>
-      <!-- / Layout page -->
+{% if portfolio.expert == request.user %}
+    <div class="action-buttons">
+        <!-- Edit Button -->
+        <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
+        <!-- Delete Button -->
+        <form action="{% url 'delete_portfolio' portfolio.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
     </div>
-
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle"></div>
-  </div>
-{% endblock %}
-
-{% block vendor_js %}
-  <script src="{% static 'vendor/libs/bootstrap/bootstrap.js' %}"></script>
-{% endblock %}
-
-{% block page_js %}
-  <!-- Page specific JavaScript files can be included here -->
+{% endif %}
+          
 {% endblock %}
