@@ -14,44 +14,29 @@
         
           <!-- Content -->
 
-          
-            <h1>{{ portfolio.title }}</h1>
-            <!-- Removed <p>{{ portfolio.content }}</p> and replaced with the following loop -->
-            {% for portfolio in portfolios %}
-                <div class="portfolio">
-                  <h2>{{ portfolio.title }}</h2>
-                  <!-- PortfolioEditor의 htmlcontent를 출력합니다. -->
-                  {% for editor in portfolio.editors.all %}
-                    <div class="editor-content">
-                      {{ editor.htmlcontent|safe }}  <!-- HTML이 렌더링되도록 safe 필터를 사용합니다. -->
-                    </div>
-                  {% endfor %}
+          <div class="container mt-4">
+            <div class="portfolio-detail">
+                <h1>{{ portfolio.title }}</h1>
+                <div class="portfolio-content">
+                    {{ portfolio.htmlcontent|safe }}
                 </div>
-              {% empty %}
-                <p>No portfolios available.</p>
-              {% endfor %}
-            <p>Price: {{ portfolio.price }}</p>
-            <p>Start Date: {{ portfolio.portfolio_start }}</p>
-            <p>End Date: {{ portfolio.portfolio_end }}</p>
-            <p>Views: {{ portfolio.show }}</p>
-            <p>Likes: {{ portfolio.like }}
+                <p>Price: {{ portfolio.price }}</p>
+                <p>Duration: {{ portfolio.get_duration }}</p>
+                <p>Start Date: {{ portfolio.portfolio_start }}</p>
+                <p>End Date: {{ portfolio.portfolio_end }}</p>
+                <p>Views: {{ portfolio.show }}</p>
+                <p>Likes: {{ portfolio.like }}</p>
+               
+            </div>
+        </div>
+            
                 <form action="{% url 'portfolio_detail' portfolio.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary">Like</button>
                 </form>
             </p>
 
-            <h2>Images</h2>
-            {% for image in portfolio.images.all %}
-                <img src="{{ image.image.url }}" alt="Portfolio Image" class="img-fluid">
-            {% endfor %}
-
-            {% for video in portfolio.videos.all %}
-                <video controls class="img-fluid">
-                    <source src="{{ video.video.url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            {% endfor %}
+           
 
             <div class="action-buttons">
                 <!-- Edit Button -->

@@ -282,3 +282,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'width': '50%',
     'height': 600,
 }
+
+
+TINYMCE_JS_URL = 'https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js'
+TINYMCE_COMPRESSOR = False

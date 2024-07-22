@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
 {% block vendor_css %}
@@ -8,65 +7,28 @@
 <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
 {% endblock %}
 
-
-
 {% block content %}
 
 {% include 'partials/navbar.html' %}
+  <a href="{% url 'create_portfolio' %}" class="btn btn-primary">글쓰기</a>
 
-        <div class="content-wrapper">
+<div class="container mt-4">
+  {% for portfolio in portfolios %}
+    <div class="card" style="width: 18rem; margin-bottom: 20px;">
+      <div class="card-body">
+        <h5 class="card-title">{{ portfolio.title }}</h5>
+        <p class="card-text">Show: {{ portfolio.show }}</p>
+        <p class="card-text">Likes: {{ portfolio.like }}</p>
+        <a href="{% url 'portfolio_detail' portfolio.id %}" class="btn btn-primary">View Portfolio</a>
+      </div>
+    </div>
+  {% empty %}
+    <p>No portfolios available.</p>
+  {% endfor %}
+</div>
 
-          <div class="container-xxl flex-grow-1 container-p-y">
-            
-              
-              <h4 class="fw-bold"><span class="text-muted fw-light">Portfolios /</span> Overview</h4>
-              <a href="{% url 'create_portfolio' %}" class="btn btn-primary" style="background-color: purple; border-color: purple;">글쓰기</a>
-            
-            <!-- Portfolios list -->
-            <div class="row justify-content-center">
-              {% for portfolio in portfolios %}
-                
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title"><a href="{% url 'portfolio_detail' portfolio.id %}" class="text-body">{{ portfolio.title }}</a></h5>
-                      <p class="card-text">{{ portfolio.description }}</p>
-                      <!-- Additional information can go here -->
-                    </div>
-                  </div>
-                
-              {% empty %}
-                <div class="col-24">
-                  <p>No portfolios available.</p>
-                </div>
-              {% endfor %}
-            </div>
-            <!-- /Portfolios list -->
-
-            <!-- Pagination -->
-            <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                {% if portfolios.has_previous %}
-                  <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-                  <li class="page-item"><a class="page-link" href="?page={{ portfolios.previous_page_number }}">Previous</a></li>
-                {% endif %}
-                
-                <li class="page-item disabled"><a class="page-link">Page {{ portfolios.number }} of {{ portfolios.paginator.num_pages }}</a></li>
-                
-                {% if portfolios.has_next %}
-                  <li class="page-item"><a class="page-link" href="?page={{ portfolios.next_page_number }}">Next</a></li>
-                  <li class="page-item"><a class="page-link" href="?page={{ portfolios.paginator.num_pages }}">Last</a></li>
-                {% endif %}
-              </ul>
-            </nav>
-            <!-- /Pagination -->
-          </div>
-          <!-- / Content -->
-        </div>
-        <!-- Content wrapper -->
-      
-    
-    
-  
 {% endblock %}
+
+
 
 
