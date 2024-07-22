@@ -1,0 +1,38 @@
+{% if message.author == user %}
+  <li class="chat-message chat-message-right">
+    <div class="d-flex overflow-hidden">
+      <div class="chat-message-wrapper flex-grow-1">
+        <div class="chat-message-text">
+          <p class="mb-0">{{ message.body }}</p>
+        </div>
+        <div class="text-end text-muted mt-1">
+          <i class="ti ti-checks ti-16px text-success me-1"></i>
+          <small>10:00 AM</small>
+        </div>
+      </div>
+      <div class="user-avatar flex-shrink-0 ms-4">
+        <div class="avatar avatar-sm">
+          <img src="{{ message.author.profile_picture }}" alt="Avatar" class="rounded-circle" />
+        </div>
+      </div>
+    </div>
+  </li>
+{% else %}
+  <li class="chat-message">
+    <div class="d-flex overflow-hidden">
+      <div class="user-avatar flex-shrink-0 me-4">
+        <div class="avatar avatar-sm">
+          <img src="{{ message.author.profile_picture }}" alt="Avatar" class="rounded-circle" />
+        </div>
+      </div>
+      <div class="chat-message-wrapper flex-grow-1">
+        <div class="chat-message-text">
+          <p class="mb-0">{{ message.body }}</p>
+        </div>
+        <div class="text-muted mt-1">
+          <small>10:02 AM</small>
+        </div>
+      </div>
+    </div>
+  </li>
+{% endif %}

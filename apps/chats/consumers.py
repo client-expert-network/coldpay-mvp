@@ -1,6 +1,6 @@
-from django.shortcuts import get_object_or_404
 from channels.generic.websocket import WebsocketConsumer
 from django.template.loader import render_to_string
+from django.shortcuts import get_object_or_404
 from asgiref.sync import async_to_sync
 from .models import *
 import json
@@ -22,7 +22,7 @@ class ChatRoomConsumer(WebsocketConsumer):
 
         self.accept()
 
-    def disconnect(self, code):
+    def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
             self.chatroom_name, self.channel_name
         )
@@ -31,12 +31,14 @@ class ChatRoomConsumer(WebsocketConsumer):
             self.chatroom.users_online.remove(self.user)
             self.update_online_count()
 
-    def receive(self, text_data=None, bytes_data=None):
+    def receive(self, text_data):
         text_data_json = json.loads(text_data)
         body = text_data_json["body"]
 
         message = GroupMessage.objects.create(
-            body=body, author=self.user, group=self.chatroom
+            body=body,
+            author=self.user,
+            group=self.chatroom,
         )
 
         event = {
@@ -44,30 +46,41 @@ class ChatRoomConsumer(WebsocketConsumer):
             "message_id": message.id,
         }
 
-        async_to_sync(self.channel_layer.group_send)(self.chatroom_name, event)
+        async_to_sync(self.channel_layer.group_send)(
+            self.chatroom_name,
+            event,
+        )
 
     def message_handler(self, event):
         message_id = event["message_id"]
         message = GroupMessage.objects.get(id=message_id)
-        context = {"message": message, "user": self.user}
-
-        html = render_to_string(
-            "chats/partials/chat_message_partial.html", context=context
-        )
+        context = {
+            "message": message,
+            "user": self.user,
+        }
+        html = render_to_string("chats/partials/chat_message_p.html", context)
 
         self.send(text_data=html)
 
     def update_online_count(self):
+
         online_count = self.chatroom.users_online.count() - 1
 
-        event = {"type": "online_count_handler", "online_count": online_count}
+        event = {
+            "type": "online_count_handler",
+            "online_count": online_count,
+        }
 
-        async_to_sync(self.channel_layer.group_send)(self.chatroom_name, event)
+        async_to_sync(self.channel_layer.group_send)(
+            self.chatroom_name,
+            event,
+        )
 
     def online_count_handler(self, event):
         online_count = event["online_count"]
-
-        context = {"online_count": online_count, "chat_group": self.chatroom}
-
-        html = render_to_string("chats/partials/online_count.html", context=context)
+        context = {
+            "online_count": online_count,
+            "chatroom": self.chatroom,
+        }
+        html = render_to_string("chats/partials/online_count.html", context)
         self.send(text_data=html)

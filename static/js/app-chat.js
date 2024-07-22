@@ -67,6 +67,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     scrollToBottom();
 
+    const socket = new WebSocket('ws://' + window.location.host + `/ws/chatroom/${chatroomName}`);
+
+    socket.onmessage = function (e) {
+      // const data = e.data
+      // // console.log(data);
+      // const messageContainer = document.getElementById('chat_messages');
+      // messageContainer.innerHTML += data;
+      // console.log('asd') // 서버에서 받은 메시지를 추가
+      // htmx로 메시지 추가했기 때문에 메시지 추가는 필요 없음
+      setTimeout(scrollToBottom, 200); // 메시지 추가 후 잠시 기다린 후 스크롤 이동
+    };
+
+
     // User About Maxlength Init
     if (chatSidebarLeftUserAbout.length) {
       chatSidebarLeftUserAbout.maxlength({
@@ -155,19 +168,23 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
-    // Send Message
     formSendMessage.addEventListener('submit', e => {
-      e.preventDefault();
-      if (messageInput.value) {
-        // Create a div and add a class
-        let renderMsg = document.createElement('div');
-        renderMsg.className = 'chat-message-text mt-2';
-        renderMsg.innerHTML = '<p class="mb-0 text-break">' + messageInput.value + '</p>';
-        document.querySelector('li:last-child .chat-message-wrapper').appendChild(renderMsg);
-        messageInput.value = '';
-        scrollToBottom();
-      }
+      setTimeout(scrollToBottom, 100)
     });
+
+    // // Send Message
+    // formSendMessage.addEventListener('submit', e => {
+    //   e.preventDefault();
+    //   if (messageInput.value) {
+    //     // Create a div and add a class
+    //     let renderMsg = document.createElement('div');
+    //     renderMsg.className = 'chat-message-text mt-2';
+    //     renderMsg.innerHTML = '<p class="mb-0 text-break">' + messageInput.value + '</p>';
+    //     document.querySelector('li:last-child .chat-message-wrapper').appendChild(renderMsg);
+    //     messageInput.value = '';
+    //     scrollToBottom();
+    //   }
+    // });
 
     // on click of chatHistoryHeaderMenu, Remove data-overlay attribute from chatSidebarLeftClose to resolve overlay overlapping issue for two sidebar
     let chatHistoryHeaderMenu = document.querySelector(".chat-history-header [data-target='#app-chat-contacts']"),
@@ -178,31 +195,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // }
 
     // Speech To Text
-    if (speechToText.length) {
-      var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-      if (SpeechRecognition !== undefined && SpeechRecognition !== null) {
-        var recognition = new SpeechRecognition(),
-          listening = false;
-        speechToText.on('click', function () {
-          const $this = $(this);
-          recognition.onspeechstart = function () {
-            listening = true;
-          };
-          if (listening === false) {
-            recognition.start();
-          }
-          recognition.onerror = function (event) {
-            listening = false;
-          };
-          recognition.onresult = function (event) {
-            $this.closest('.form-send-message').find('.message-input').val(event.results[0][0].transcript);
-          };
-          recognition.onspeechend = function (event) {
-            listening = false;
-            recognition.stop();
-          };
-        });
-      }
-    }
+    // if (speechToText.length) {
+    //   var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    //   if (SpeechRecognition !== undefined && SpeechRecognition !== null) {
+    //     var recognition = new SpeechRecognition(),
+    //       listening = false;
+    //     speechToText.on('click', function () {
+    //       const $this = $(this);
+    //       recognition.onspeechstart = function () {
+    //         listening = true;
+    //       };
+    //       if (listening === false) {
+    //         recognition.start();
+    //       }
+    //       recognition.onerror = function (event) {
+    //         listening = false;
+    //       };
+    //       recognition.onresult = function (event) {
+    //         $this.closest('.form-send-message').find('.message-input').val(event.results[0][0].transcript);
+    //       };
+    //       recognition.onspeechend = function (event) {
+    //         listening = false;
+    //         recognition.stop();
+    //       };
+    //     });
+    //   }
+    // }
   })();
 });
