@@ -1,6 +1,6 @@
 from django import forms
 from .models import Portfolio
-from tinymce.widgets import TinyMCE
+
 
 class PortfolioForm(forms.ModelForm):   
 

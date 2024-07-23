@@ -1,13 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import F
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from .forms import PortfolioForm
 from apps.portfolios.models import Portfolio, PortfolioImage, PortfolioVideo
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.urls import reverse
+from django.views.decorators.clickjacking import xframe_options_exempt
+
 
 User = get_user_model()
 
@@ -45,7 +48,7 @@ def create_portfolio(request):
         form = PortfolioForm()
     return render(request, "portfolios/create_portfolio.html", {"form": form})
 
-
+@xframe_options_exempt
 @require_http_methods(["GET"])
 def get_portfolios(request):
     page = request.GET.get("page", 1)
@@ -72,13 +75,11 @@ def get_top_portfolios(request):
         {"portfolios": top_portfolios},
     )
 
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
 
+@xframe_options_exempt
 @require_http_methods(["GET", "POST"])  
 def portfolio_detail(request, portfolio_id):    # 게시물 READ
-    # 특정 Portfolio 객체를 가져옴
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
 
     if request.method == "POST":
@@ -106,14 +107,13 @@ def portfolio_detail(request, portfolio_id):    # 게시물 READ
 
         return render(request, "portfolios/portfolio_detail.html", {"portfolio": portfolio})
 
-
+@xframe_options_exempt
 @require_http_methods(["GET", "POST"])  # 게시물 UPDATE 수정
 def update_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
     
     # 현재 접근한 user가 Portfolio의 작성자와 동일한지 확인
     if portfolio.expert != request.user:
-        # 권한이 없는 경우의 처리를 변경
         context = {
             'message': "편집 권한이 없습니다!"
         }
@@ -130,13 +130,13 @@ def update_portfolio(request, portfolio_id):
     context = {
         'form': form,
         'portfolio': portfolio,
-        'TINYMCE_API_KEY': settings.TINYMCE_API_KEY  # TINYMCE_API_KEY를 context에 추가
+        'TINYMCE_API_KEY': settings.TINYMCE_API_KEY,  # TINYMCE_API_KEY를 context에 추가
     }
     
     return render(request, 'portfolios/update_portfolio.html', context)
 
 
-
+@xframe_options_exempt
 @require_http_methods(["POST"])  # 게시물 DELETE
 def delete_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)

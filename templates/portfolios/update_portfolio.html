@@ -5,48 +5,6 @@
 <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-
-
-<script src="https://cdn.tiny.cloud/1/{{TINYMCE_API_KEY}}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-
-<script>
-    tinymce.init({
-      selector: '#htmlcontent',
-      cleanup_on_startup: true,
-      custom_undo_redo_levels: 20,
-      theme: 'silver',
-      plugins: `
-          advlist autolink lists link image charmap print preview hr anchor
-          pagebreak searchreplace wordcount visualblocks visualchars code
-          fullscreen insertdatetime media nonbreaking save table contextmenu
-          directionality emoticons template paste textcolor colorpicker textpattern codesample
-      `,
-      toolbar1: `
-          fullscreen preview bold italic underline | fontselect,
-          fontsizeselect | forecolor backcolor | alignleft alignright |
-          aligncenter alignjustify | indent outdent | bullist numlist table |
-          | link image media | codesample
-      `,
-      toolbar2: `
-          visualblocks visualchars | charmap emoticons | insertdatetime
-          | hr nonbreaking | template | pagebreak restoredraft | code
-      `,
-      fontsize_formats: "8pt 9pt 10pt 11pt 12pt 13pt 14pt 15pt 16pt 17pt 18pt 24pt 36pt",
-      contextmenu: 'formats | link image',
-      menubar: true,
-      statusbar: true,
-      theme_advanced_resizing: true,
-      image_class_list: [{title: "Fluid", value: 'img-fluid', style: {}}],
-      image_caption: true,
-      width: '100%',
-      height: 1000,
-      toolbar_mode: 'floating',
-    });
-  </script>
-
-
-
 
 {% endblock %}
 
@@ -54,27 +12,12 @@
 <div class="container mt-4">
     <h2>Edit Portfolio</h2>
     <form action="{% url 'update_portfolio' portfolio.id %}" method="post" enctype="multipart/form-data">
+        {{ form.media }}
         {% csrf_token %}
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" name="title" value="{{ portfolio.title }}" required>
-        </div>
-        <div class="form-group">
-            <label for="htmlcontent">Content</label>
-            <textarea class="form-control" id="htmlcontent" name="htmlcontent" rows="30" required>{{ portfolio.htmlcontent }}</textarea>
-        </div>
-        <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" name="price" value="{{ portfolio.price }}" required>
-        </div>
-        <div class="form-group">
-            <label for="portfolio_start">Start Date</label>
-            <input type="datetime-local" class="form-control" id="portfolio_start" name="portfolio_start" value="{{ portfolio.portfolio_start|date:"Y-m-d\TH:i" }}" required>
-        </div>
-        <div class="form-group">
-            <label for="portfolio_end">End Date</label>
-            <input type="datetime-local" class="form-control" id="portfolio_end" name="portfolio_end" value="{{ portfolio.portfolio_end|date:"Y-m-d\TH:i" }}" required>
-        </div>
+        {{ form.as_p }}
+        
+
+        
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </div>
