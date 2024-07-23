@@ -36,45 +36,39 @@ def get_services(request):
 def get_service(request, service_id):
     service = Service.objects.get(id=service_id)
     serializers = ServiceSerializer(service)
-    reviews = Review.objects.filter(service=service)
+    reviews = Review.objects.filter(service=service).select_related("author")
     reviews_with_comments = []
+    seller_email = service.seller.email
     for review in reviews:
         comments = ReviewComment.objects.filter(review_id=review.id)
-        reviews_with_comments.append({"review": review, "comments": comments})
-        print(reviews_with_comments)
-    # reviews_data = [model_to_dict(review) for review in reviews]
-    # reviews_with_comments_data = [{"review": model_to_dict(review_with_comment["review"]), "comments": [model_to_dict(comment) for comment in review_with_comment["comments"]]} for review_with_comment in reviews_with_comments]
-    # return JsonResponse({"service": serializers.data, "reviews": reviews_data, "reviews_with_comments": reviews_with_comments_data})
+        author_username = review.author.username
+        reviews_with_comments.append({"review": review, "comments": comments, "author_username": author_username})
     return render(request, "services/service_detail.html", {
-        "service": serializers.data, "reviews": reviews, "reviews_with_comments": reviews_with_comments})
+        "service": serializers.data, "reviews": reviews, "reviews_with_comments": reviews_with_comments, "seller_email": seller_email})
 
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 @login_required
 def create_service(request):
     if request.method == 'POST':
-        service_form = CreateServiceForm(request.POST)
-        price_option_form = PriceOptionForm(request.POST)
-        if service_form.is_valid() and price_option_form.is_valid():
-            user = User.objects.get(email=request.user)
-            category_detail = service_form.cleaned_data["category_detail"]
-            created_service = Service.objects.create(
-                seller=user,
-                service_name=service_form.cleaned_data["service_name"],
-                category_detail=category_detail,
-            )
-            PriceOption.objects.create(
-                service=created_service,
-                price=price_option_form.cleaned_data["price"],
-                price_option_name=price_option_form.cleaned_data["price_option_name"],
-                description=price_option_form.cleaned_data["description"],
-            )
-            return redirect("services:get_all_services")
+        user = User.objects.get(email=request.user)
+        category_detail = CategoryDetail.objects.get(id=request.POST["category_detail"])
+        created_service = Service.objects.create(
+            seller=user,
+            service_name=request.POST["service_name"],
+            category_detail=category_detail,
+        )
+        PriceOption.objects.create(
+            service=created_service,
+            price=request.POST["price"],
+            price_option_name=request.POST["price_option_name"],
+            description=request.POST["description"],
+        )
+        return redirect("services:get_all_services")
 
     else:
-        service_form = CreateServiceForm()
-        price_option_form = PriceOptionForm()
-    return render(request, "services/create_service.html", {"service_form": service_form, "price_option_form": price_option_form})
+        category_detail = CategoryDetail.objects.all()
+    return render(request, "services/create_service.html", {"category_detail": category_detail})
 
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
@@ -83,28 +77,22 @@ def update_service(request, service_id):
     user = User.objects.get(email=request.user)
     service = get_object_or_404(Service, id=service_id, seller=user)
     price_option = get_object_or_404(PriceOption, service=service)
+    category_detail = CategoryDetail.objects.all()
 
     if request.method == 'POST':
-        service_form = CreateServiceForm(request.POST, prefix="service", instance=service)
-        price_option_forms = PriceOptionForm(request.POST, prefix="price_option", instance=price_option)
-
-        if service_form.is_valid() and price_option_forms.is_valid():
-            service = service_form.save(commit=False)
-            service.seller= user
-            service.save()
-            price_option = price_option_forms.save(commit=False)
-            price_option.service = service
-            price_option.save()
-            return redirect("get_service", service_id=service.id)
+        service.service_name = request.POST["service_name"]
+        service.seller = user
+        service.save()
+        price_option.price = request.POST["price"]
+        price_option.price_option_name = request.POST["price_option_name"]
+        price_option.description = request.POST["description"]
+        price_option.save()
+        return redirect("services:get_service", service_id=service.id)
         
     else:
-        service_initial_data = {'service_name': service.service_name, 'category_detail': service.category_detail.id}
-        service_form = CreateServiceForm(initial=service_initial_data, prefix="service")
-        price_option_forms = PriceOptionForm(prefix="price_option", instance=price_option)
- 
-    return render(request, "services/update_service.html", {"service_form": service_form, "service": service, "price_option_forms": price_option_forms})
+        return render(request, "services/update_service.html", {"service": service, "price_option": price_option, "category_detail": category_detail})
 
-@require_http_methods(["POST", "DELETE"])
+@require_http_methods(["GET", "POST", "DELETE"])
 @login_required
 def delete_service(request, service_id):
     user = User.objects.get(email=request.user)
@@ -112,11 +100,11 @@ def delete_service(request, service_id):
     if service.seller != user:
         # 메시지가 안 뜸...
         messages.error(request, "You are not the owner of this service.")
-        return redirect("get_all_services")
+        return redirect("services:get_all_services")
     # 메시지가 안 뜨는 문제
     messages.success(request, "Service deleted successfully.")
     service.delete()
-    return redirect("get_all_services")
+    return redirect("services:get_all_services")
 
 
 @require_http_methods(["GET"])
@@ -146,10 +134,11 @@ def create_review(request, service_id):
                 author=user,
                 content=review_form.cleaned_data["content"],
             )
-            return redirect("get_service", service_id=service.id)
+            return redirect("services:get_service", service_id=service.id)
     else:
+        service = get_object_or_404(Service, id=service_id)
         review_form = CreateReviewForm()
-    return render(request, "services/create_review.html", {"review_form": review_form})
+    return render(request, "services/create_review.html", {"review_form": review_form, "service": service})
 
 @csrf_exempt   
 @require_http_methods(["GET", "POST"])
@@ -177,7 +166,7 @@ def delete_review(request, review_id):
     if review.author != user:
         return JsonResponse({"message": "You are not the owner of this review"}, safe=False, status=403)
     review.delete()
-    return redirect("get_service", service_id=review.service.id)
+    return redirect("services:get_service", service_id=review.service.id)
 
 
 @require_http_methods(["GET"])

@@ -33,6 +33,11 @@
                       <div class="me-1">
                         <h5 class="mb-0">{{ service.service_name }}</h5>
                         <p class="mb-0">Prof. <span class="fw-medium text-heading"> {{ service.seller_name }} </span></p>
+                        {% if request.user.email == seller_email %}
+                            <a href="{% url 'services:update_service' service_id=service.id %}" class="btn btn-outline-primary btn-sm mt-4">Update</a>
+                            <a href="{% url 'services:delete_service' service_id=service.id %}" class="btn btn-outline-danger btn-sm mt-4">Delete</a>
+                        {% endif %}
+                      
                       </div>
                       <div class="d-flex align-items-center">
                         <span class="badge bg-label-danger">{{ service.category_detail_name }}</span>
@@ -56,50 +61,28 @@
                         </div>
                       </div>
                       <div class="card-body pt-4">
-                        <h5>About this service</h5>
-                        <p class="mb-0">
-                          Learn web design in 1 hour with 25+ simple-to-use rules and guidelines — tons of amazing web
-                          design resources included!
-                        </p>
-                        <hr class="my-6" />
-                        <h5>By the numbers</h5>
+                        <h5>About this Service</h5>
                         <div class="d-flex flex-wrap row-gap-2">
                           <div class="me-12">
                             <p class="text-nowrap mb-2">
-                              <i class="ti ti-check me-2 align-bottom"></i>Skill level: All Levels
+                              <i class="ti ti-check me-2 align-bottom"></i>세부 카테고리 : {{ service.category_detail_name }}
                             </p>
-                            <p class="text-nowrap mb-2"><i class="ti ti-users me-2 align-top"></i>Students: 38,815</p>
+                            <p class="text-nowrap mb-2"><i class="ti ti-users me-2 align-top"></i>가격 : {{ service.price_options.0.price }}￦</p>
                             <p class="text-nowrap mb-2">
-                              <i class="ti ti-world me-2 align-bottom"></i>Languages: English
+                              <i class="ti ti-world me-2 align-bottom"></i>Price Option Name : {{ service.price_options.0.price_option_name }}
                             </p>
-                            <p class="text-nowrap mb-0"><i class="ti ti-file me-2 align-bottom"></i>Captions: Yes</p>
+                            <p class="text-nowrap mb-0"><i class="ti ti-file me-2 align-bottom"></i>아이콘은 아직 수정 안 했습니다.</p>
                           </div>
                           <div>
                             <p class="text-nowrap mb-2">
-                              <i class="ti ti-video me-2 align-top ms-50"></i>Lectures: 19
+                              <i class="ti ti-video me-2 align-top ms-50"></i>Likes : {{ service.likes }}
                             </p>
                             <p class="text-nowrap mb-0">
-                              <i class="ti ti-clock me-2 align-top"></i>Video: 1.5 total hours
+                              <i class="ti ti-clock me-2 align-top"></i>Seller : {{ service.seller_name }}
                             </p>
                           </div>
                         </div>
-                        <hr class="my-6" />
-                        <h5>Description</h5>
-                        <p class="mb-6">
-                          The material of this service is also covered in my other service about web design and
-                          development with HTML5 & CSS3. Scroll to the bottom of this page to check out that service,
-                          too! If you're already taking my other service, you already have all it takes to start
-                          designing beautiful websites today!
-                        </p>
-                        <p class="mb-6">
-                          "Best web design service: If you're interested in web design, but want more than just a "how
-                          to use WordPress" service,I highly recommend this one." — Florian Giusti
-                        </p>
-                        <p>
-                          "Very helpful to us left-brained people: I am familiar with HTML, CSS, JQuery, and Twitter
-                          Bootstrap, but I needed instruction in web design. This service gave me practical, impactful
-                          techniques for making websites more beautiful and engaging." — Susan Darlene Cain
-                        </p>
+
                         <hr class="my-6" />
                         <h5>Instructor</h5>
                         <div class="d-flex justify-content-start align-items-center user-name">
@@ -113,6 +96,34 @@
                             <small>Web Developer, Designer, and Teacher</small>
                           </div>
                         </div>
+
+                        <hr class="my-6" />
+                        <h5>Price Description</h5>
+                        <p class="mb-6">
+                          {{ service.price_options.0.description }}
+                        </p>
+
+                        <hr class="my-6" />
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                          <h5>Reviews</h5>
+                          <div>
+                              <a href="{% url 'services:create_review' service_id=service.id %}" class="btn btn-outline-primary">Create a Review</a>
+                          </div>
+                      </div>
+                        {% for review in reviews_with_comments %}
+                        <div class="d-flex justify-content-start align-items-center user-name mb-6">
+                          <div class="avatar-wrapper">
+                            <div class="avatar me-4">
+                              <img src="../../assets/img/avatars/11.png" alt="Avatar" class="rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="d-flex flex-column">
+                            <h6 class="mb-1">{{ review.author_username }}</h6>
+                            <small>{{ review.review.content }}</small>
+                          </div>
+                        </div>
+                        {% endfor %}
+
                       </div>
                     </div>
                   </div>

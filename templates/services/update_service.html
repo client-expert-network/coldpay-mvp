@@ -1,20 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Update Service</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gradient-to-br from-pink-50 to-indigo-100 p-8">
-    <h2 class="font-semibold text-xl leading-6 text-gray-700 my-2">Update Service</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ service_form.as_p }}
-        <div class="price-option-form">
-            {{ price_option_forms.as_p }}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block vendor_css %}
+  <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
+{% endblock %}
+
+{% block page_css %}
+  <link rel="stylesheet" href="{% static 'vendor/css/pages/page-profile.css' %}" />
+{% endblock %}
+
+{% block content %}
+  {% include 'partials/navbar.html' %}
+<!-- Layout wrapper -->
+<div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+    <div class="layout-container">
+
+
+          <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card">
+                <h3 class="card-header">Update Service</h3>
+                <div class="card-body">
+                    <form method="post" action="{% url 'services:update_service' service_id=service.id%}">
+                        {% csrf_token %}
+                            <div class="mb-4">
+                                <label for="serviceName" class="form-label">Service Name</label>
+                                <input type="text" class="form-control" id="serviceName" name="service_name" aria-describedby="serviceNameHelp" value="{{ service.service_name }}" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="categoryDetail" class="form-label">Category Detail</label>
+                                <select id="categoryDetail" class="form-control" name="category_detail">
+                                    <option>세부 카테고리를 선택해주세요.</option>
+                                    {% for detail in category_detail %}
+                                    <option value="{{ detail.id }}" {% if service.category_detail.id == detail.id %}selected{% endif %}>{{ detail.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" class="form-control" id="price" name="price" placeholder="10000" value="{{ price_option.price }}"/>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="priceOptionName" class="form-label">Price Option Name</label>
+                                <input type="text" class="form-control" id="priceOptionName" name="price_option_name" value="{{ price_option.price_option_name }}"/>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3">{{ price_option.description }}</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                  </div>
+              </div>
+            </div>
+          <!--/ Content -->
+
+          <!-- Footer -->
+          <footer class="content-footer footer bg-footer-theme">
+            <div class="container-xxl">
+              <div
+                class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
+                <div class="text-body">
+                  ©
+                  <script>
+                    document.write(new Date().getFullYear());
+                  </script>
+                  , made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
+                </div>
+                <div class="d-none d-lg-inline-block">
+                  <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank"
+                    >License</a
+                  >
+                  <a href="https://1.envato.market/pixinvent_portfolio" target="_blank" class="footer-link me-4"
+                    >More Themes</a
+                  >
+
+                  <a
+                    href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
+                    target="_blank"
+                    class="footer-link me-4"
+                    >Documentation</a
+                  >
+
+                  <a href="https://pixinvent.ticksy.com/" target="_blank" class="footer-link d-none d-sm-inline-block"
+                    >Support</a
+                  >
+                </div>
+              </div>
+            </div>
+          </footer>
+          <!-- / Footer -->
+
+          <div class="content-backdrop fade"></div>
         </div>
-        <button type="submit">Save Changes</button>
-    </form>
-    <button onclick="location.href='{% url 'get_service' service.id %}'">Cancel</button>
-</body>
-</html>
+        <!--/ Content wrapper -->
+      </div>
+
+      <!--/ Layout container -->
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="layout-overlay layout-menu-toggle"></div>
+
+  <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+  <div class="drag-target"></div>
+
+  <!--/ Layout wrapper -->
+{% endblock %}
+
+{% block vendor_js %}
+  <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+{% endblock %}
+
+{% block page_js %}
+  <script src="{% static 'js/pages-profile.js' %}"></script>
+{% endblock %}
