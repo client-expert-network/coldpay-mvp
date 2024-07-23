@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Service</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-pink-50 to-indigo-100 p-8">
+    <h2 class="font-semibold text-xl leading-6 text-gray-700 my-2">Update Service</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ service_form.as_p }}
+        <div class="price-option-form">
+            {{ price_option_forms.as_p }}
+        </div>
+        <button type="submit">Save Changes</button>
+    </form>
+    <button onclick="location.href='{% url 'get_service' service.id %}'">Cancel</button>
+</body>
+</html>
