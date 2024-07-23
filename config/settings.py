@@ -32,10 +32,10 @@ else:
 
 ALLOWED_HOSTS = ["*"]
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-    "localhost:8000",
-]
+# INTERNAL_IPS = [
+#     "127.0.0.1",
+#     "localhost:8000",
+# ]
 
 SITE_ID = 1
 APPEND_SLASH = True
@@ -44,7 +44,7 @@ APPEND_SLASH = True
 
 INSTALLED_APPS = [
     "daphne",
-    'tinymce',
+    "tinymce",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -71,6 +71,7 @@ DJANGO_APPS = [
     "apps.portfolios",
     "apps.profiles",
     "apps.payment",
+    "apps.services",
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + DJANGO_APPS
@@ -251,45 +252,55 @@ LOGOUT_REDIRECT_URL = "/"
 # CSRF 세팅하기
 
 
+# Channels 레이어
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    }
+}
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [(config("REDIS_URL"))],
+#         },
+#     },
+# }
+
+
 # Tinymce 세팅 / 에디터 메뉴바 설정
 TINYMCE_DEFAULT_CONFIG = {
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 20,
-    'selector': 'textarea',
-    'theme': 'silver',
-    'plugins': '''
+    "cleanup_on_startup": True,
+    "custom_undo_redo_levels": 20,
+    "selector": "textarea",
+    "theme": "silver",
+    "plugins": """
         advlist autolink lists link image charmap print preview hr anchor
         pagebreak searchreplace wordcount visualblocks visualchars code
         fullscreen insertdatetime media nonbreaking save table contextmenu
         directionality emoticons template paste textcolor colorpicker textpattern codesample
-    ''',
-    'toolbar1': '''
+    """,
+    "toolbar1": """
         fullscreen preview bold italic underline | fontselect,
         fontsizeselect | forecolor backcolor | alignleft alignright |
         aligncenter alignjustify | indent outdent | bullist numlist table |
         | link image media | codesample
-    ''',
-    'toolbar2': '''
+    """,
+    "toolbar2": """
         visualblocks visualchars | charmap emoticons | insertdatetime
         | hr nonbreaking | template | pagebreak restoredraft | code
-    ''',
-    'fontsize_formats': "8pt 9pt 10pt 11pt 12pt 13pt 14pt 15pt 16pt 17pt 18pt 24pt 36pt",
-    'contextmenu': 'formats | link image',
-    'menubar': True,
-    'statusbar': True,
-    'theme_advanced_resizing': True,
-    'image_class_list' : [{'title':"Fluid",'value':'img-fluid','style':{} }],
-    'image_caption':True,
-    'width': '100%',
-    'height': 1000,
+    """,
+    "fontsize_formats": "8pt 9pt 10pt 11pt 12pt 13pt 14pt 15pt 16pt 17pt 18pt 24pt 36pt",
+    "contextmenu": "formats | link image",
+    "menubar": True,
+    "statusbar": True,
+    "theme_advanced_resizing": True,
+    "image_class_list": [{"title": "Fluid", "value": "img-fluid", "style": {}}],
+    "image_caption": True,
+    "width": "100%",
+    "height": 1000,
 }
 
-
-import os
-from dotenv import load_dotenv
-
-# Load .env file
-load_dotenv()
-
 # Accessing variables
-TINYMCE_API_KEY = os.getenv('TINYMCE_API_KEY')
+TINYMCE_API_KEY = config("TINYMCE_API_KEY")

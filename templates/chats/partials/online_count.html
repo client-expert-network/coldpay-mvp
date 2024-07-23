@@ -1,0 +1,16 @@
+<span id="online-count" hx-swap-oob="">{{ online_count }}</span>
+
+{% for user in chatroom.users_online.all %}
+  {% if user != request.user %}
+    <div id="conv-user"
+      hx-swap-oob="true"
+      loading="lazy"
+      class="flex-shrink-0 avatar {% if online_count %}
+        avatar-online
+      {% else %}
+        avatar-offline
+      {% endif %}">
+      <img src="{{ user.profile_picture }}" alt="{{ user.username }}" class="rounded-circle" data-bs-toggle="sidebar" data-overlay data-target="#app-chat-sidebar-right" />
+    </div>
+  {% endif %}
+{% endfor %}
