@@ -2,88 +2,43 @@
 {% load static %}
 
 {% block vendor_css %}
-  <link rel="stylesheet" href="{% static 'vendor/libs/bootstrap/bootstrap.css' %}" />
-{% endblock %}
-
-{% block page_css %}
-  <link rel="stylesheet" href="{% static 'css/custom-styles.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
 {% endblock %}
 
 {% block content %}
-  <div class="layout-wrapper layout-content-navbar">
-    <div class="layout-container">
-      <!-- Layout container -->
-      <div class="layout-page">
-        <!-- Navbar -->
 
-        {% include 'partials/navbar.html' %}
+{% include 'partials/navbar.html' %}
 
-        <!-- / Navbar -->
+<div style="text-align: right; margin-right: 270px;">
+  <a href="{% url 'create_portfolio' %}" class="btn btn-primary" style="font-weight: medium;">글쓰기</a>
+</div>
 
-        <!-- Content wrapper -->
-        <div class="content-wrapper">
-          <!-- Content -->
-
-          <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="d-flex justify-content-between align-items-center py-3 mb-4">
-              
-              <h4 class="fw-bold"><span class="text-muted fw-light">Portfolios /</span> Overview</h4>
-              <a href="{% url 'create_portfolio' %}" class="btn btn-primary" style="background-color: purple; border-color: purple;">글쓰기</a>
-            </div>
-            <!-- Portfolios list -->
-            <div class="row">
-              {% for portfolio in portfolios %}
-                <div class="col-md-6 col-lg-4 mb-4">
-                  <div class="card">
-                    <div class="card-body">
-                      <h5 class="card-title"><a href="{% url 'portfolio_detail' portfolio.id %}" class="text-body">{{ portfolio.title }}</a></h5>
-                      <p class="card-text">{{ portfolio.description }}</p>
-                      <!-- Additional information can go here -->
-                    </div>
-                  </div>
-                </div>
-              {% empty %}
-                <div class="col-12">
-                  <p>No portfolios available.</p>
-                </div>
-              {% endfor %}
-            </div>
-            <!-- /Portfolios list -->
-
-            <!-- Pagination -->
-            <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                {% if portfolios.has_previous %}
-                  <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-                  <li class="page-item"><a class="page-link" href="?page={{ portfolios.previous_page_number }}">Previous</a></li>
-                {% endif %}
-                
-                <li class="page-item disabled"><a class="page-link">Page {{ portfolios.number }} of {{ portfolios.paginator.num_pages }}</a></li>
-                
-                {% if portfolios.has_next %}
-                  <li class="page-item"><a class="page-link" href="?page={{ portfolios.next_page_number }}">Next</a></li>
-                  <li class="page-item"><a class="page-link" href="?page={{ portfolios.paginator.num_pages }}">Last</a></li>
-                {% endif %}
-              </ul>
-            </nav>
-            <!-- /Pagination -->
+<div class="container mt-4">
+  <div class="row">
+    {% for portfolio in portfolios %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+          <!-- Assuming each portfolio has an 'image' attribute for the image URL -->
+          <div class="card-img-top" style="max-height: 350px; overflow: hidden;">
+            {{ portfolio.htmlcontent|safe }}
           </div>
-          <!-- / Content -->
+          <div class="card-body">
+            <h5 class="card-title">{{ portfolio.title }}</h5>
+            <a href="" class="card-text">{{ portfolio.expert.first_name }} {{ portfolio.expert.last_name }}</a>
+            <p class="card-text">Views: {{ portfolio.show }}</p>
+            <p class="card-text">Likes: {{ portfolio.like }}</p>
+            <a href="{% url 'portfolio_detail' portfolio.id %}" class="btn btn-outline-primary">View Portfolio</a>
+          </div>
         </div>
-        <!-- Content wrapper -->
       </div>
-      <!-- / Layout page -->
-    </div>
-
-    <!-- Overlay -->
-    <div class="layout-overlay layout-menu-toggle"></div>
+    {% empty %}
+      <div class="col-12">
+        <p>No portfolios available.</p>
+      </div>
+    {% endfor %}
   </div>
-{% endblock %}
+</div>
 
-{% block vendor_js %}
-  <script src="{% static 'vendor/libs/bootstrap/bootstrap.js' %}"></script>
-{% endblock %}
-
-{% block page_js %}
-  <!-- Page specific JavaScript files can be included here -->
 {% endblock %}
