@@ -12,7 +12,7 @@
 {% include 'partials/navbar.html' %}
 
 <div style="text-align: right; margin-top: 30px; margin-right: 270px; margin-bottom: 20px;">
-  <a href="{% url 'create_portfolio' %}" class="btn btn-primary btn-lg" style="font-weight: medium;">글쓰기</a>
+  <a href="javascript:void(0);" onclick="checkExpertStatus()" class="btn btn-primary btn-lg" style="font-weight: medium;">글쓰기</a>
 </div>
 
 <div class="container mt-4">
@@ -59,6 +59,22 @@
 </div>
 
 <script>
+  
+function checkExpertStatus() {
+  // 여기에 AJAX 요청을 추가하여 사용자가 전문가인지 확인할 수 있습니다.
+  // 예시로, 서버 측에서 사용자의 상태를 확인하는 '/api/check-expert-status' 엔드포인트가 있다고 가정합니다.
+  fetch('/portfolios/create/')
+    .then(response => response.json())
+    .then(data => {
+      if(data.is_expert) {
+        window.location.href = "{% url 'create_portfolio' %}"; // 전문가일 경우, 포트폴리오 생성 페이지로 이동
+      } else {
+        alert("전문가로 등록해야 Portfolio를 작성할 수 있습니다."); // 전문가가 아닐 경우, 경고 메시지 표시
+      }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
 function openPortfolioModal(url) {
   document.getElementById('portfolioDetailFrame').src = url;
 }

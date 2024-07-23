@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import F
-from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from .forms import PortfolioForm
@@ -15,12 +15,14 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 User = get_user_model()
 
 
-# @login_required
+@login_required
 @require_http_methods(["GET", "POST"])  # 게시물 CREATE
 def create_portfolio(request):
 
     # 전문가인지 확인하는 과정 점검 필요함
     if not request.user.is_expert:
+        if request.method == "GET":
+            return JsonResponse({"is_expert": False})
         return HttpResponseForbidden({"error": "User is not a expert"})
     
     if request.method == "GET":

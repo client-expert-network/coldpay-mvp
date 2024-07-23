@@ -18,7 +18,43 @@
         
 
         
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary" onclick="return confirm('정말로 수정하시겠습니까?');">Update</button>
+
     </form>
 </div>
 {% endblock %}
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("form");
+    form.onsubmit = function(e) {
+        e.preventDefault(); // 폼 기본 제출 방지
+
+        // 사용자 확인
+        if (confirm('정말로 수정하시겠습니까?')) {
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest', // AJAX 요청임을 나타냄
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    // 모달 닫기 로직 (모달의 ID나 클래스에 따라 달라질 수 있음)
+                    $('#fullscreenModal').modal('hide'); // Bootstrap 모달의 경우
+                    // 페이지 리디렉션 또는 새로고침
+                    window.location.reload(); // 페이지 새로고침
+                    // 또는 window.location.href = '새로운 URL'; // 페이지 리디렉션
+                } else {
+                    alert('서버에서 문제가 발생했습니다. 다시 시도해주세요.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    };
+});
+    </script>
