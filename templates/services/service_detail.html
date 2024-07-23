@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block vendor_css %}
+  <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
+{% endblock %}
+
+{% block page_css %}
+  <link rel="stylesheet" href="{% static 'vendor/css/pages/page-profile.css' %}" />
+{% endblock %}
+
+{% block content %}
+  {% include 'partials/navbar.html' %}
+<!-- Layout wrapper -->
+<div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+    <div class="layout-container">
+
+
+          <!-- Content -->
+
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="row g-6">
+              <div class="col-lg-8">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-6 gap-2">
+                      <div class="me-1">
+                        <h5 class="mb-0">{{ service.service_name }}</h5>
+                        <p class="mb-0">Prof. <span class="fw-medium text-heading"> {{ service.seller_name }} </span></p>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <span class="badge bg-label-danger">{{ service.category_detail_name }}</span>
+                        <i class="ti ti-share ti-lg mx-4"></i>
+                        <i class="ti ti-bookmarks ti-lg"></i>
+                      </div>
+                    </div>
+                    <div class="card academy-content shadow-none border">
+                      <div class="p-2">
+                        <div class="cursor-pointer">
+                          <video
+                            class="w-100"
+                            poster="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg"
+                            id="plyr-video-player"
+                            playsinline
+                            controls>
+                            <source
+                              src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
+                              type="video/mp4" />
+                          </video>
+                        </div>
+                      </div>
+                      <div class="card-body pt-4">
+                        <h5>About this service</h5>
+                        <p class="mb-0">
+                          Learn web design in 1 hour with 25+ simple-to-use rules and guidelines — tons of amazing web
+                          design resources included!
+                        </p>
+                        <hr class="my-6" />
+                        <h5>By the numbers</h5>
+                        <div class="d-flex flex-wrap row-gap-2">
+                          <div class="me-12">
+                            <p class="text-nowrap mb-2">
+                              <i class="ti ti-check me-2 align-bottom"></i>Skill level: All Levels
+                            </p>
+                            <p class="text-nowrap mb-2"><i class="ti ti-users me-2 align-top"></i>Students: 38,815</p>
+                            <p class="text-nowrap mb-2">
+                              <i class="ti ti-world me-2 align-bottom"></i>Languages: English
+                            </p>
+                            <p class="text-nowrap mb-0"><i class="ti ti-file me-2 align-bottom"></i>Captions: Yes</p>
+                          </div>
+                          <div>
+                            <p class="text-nowrap mb-2">
+                              <i class="ti ti-video me-2 align-top ms-50"></i>Lectures: 19
+                            </p>
+                            <p class="text-nowrap mb-0">
+                              <i class="ti ti-clock me-2 align-top"></i>Video: 1.5 total hours
+                            </p>
+                          </div>
+                        </div>
+                        <hr class="my-6" />
+                        <h5>Description</h5>
+                        <p class="mb-6">
+                          The material of this service is also covered in my other service about web design and
+                          development with HTML5 & CSS3. Scroll to the bottom of this page to check out that service,
+                          too! If you're already taking my other service, you already have all it takes to start
+                          designing beautiful websites today!
+                        </p>
+                        <p class="mb-6">
+                          "Best web design service: If you're interested in web design, but want more than just a "how
+                          to use WordPress" service,I highly recommend this one." — Florian Giusti
+                        </p>
+                        <p>
+                          "Very helpful to us left-brained people: I am familiar with HTML, CSS, JQuery, and Twitter
+                          Bootstrap, but I needed instruction in web design. This service gave me practical, impactful
+                          techniques for making websites more beautiful and engaging." — Susan Darlene Cain
+                        </p>
+                        <hr class="my-6" />
+                        <h5>Instructor</h5>
+                        <div class="d-flex justify-content-start align-items-center user-name">
+                          <div class="avatar-wrapper">
+                            <div class="avatar me-4">
+                              <img src="../../assets/img/avatars/11.png" alt="Avatar" class="rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="d-flex flex-column">
+                            <h6 class="mb-1">{{ service.seller_name }}</h6>
+                            <small>Web Developer, Designer, and Teacher</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sidebar -->
+              <!-- Invoice Actions -->
+              <div class="col-lg-3 col-12 invoice-actions">
+                <div class="card mb-6">
+                  <div class="card-body">
+                    <button
+                      class="btn btn-primary d-grid w-100"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#sendInvoiceOffcanvas">
+                      <span class="d-flex align-items-center justify-content-center text-nowrap"
+                        ><i class="ti ti-send ti-xs me-2"></i>문의하기</span
+                      >
+                    </button>
+                    <div class="d-flex my-4">
+                      <a href="/get/all/" class="btn btn-label-secondary w-100 me-4">뒤로 가기</a>
+                      <button type="button" class="btn btn-label-primary w-100"><i class="ti ti-heart"></i>찜하기</button>
+                    </div>
+                    <button
+                      class="btn btn-success d-grid w-100"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#addPaymentOffcanvas">
+                      <span class="d-flex align-items-center justify-content-center text-nowrap"
+                        ><i class="ti ti-currency-dollar ti-xs me-1"></i>결제하기</span
+                      >
+                    </button>
+                  </div>
+                </div>
+                
+              </div>
+              <!-- /Invoice Actions -->
+            </div>
+          <!--/ Content -->
+
+          <!-- Footer -->
+          <footer class="content-footer footer bg-footer-theme">
+            <div class="container-xxl">
+              <div
+                class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
+                <div class="text-body">
+                  ©
+                  <script>
+                    document.write(new Date().getFullYear());
+                  </script>
+                  , made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
+                </div>
+                <div class="d-none d-lg-inline-block">
+                  <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank"
+                    >License</a
+                  >
+                  <a href="https://1.envato.market/pixinvent_portfolio" target="_blank" class="footer-link me-4"
+                    >More Themes</a
+                  >
+
+                  <a
+                    href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
+                    target="_blank"
+                    class="footer-link me-4"
+                    >Documentation</a
+                  >
+
+                  <a href="https://pixinvent.ticksy.com/" target="_blank" class="footer-link d-none d-sm-inline-block"
+                    >Support</a
+                  >
+                </div>
+              </div>
+            </div>
+          </footer>
+          <!-- / Footer -->
+
+          <div class="content-backdrop fade"></div>
+        </div>
+        <!--/ Content wrapper -->
+      </div>
+
+      <!--/ Layout container -->
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="layout-overlay layout-menu-toggle"></div>
+
+  <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+  <div class="drag-target"></div>
+
+  <!--/ Layout wrapper -->
+{% endblock %}
+
+{% block vendor_js %}
+  <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+{% endblock %}
+
+{% block page_js %}
+  <script src="{% static 'js/pages-profile.js' %}"></script>
+{% endblock %}
