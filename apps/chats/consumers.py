@@ -1,6 +1,6 @@
 from channels.generic.websocket import WebsocketConsumer
 from django.template.loader import render_to_string
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from asgiref.sync import async_to_sync
 from .models import *
 import json
@@ -10,7 +10,10 @@ class ChatRoomConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope["user"]
         self.chatroom_name = self.scope["url_route"]["kwargs"]["chatroom_name"]
-        self.chatroom = get_object_or_404(ChatGroup, group_name=self.chatroom_name)
+        self.chatroom = ChatGroup.objects.filter(group_name=self.chatroom_name).first()
+
+        if not self.chatroom:
+            return redirect("chats:chat")
 
         async_to_sync(self.channel_layer.group_add)(
             self.chatroom_name, self.channel_name

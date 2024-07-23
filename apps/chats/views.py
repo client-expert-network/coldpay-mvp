@@ -7,12 +7,27 @@ from .forms import *
 
 @login_required
 def chat_view(request, chatroom_name="public-chat"):
+
     if chatroom_name == "public-chat":
         chat_group = ChatGroup.objects.filter(
             members=request.user, is_private=True
         ).first()
     else:
         chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
+
+    if not chat_group:
+        # 조건에 맞는 chat_group이 없을 경우 기본 페이지 렌더링
+        return render(
+            request,
+            "chats/chat.html",
+            {
+                "chat_messages": [],
+                "form": ChatMessageCreateForm(),
+                "other_user": None,
+                "chatroom_name": chatroom_name,
+                "other_user_is_online": False,
+            },
+        )
 
     chat_messages = chat_group.chat_messages.all()[:30]
 
