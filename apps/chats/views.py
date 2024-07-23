@@ -7,8 +7,13 @@ from .forms import *
 
 @login_required
 def chat_view(request, chatroom_name="public-chat"):
+    if chatroom_name == "public-chat":
+        chat_group = ChatGroup.objects.filter(
+            members=request.user, is_private=True
+        ).first()
+    else:
+        chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
 
-    chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
     chat_messages = chat_group.chat_messages.all()[:30]
 
     form = ChatMessageCreateForm(request.POST or None)
@@ -42,6 +47,7 @@ def chat_view(request, chatroom_name="public-chat"):
         "other_user": other_user,
         "chatroom_name": chatroom_name,
         "other_user_is_online": other_user_is_online,
+        "chat_group": chat_group,
     }
 
     return render(request, "chats/chat.html", context)
