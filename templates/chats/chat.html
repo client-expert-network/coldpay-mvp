@@ -114,24 +114,36 @@
               <li class="chat-contact-list-item chat-contact-list-item-title mt-0">
                 <h5 class="text-primary mb-0">Chats</h5>
               </li>
-              <li class="chat-contact-list-item chat-list-item-0 d-none">
-                <h6 class="text-muted mb-0">No Chats Found</h6>
-              </li>
-              <li class="chat-contact-list-item mb-1">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-online">
-                    <img src="../../assets/img/avatars/13.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-4">
-                    <div class="d-flex justify-content-between align-items-center">
-                      <h6 class="chat-contact-name text-truncate m-0 fw-normal">Waldemar Mannering</h6>
-                      <small class="text-muted">5 Minutes</small>
-                    </div>
-                    <small class="chat-contact-status text-truncate">Refer friends. Get rewards.</small>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item active mb-1">
+              {% if user.chat_groups.all %}
+                {% for group in user.chat_groups.all %}
+                  {% if group.is_private == True %}
+                    {% for member in group.members.all %}
+                      {% if member != user %}
+                        <li class="chat-contact-list-item mb-1">
+                          <a class="d-flex align-items-center" href="{% url 'chats:start_chat' member.id %}">
+                            <div class="flex-shrink-0 avatar">
+                              <img src="{{ member.profile_picture }}" alt="Avatar" class="rounded-circle" />
+                            </div>
+                            <div class="chat-contact-info flex-grow-1 ms-4">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="chat-contact-name text-truncate m-0 fw-normal">{{ member.username }}</h6>
+                                <small class="text-muted">5 Minutes</small>
+                              </div>
+                              <small class="chat-contact-status text-truncate">Refer friends. Get rewards.</small>
+                            </div>
+                          </a>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              {% else %}
+                <li class="chat-contact-list-item chat-list-item-0 d-none">
+                  <h6 class="text-muted mb-0">No Chats Found</h6>
+                </li>
+              {% endif %}
+
+              {% comment %} <li class="chat-contact-list-item active mb-1">
                 <a class="d-flex align-items-center">
                   <div class="flex-shrink-0 avatar avatar-offline">
                     <img src="../../assets/img/avatars/4.png" alt="Avatar" class="rounded-circle" />
@@ -158,7 +170,7 @@
                     <small class="chat-contact-status text-truncate">If it takes long you can mail inbox user</small>
                   </div>
                 </a>
-              </li>
+              </li> {% endcomment %}
             </ul>
             <!-- 연락처 -->
             <ul class="list-unstyled chat-contact-list mb-0 py-2" id="contact-list">
