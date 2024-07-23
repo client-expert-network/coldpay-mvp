@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from shortuuidfield import ShortUUIDField
+from shortuuid.django_fields import ShortUUIDField
 
 User = get_user_model()
+
 
 class Category(models.Model):
     id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
