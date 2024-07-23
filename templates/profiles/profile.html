@@ -38,20 +38,22 @@
                 <div class="flex-grow-1 mt-3 mt-lg-5">
                   <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4">
                     <div class="user-profile-info">
-                      <h4 class="mb-2 mt-lg-6">John Doe</h4>
+                      <h4 class="mb-2 mt-lg-6">{{ user.get_full_name }}</h4>
                       <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
                         <li class="list-inline-item d-flex gap-2 align-items-center">
-                          <i class="ti ti-palette ti-lg"></i><span class="fw-medium">UX Designer</span>
+                          <i class="ti ti-palette ti-lg"></i><span class="fw-medium">{{ profile.display_name }}</span>
                         </li>
                         <li class="list-inline-item d-flex gap-2 align-items-center">
-                          <i class="ti ti-map-pin ti-lg"></i><span class="fw-medium">Vatican City</span>
+                          <i class="ti ti-mail ti-lg"></i><span class="fw-medium">{{ user.email }}</span>
                         </li>
+                        {% if user.phone_number %}
                         <li class="list-inline-item d-flex gap-2 align-items-center">
-                          <i class="ti ti-calendar ti-lg"></i><span class="fw-medium">Joined April 2021</span>
+                          <i class="ti ti-phone ti-lg"></i><span class="fw-medium">{{ user.phone_number }}</span>
                         </li>
+                        {% endif %}
                       </ul>
                     </div>
-                    <a href="javascript:void(0)" class="btn btn-primary mb-1"><i class="ti ti-user-check ti-xs me-2"></i>Connected</a>
+                    <a href="javascript:void(0)" class="btn btn-primary mb-1"><i class="ti ti-user-check ti-xs me-2"></i>인증 완료</a>
                   </div>
                 </div>
               </div>
@@ -69,7 +71,7 @@
                   <a class="nav-link active" href="javascript:void(0);"><i class="ti-sm ti ti-user-check me-1_5"></i> Profile</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="pages-profile-teams.html"><i class="ti-sm ti ti-users me-1_5"></i> Teams</a>
+                  <a class="nav-link" href="pages-profile-teams.html"><i class="ti-sm ti ti-users me-1_5"></i> Teams</a>z
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="pages-profile-projects.html"><i class="ti-sm ti ti-layout-grid me-1_5"></i> Projects</a>
@@ -93,19 +95,17 @@
                 <ul class="list-unstyled my-3 py-1">
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-user ti-lg"></i><span class="fw-medium mx-2">Full Name:</span>
-                    <span>John Doe</span>
+                    <span>{{ user.get_full_name }}</span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-check ti-lg"></i><span class="fw-medium mx-2">Status:</span>
-                    <span>Active</span>
+                    <i class="ti ti-check ti-lg"></i><span class="fw-medium mx-2">Expert:</span>
+                    <span>{% if user.is_expert %}인증됨{% else %}인증되지 않음{% endif %}</span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-crown ti-lg"></i><span class="fw-medium mx-2">Role:</span>
-                    <span>Developer</span>
+                    <span>촬영감독</span>
                   </li>
-                  <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-flag ti-lg"></i><span class="fw-medium mx-2">Country:</span> <span>USA</span>
-                  </li>
+
                   <li class="d-flex align-items-center mb-2">
                     <i class="ti ti-language ti-lg"></i><span class="fw-medium mx-2">Languages:</span>
                     <span>English</span>
@@ -113,26 +113,22 @@
                 </ul>
                 <small class="card-text text-uppercase text-muted small">Contacts</small>
                 <ul class="list-unstyled my-3 py-1">
+
+                  <li class="d-flex align-items-center mb-4">
+                    <i class="ti ti-brand-hipchat ti-lg"></i>
+                    <span class="fw-medium mx-2">채팅하기:</span>
+                    <a href="{% url 'chats:start_chat' user.id %}" class="btn btn-primary btn-sm">
+                      <i class="ti ti-messages me-1"></i>채팅 시작
+                    </a>
+                  </li>
+
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-phone-call ti-lg"></i><span class="fw-medium mx-2">Contact:</span>
-                    <span>(123) 456-7890</span>
-                  </li>
-                  <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-messages ti-lg"></i><span class="fw-medium mx-2">Skype:</span>
-                    <span>john.doe</span>
+                    <span>{% if user.phone_number %}{{ user.phone_number }}{% else %}등록되지 않음{% endif %}</span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-mail ti-lg"></i><span class="fw-medium mx-2">Email:</span>
-                    <span>john.doe@example.com</span>
-                  </li>
-                </ul>
-                <small class="card-text text-uppercase text-muted small">Teams</small>
-                <ul class="list-unstyled mb-0 mt-3 pt-1">
-                  <li class="d-flex flex-wrap mb-4">
-                    <span class="fw-medium me-2">Backend Developer</span><span>(126 Members)</span>
-                  </li>
-                  <li class="d-flex flex-wrap">
-                    <span class="fw-medium me-2">React Developer</span><span>(98 Members)</span>
+                    <span>{{ user.email }}</span>
                   </li>
                 </ul>
               </div>

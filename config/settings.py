@@ -252,20 +252,20 @@ LOGOUT_REDIRECT_URL = "/"
 
 
 # Channels 레이어
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels.layers.InMemoryChannelLayer",
-#     }
-# }
-
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [(config("REDIS_URL"))],
-        },
-    },
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    }
 }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [(config("REDIS_URL"))],
+#         },
+#     },
+# }
 
 
 # Tinymce 세팅 / 에디터 메뉴바 설정
