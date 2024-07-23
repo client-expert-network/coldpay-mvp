@@ -117,8 +117,16 @@
                               <img src="../../assets/img/avatars/11.png" alt="Avatar" class="rounded-circle" />
                             </div>
                           </div>
-                          <div class="d-flex flex-column">
-                            <h6 class="mb-1">{{ review.author_username }}</h6>
+                          <div class="d-flex flex-column w-100">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                              <h6 class="mb-1">{{ review.author_username }}</h6>
+                              {% if request.user.email == review.author_email %}
+                              <div style="display: flex; justify-content: flex-end;">
+                              <a href="{% url 'services:update_review' review_id=review.review.id %}" style="margin-right: 10px; font-size: smaller;">Modify</a>
+                              <a href="{% url 'services:delete_review' review_id=review.review.id %}" style="font-size: smaller; color: red;">Delete</a>
+                            </div>
+                              {% endif %}
+                          </div>
                             <small>{{ review.review.content }}</small>
                           </div>
                         </div>

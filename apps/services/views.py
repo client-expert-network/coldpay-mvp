@@ -42,7 +42,8 @@ def get_service(request, service_id):
     for review in reviews:
         comments = ReviewComment.objects.filter(review_id=review.id)
         author_username = review.author.username
-        reviews_with_comments.append({"review": review, "comments": comments, "author_username": author_username})
+        author_email = review.author.email
+        reviews_with_comments.append({"review": review, "comments": comments, "author_username": author_username, "author_email": author_email})
     return render(request, "services/service_detail.html", {
         "service": serializers.data, "reviews": reviews, "reviews_with_comments": reviews_with_comments, "seller_email": seller_email})
 
@@ -125,20 +126,17 @@ def get_review(request, review_id):
 @login_required
 def create_review(request, service_id):
     if request.method == 'POST':
-        review_form = CreateReviewForm(request.POST)
-        if review_form.is_valid():
-            user = User.objects.get(email=request.user)
-            service = get_object_or_404(Service, id=service_id)
-            created_review = Review.objects.create(
-                service=service,
-                author=user,
-                content=review_form.cleaned_data["content"],
-            )
-            return redirect("services:get_service", service_id=service.id)
+        user = User.objects.get(email=request.user)
+        service = get_object_or_404(Service, id=service_id)
+        Review.objects.create(
+            service=service,
+            author=user,
+            content=request.POST["content"],
+        )
+        return redirect("services:get_service", service_id=service.id)
     else:
         service = get_object_or_404(Service, id=service_id)
-        review_form = CreateReviewForm()
-    return render(request, "services/create_review.html", {"review_form": review_form, "service": service})
+    return render(request, "services/create_review.html", {"service": service})
 
 @csrf_exempt   
 @require_http_methods(["GET", "POST"])
@@ -148,15 +146,12 @@ def update_review(request, review_id):
     review = get_object_or_404(Review, id=review_id, author=user)
     
     if request.method == 'POST':
-        review_form = CreateReviewForm(request.POST, instance=review)
-        if review_form.is_valid():
-            review = review_form.save(commit=False)
-            review.author = user
-            review.save()
-            return redirect("get_service", service_id=review.service.id)
+        review.content = request.POST["content"]
+        review.author = user
+        review.save()
+        return redirect("services:get_service", service_id=review.service.id)
     else:
-        review_form = CreateReviewForm(instance=review)
-    return render(request, "services/update_review.html", {"review_form": review_form, "review": review})
+        return render(request, "services/update_review.html", {"review": review})
 
 @require_http_methods(["GET", "POST"])
 @login_required
