@@ -29,14 +29,15 @@ def get_category_details(request, category_id):
 @require_http_methods(["GET"])
 def get_services(request):
     services = Service.objects.all()
+    category_details = CategoryDetail.objects.all()
     serializer = ServiceSerializer(services, many=True)
-    return render(request, "services/service_all.html", {"services": serializer.data})
+    return render(request, "services/service_all.html", {"services": serializer.data, "category_details": category_details})
 
 @require_http_methods(["GET"])
 def get_service(request, service_id):
     service = Service.objects.get(id=service_id)
     serializers = ServiceSerializer(service)
-    reviews = Review.objects.filter(service=service).select_related("author")
+    reviews = Review.objects.filter(service_id=service.id).select_related("author")
     reviews_with_comments = []
     seller_email = service.seller.email
     for review in reviews:
@@ -181,20 +182,17 @@ def get_comment(request, comment_id):
 @require_http_methods(["GET", "POST"])
 @login_required
 def create_comment(request, review_id):
+    review = Review.objects.get(id=review_id)
     if request.method == 'POST':
-        comment_form = CreateReviewCommentForm(request.POST)
-        if comment_form.is_valid():
             user = User.objects.get(email=request.user)
-            review = Review.objects.get(id=review_id)
             ReviewComment.objects.create(
                 author=user,
                 review=review,
-                content=comment_form.cleaned_data["content"],
+                content=request.POST["content"],
             )
-            return redirect("get_service", service_id=review.service.id)
+            return redirect("services:get_service", service_id=review.service.id)
     else:
-        comment_form = CreateReviewCommentForm()
-    return render(request, "services/create_comment.html", {"comment_form": comment_form})
+        return render(request, "services/create_comment.html", {"review": review })
     
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
@@ -205,15 +203,12 @@ def update_comment(request, comment_id):
     if comment.author != user:
         return JsonResponse({"message": "You are not the owner of this comment"}, safe=False, status=403)
     if request.method == 'POST':
-        comment_form = CreateReviewCommentForm(request.POST, instance=comment)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.author = user
-            comment.save()
-            return redirect("get_service", service_id=comment.review.service.id)        
+        comment.content = request.POST["content"]
+        comment.author = user
+        comment.save()
+        return redirect("services:get_service", service_id=comment.review.service.id)        
     else:
-        comment_form = CreateReviewCommentForm(instance=comment)
-    return render(request, "services/update_comment.html", {"comment_form": comment_form, "comment": comment})
+        return render(request, "services/update_comment.html", {"comment": comment})
 
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
@@ -224,4 +219,4 @@ def delete_comment(request, comment_id):
     if comment.author != user:
         return JsonResponse({"message": "You are not the owner of this comment"}, safe=False, status=403)
     comment.delete()
-    return redirect("get_service", service_id=comment.review.service.id)
+    return redirect("services:get_service", service_id=comment.review.service.id)

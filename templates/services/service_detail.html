@@ -111,7 +111,7 @@
                           </div>
                       </div>
                         {% for review in reviews_with_comments %}
-                        <div class="d-flex justify-content-start align-items-center user-name mb-6">
+                        <div class="d-flex justify-content-start align-items-start user-name mb-6">
                           <div class="avatar-wrapper">
                             <div class="avatar me-4">
                               <img src="../../assets/img/avatars/11.png" alt="Avatar" class="rounded-circle" />
@@ -122,12 +122,32 @@
                               <h6 class="mb-1">{{ review.author_username }}</h6>
                               {% if request.user.email == review.author_email %}
                               <div style="display: flex; justify-content: flex-end;">
-                              <a href="{% url 'services:update_review' review_id=review.review.id %}" style="margin-right: 10px; font-size: smaller;">Modify</a>
-                              <a href="{% url 'services:delete_review' review_id=review.review.id %}" style="font-size: smaller; color: red;">Delete</a>
-                            </div>
+                                {% if request.user.email == seller_email %}
+                                  <a href="{% url 'services:create_comment' review_id=review.review.id %}" style="margin-right: 10px; font-size: smaller; color: black;">Comment</a>
+                                {% endif %}
+                                <a href="{% url 'services:update_review' review_id=review.review.id %}" style="margin-right: 10px; font-size: smaller;">Modify</a>
+                                <a href="{% url 'services:delete_review' review_id=review.review.id %}" style="font-size: smaller; color: red;">Delete</a>
+                              </div>
                               {% endif %}
-                          </div>
+                            </div>
                             <small>{{ review.review.content }}</small>
+                            
+                            {% if review.comments %}
+                            <div style="margin-left: 20px; margin-top: 10px;">
+                              <h6>Comments:</h6>
+                              {% for comment in review.comments %}
+                              <div style="border-left: 2px solid #ccc; padding-left: 10px; margin-bottom: 10px;">
+                                <small>{{ comment.content }}</small>
+                                {% if request.user.email == seller_email %}
+                                <div style="display: flex; margin-top: 5px;">
+                                  <a href="{% url 'services:update_comment' comment_id=comment.id %}" style="margin-right: 10px; font-size: smaller;">Modify</a>
+                                  <a href="{% url 'services:delete_comment' comment_id=comment.id %}" style="font-size: smaller; color: red;">Delete</a>
+                                </div>
+                                {% endif %}
+                              </div>
+                              {% endfor %}
+                            </div>
+                            {% endif %}
                           </div>
                         </div>
                         {% endfor %}
