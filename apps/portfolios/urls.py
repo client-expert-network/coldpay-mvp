@@ -10,4 +10,5 @@ urlpatterns = [
     path("portfolios/read/<str:portfolio_id>/", portfolio_detail, name="portfolio_detail"),
     path("portfolios/update/<str:portfolio_id>/", update_portfolio, name="update_portfolio"),
     path("portfolios/delete/<str:portfolio_id>/", delete_portfolio, name="delete_portfolio"),
+    path("portfolios/confirm/", confirm_expert, name="confirm_expert"),
 ]

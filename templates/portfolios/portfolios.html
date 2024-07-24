@@ -25,7 +25,13 @@
           </div>
           <div class="card-body">
             <h5 class="card-title">{{ portfolio.title }}</h5>
-            <a href="" class="card-text">{{ portfolio.expert.first_name }} {{ portfolio.expert.last_name }}</a>
+
+            <a href="" class="card-text d-flex align-items-center">
+              <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" class="rounded-circle me-2" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+              {{ portfolio.expert.username }}</a>
+              
+              <br>
+              <br>
             <p class="card-text">Views: {{ portfolio.show }}</p>
             <p class="card-text">Likes: {{ portfolio.like }}</p>
             <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal" onclick="openPortfolioModal('{% url 'portfolio_detail' portfolio.id %}')">View Portfolio</a>
@@ -40,7 +46,7 @@
   </div>
 </div>
 
-<!-- Fullscreen Modal -->
+
 <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen" role="document">
     <div class="modal-content">
@@ -58,26 +64,46 @@
   </div>
 </div>
 
+<style>
+  @media (min-width: 800px) {
+    .modal-lg {
+      max-width: 60%; 
+    }
+  }
+</style>
+
+
 <script>
   
-function checkExpertStatus() {
-  // 여기에 AJAX 요청을 추가하여 사용자가 전문가인지 확인할 수 있습니다.
-  // 예시로, 서버 측에서 사용자의 상태를 확인하는 '/api/check-expert-status' 엔드포인트가 있다고 가정합니다.
-  fetch('/portfolios/create/')
-    .then(response => response.json())
+  function checkExpertStatus() {
+  fetch('/portfolios/confirm/')
+    .then(response => {
+      // 응답이 JSON 형식인지 확인
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        return response.json();
+      } else {
+        throw new Error("Received non-JSON response");
+      }
+    })
     .then(data => {
-      if(data.is_expert) {
+      if (data.is_expert) {
         window.location.href = "{% url 'create_portfolio' %}"; // 전문가일 경우, 포트폴리오 생성 페이지로 이동
       } else {
         alert("전문가로 등록해야 Portfolio를 작성할 수 있습니다."); // 전문가가 아닐 경우, 경고 메시지 표시
       }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+      console.error('Error:', error);
+      alert("서버와의 통신 중 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+    });
 }
 
-function openPortfolioModal(url) {
+  // modal 열어주는 함수
+  function openPortfolioModal(url) {
   document.getElementById('portfolioDetailFrame').src = url;
 }
+
 </script>
 
 
