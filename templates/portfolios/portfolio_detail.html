@@ -17,6 +17,12 @@
 
 <div class="container mt-4">
   <div class="portfolio-detail">
+    <h2>
+        <a href="http://127.0.0.1:8000/portfolios/">
+          <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+          {{ portfolio.expert.username }}
+        </a>
+      </h2>
       <h1>{{ portfolio.title }}</h1>
       <div class="portfolio-content">
           {{ portfolio.htmlcontent|safe }}

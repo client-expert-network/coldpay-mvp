@@ -25,7 +25,13 @@
           </div>
           <div class="card-body">
             <h5 class="card-title">{{ portfolio.title }}</h5>
-            <a href="" class="card-text">{{ portfolio.expert.first_name }} {{ portfolio.expert.last_name }}</a>
+            
+            <a href="" class="card-text d-flex align-items-center">
+              <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" class="rounded-circle me-2" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+              {{ portfolio.expert.username }}</a>
+              
+              <br>
+              <br>
             <p class="card-text">Views: {{ portfolio.show }}</p>
             <p class="card-text">Likes: {{ portfolio.like }}</p>
             <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal" onclick="openPortfolioModal('{% url 'portfolio_detail' portfolio.id %}')">View Portfolio</a>
@@ -40,7 +46,7 @@
   </div>
 </div>
 
-<!-- Fullscreen Modal -->
+
 <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen" role="document">
     <div class="modal-content">
@@ -57,6 +63,15 @@
     </div>
   </div>
 </div>
+
+<style>
+  @media (min-width: 800px) {
+    .modal-lg {
+      max-width: 60%; 
+    }
+  }
+</style>
+
 
 <script>
   
