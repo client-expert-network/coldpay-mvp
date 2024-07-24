@@ -32,7 +32,7 @@
     form.onsubmit = function(e) {
         e.preventDefault(); // 폼 기본 제출 방지
 
-        // 사용자 확인
+        // 사용자로부터 확인
         if (confirm('정말로 수정하시겠습니까?')) {
             const formData = new FormData(form);
             fetch(form.action, {
@@ -44,7 +44,7 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // 모달 닫기 로직 (모달의 ID나 클래스에 따라 달라질 수 있음)
+                    // 모달 닫기 
                     $('#fullscreenModal').modal('hide'); // Bootstrap 모달의 경우
                     // 페이지 리디렉션 또는 새로고침
                     window.location.reload(); // 페이지 새로고침

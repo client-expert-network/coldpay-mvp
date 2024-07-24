@@ -77,7 +77,8 @@ def get_top_portfolios(request):
 @require_http_methods(["GET", "POST"])  
 def portfolio_detail(request, portfolio_id):    # 게시물 READ
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
-
+    other_portfolios = Portfolio.objects.filter(expert=portfolio.expert).exclude(id=portfolio.id)
+    
     if request.method == "POST":
         # 사용자가 이미 'like'를 눌렀는지 확인하는 세션 키 생성
         session_key = f"liked_{portfolio_id}"
@@ -101,7 +102,9 @@ def portfolio_detail(request, portfolio_id):    # 게시물 READ
             portfolio.save()
             request.session[session_key] = True  # 세션에 키 설정하여 재방문 추적
 
-        return render(request, "portfolios/portfolio_detail.html", {"portfolio": portfolio})
+        return render(request, 'portfolios/portfolio_detail.html', 
+        {'portfolio': portfolio,
+        'other_portfolios': other_portfolios,})
 
 @xframe_options_exempt
 @require_http_methods(["GET", "POST"])  # 게시물 UPDATE 수정

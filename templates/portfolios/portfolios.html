@@ -25,7 +25,7 @@
           </div>
           <div class="card-body">
             <h5 class="card-title">{{ portfolio.title }}</h5>
-            
+
             <a href="" class="card-text d-flex align-items-center">
               <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" class="rounded-circle me-2" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
               {{ portfolio.expert.username }}</a>
@@ -99,6 +99,7 @@
     });
 }
 
+  // modal 열어주는 함수
   function openPortfolioModal(url) {
   document.getElementById('portfolioDetailFrame').src = url;
 }
