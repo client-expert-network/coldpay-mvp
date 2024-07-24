@@ -18,13 +18,6 @@ User = get_user_model()
 @login_required
 @require_http_methods(["GET", "POST"])  # 게시물 CREATE
 def create_portfolio(request):
-
-    # 전문가인지 확인하는 과정 점검 필요함
-    if not request.user.is_expert:
-        if request.method == "GET":
-            return JsonResponse({"is_expert": False})
-        return HttpResponseForbidden({"error": "User is not a expert"})
-    
     if request.method == "GET":
         form = PortfolioForm()
         return render(request, "portfolios/create_portfolio.html", {"form": form})
@@ -35,20 +28,21 @@ def create_portfolio(request):
             portfolio = form.save(commit=False)
             portfolio.expert = request.user
             portfolio.save()
-
-            # 이미지와 비디오 처리
-            images = request.FILES.getlist("images")
-            videos = request.FILES.getlist("videos")
-            for image in images:
-                PortfolioImage.objects.create(portfolio=portfolio, image=image)
-            for video in videos:
-                PortfolioVideo.objects.create(portfolio=portfolio, video=video)
-
             # 성공적으로 생성된 경우, 포트폴리오 상세 페이지로 
             return render(request, "portfolios/portfolio_detail.html", {"portfolio": portfolio})
+
+
+@require_http_methods(["GET", "POST"])
+def confirm_expert(request):
+    # 전문가인지 확인하는 과정
+    if not request.user.is_expert:
+        if request.method == "GET":
+            return JsonResponse({"is_expert": False})
+        return JsonResponse({"error": "User is not an expert"}, status=403)
+    
     else:
-        form = PortfolioForm()
-    return render(request, "portfolios/create_portfolio.html", {"form": form})
+        return JsonResponse({"is_expert": True})
+
 
 @xframe_options_exempt
 @require_http_methods(["GET"])
