@@ -13,45 +13,39 @@
 
 {% include 'partials/navbar.html' %}
 
-        
-          <!-- Content -->
 
-          <div class="container mt-4">
-            <div class="portfolio-detail">
-                <h1>{{ portfolio.title }}</h1>
-                <div class="portfolio-content">
-                    {{ portfolio.htmlcontent|safe }}
-                </div>
-                <p>Price: {{ portfolio.price }}</p>
-                <p>Duration: {{ portfolio.get_duration }}</p>
-                <p>Start Date: {{ portfolio.portfolio_start }}</p>
-                <p>End Date: {{ portfolio.portfolio_end }}</p>
-                <p>Views: {{ portfolio.show }}</p>
-                <p>Likes: {{ portfolio.like }}</p>
-               
-            </div>
-            
-        </div>
-            
-                <form action="{% url 'portfolio_detail' portfolio.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">Like</button>
-                </form>
-            </p>
 
-           
-
-{% if portfolio.expert == request.user %}
-    <div class="action-buttons">
-        <!-- Edit Button -->
-        <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
-        <!-- Delete Button -->
-        <form action="{% url 'delete_portfolio' portfolio.id %}" method="post" style="display: inline;">
-            {% csrf_token %}
-            <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-    </div>
-{% endif %}
+<div class="container mt-4">
+  <div class="portfolio-detail">
+      <h1>{{ portfolio.title }}</h1>
+      <div class="portfolio-content">
+          {{ portfolio.htmlcontent|safe }}
+      </div>
+      <p>Price: {{ portfolio.price }}</p>
+      <p>Duration: {{ portfolio.get_duration }}</p>
+      <p>Start Date: {{ portfolio.portfolio_start }}</p>
+      <p>End Date: {{ portfolio.portfolio_end }}</p>
+      <p>Views: {{ portfolio.show }}</p>
+      <p>Likes: {{ portfolio.like }}</p>
+     
+      <div class="action-buttons">
+          <form action="{% url 'portfolio_detail' portfolio.id %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary">Like</button>
+          </form>
+          {% if portfolio.expert == request.user %}
+              <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
+              <form action="{% url 'delete_portfolio' portfolio.id %}" method="post" style="display: inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+          {% endif %}
+      </div>
+  </div>
+</div>
           
 {% endblock %}
+
+
+<h2>이 전문가의 다른 Portfolio</h2>
