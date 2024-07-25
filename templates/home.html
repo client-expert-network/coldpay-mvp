@@ -15,14 +15,8 @@
   <!-- 레이아웃 -->
   <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
     <div class="layout-container">
-      <!-- 네비바 -->
-      {% comment %} {% include 'partials/navbar.html' %} {% endcomment %}
-      <!-- 콘텐츠 -->
-      {% comment %} {% endcomment %}
-
-      {% include 'portfolios/portfolios.html' %}
-
-      {% include 'partials/footer.html' %}
+      {% include 'partials/navbar.html' %}
+      {% include 'portfolios/partials/portfolio_card.html' %}
     </div>
   </div>
 {% endblock %}
