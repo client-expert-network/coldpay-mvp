@@ -51,9 +51,38 @@
                             <i class="ti ti-phone ti-lg"></i><span class="fw-medium">{{ profile_user.phone_number }}</span>
                           </li>
                         {% endif %}
+                        <li class="d-flex align-items-center mb-4">
+                          <i class="ti ti-users ti-lg"></i>
+                          <span class="fw-medium mx-2">팔로워:</span>
+                          <span hx-get="{% url 'profiles:follower_count' profile_user.id %}" hx-trigger="followToggled from:body" hx-swap="innerHTML">
+                            {{ follower_count }}
+                          </span>
+                        </li>
+                        <li class="d-flex align-items-center mb-4">
+                          <i class="ti ti-user-plus ti-lg"></i>
+                          <span class="fw-medium mx-2">팔로잉:</span>
+                          <span hx-get="{% url 'profiles:following_count' profile_user.id %}" hx-trigger="followToggled from:body" hx-swap="innerHTML">
+                            {{ following_count }}
+                          </span>
+                        </li>
+
                       </ul>
                     </div>
-                    <a href="javascript:void(0)" class="btn btn-primary mb-1"><i class="ti ti-user-check ti-xs me-2"></i>인증 완료</a>
+
+                      <div class="d-flex gap-2">
+                        {% if user != profile_user %}
+                            <button 
+                            hx-post="{% url 'profiles:follow_unfollow' profile_user.id %}"
+                            hx-swap="outerHTML"
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                            class="btn {% if is_following %}btn-secondary{% else %}btn-primary{% endif %} mb-1 ms-2">
+                            <i class="ti ti-user-plus ti-xs me-2"></i>
+                            {% if is_following %}언팔로우{% else %}팔로우{% endif %}
+                            </button>
+                        {% endif %}
+
+                        <a href="javascript:void(0)" class="btn btn-primary mb-1"><i class="ti ti-user-check ti-xs me-2"></i>인증 완료</a>
+                      </div>
                   </div>
                 </div>
               </div>
