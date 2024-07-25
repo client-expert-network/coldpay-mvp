@@ -11,32 +11,46 @@
 
 {% include 'partials/navbar.html' %}
 
+
+{% if write %}
 <div style="text-align: right; margin-top: 30px; margin-right: 270px; margin-bottom: 20px;">
   <a href="javascript:void(0);" onclick="checkExpertStatus()" class="btn btn-primary btn-lg" style="font-weight: medium;">글쓰기</a>
 </div>
+{% endif %}
 
 
 
-<div class="container mt-4">
-  <div class="row">
+<div class="container px-4 px-lg-5 mt-5">
+  <h3>포트폴리오</h3>
+  <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
     {% for portfolio in portfolios %}
-      <div class="col-md-6 col-lg-4 mb-4">
+      <div class="col mb-5">
         <div class="card h-100">
+          <!-- Product image -->
           <div class="card-img-top" style="max-height: 350px; overflow: hidden;">
             {{ portfolio.htmlcontent|safe }}
           </div>
-          <div class="card-body">
-            <h5 class="card-title">{{ portfolio.title }}</h5>
-
-            <a href="" class="card-text d-flex align-items-center">
-              <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" class="rounded-circle me-2" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
-              {{ portfolio.expert.username }}</a>
-              
-              <br>
-              <br>
-            <p class="card-text">Views: {{ portfolio.show }}</p>
-            <p class="card-text">Likes: {{ portfolio.like }}</p>
-            <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal" onclick="openPortfolioModal('{% url 'portfolio_detail' portfolio.id %}')">View Portfolio</a>
+          <!-- Product details -->
+          <div class="card-body p-4">
+            <div class="text-left">
+              <!-- Product name -->
+              <h5 class="fw-bolder">{{ portfolio.title }}</h5>
+              <!-- Expert details -->
+              <a href="" class="card-text d-flex align-items-center">
+                <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" class="rounded-circle me-2" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                {{ portfolio.expert.username }}
+              </a>
+              <br><br>
+              <!-- Views and Likes -->
+              <p class="card-text">Views: {{ portfolio.show }}</p>
+              <p class="card-text">Likes: {{ portfolio.like }}</p>
+            </div>
+          </div>
+          <!-- Product actions -->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center">
+              <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal" onclick="openPortfolioModal('{% url 'portfolio_detail' portfolio.id %}')">View Portfolio</a>
+            </div>
           </div>
         </div>
       </div>
@@ -50,7 +64,7 @@
 
 
 <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalFullTitle">Portfolio Details</h5>
@@ -69,7 +83,7 @@
 <style>
   @media (min-width: 800px) {
     .modal-lg {
-      max-width: 60%; 
+      max-width: 80%; 
     }
   }
 </style>

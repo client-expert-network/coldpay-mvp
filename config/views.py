@@ -12,13 +12,13 @@ from django.core.paginator import Paginator
 def home(request):
     page = request.GET.get("page", 1)
     portfolios = Portfolio.objects.all().order_by("-created_at")
-    paginator = Paginator(portfolios, 10)
+    paginator = Paginator(portfolios, 8)
     paginator_boards = paginator.get_page(page)
 
     return render(
         request,
         "home.html",
-        {"portfolios": paginator_boards},)
+        {"portfolios": paginator_boards, "write": False},)
     
     
 

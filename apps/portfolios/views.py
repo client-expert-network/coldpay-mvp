@@ -55,7 +55,7 @@ def get_portfolios(request):
     return render(
         request,
         "portfolios/portfolios.html",
-        {"portfolios": paginator_boards},
+        {"portfolios": paginator_boards, "write": True},
     )
 
 @require_http_methods(["GET"])

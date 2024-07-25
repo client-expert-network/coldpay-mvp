@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+
 {% load static %}
 
 {% block vendor_css %}
@@ -13,6 +13,7 @@
 
 {% block content %}
 
+
   {% comment %} 테스트용 코드 {% endcomment %}
   {% if user.is_authenticated %}
       <p>Welcome, {{ user.username }}!</p>
@@ -25,15 +26,11 @@
   <!-- 레이아웃 -->
   <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
     <div class="layout-container">
-      <!-- 네비바 -->
-      {% include 'partials/navbar.html' %}
-      <!-- 콘텐츠 -->
-      {% comment %} {% endcomment %}
+      <!-- 네비바 --><!-- 콘텐츠 -->
+      {% include 'portfolios/portfolios.html' %}
+  
+      
 
-      <br>
-      <br><br>
-      <h1>지금 핫한 포트폴리오</h1>
-      {% include 'portfolios/portfolio_cards.html' %}
 
 
     </div>
