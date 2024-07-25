@@ -2,93 +2,81 @@
 {% load static %}
 
 {% block vendor_css %}
-<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
-<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
-<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
 {% endblock %}
 
-
 {% block content %}
-
-
-{% include 'partials/navbar.html' %}
-
-
-
-<div class="container mt-4">
-  <div class="portfolio-detail">
-    <h2>
+  <div class="container mt-4">
+    <div class="portfolio-detail">
+      <h2>
         <a href="http://127.0.0.1:8000/portfolios/">
-          <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+          <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
           {{ portfolio.expert.username }}
         </a>
       </h2>
       <h1>{{ portfolio.title }}</h1>
-      <div class="portfolio-content">
-          {{ portfolio.htmlcontent|safe }}
-      </div>
+      <div class="portfolio-content">{{ portfolio.htmlcontent|safe }}</div>
       <p>Price: {{ portfolio.price }}</p>
       <p>Duration: {{ portfolio.get_duration }}</p>
       <p>Start Date: {{ portfolio.portfolio_start }}</p>
       <p>End Date: {{ portfolio.portfolio_end }}</p>
       <p>Views: {{ portfolio.show }}</p>
       <p>Likes: {{ portfolio.like }}</p>
-     
+
       <div class="action-buttons">
-          <form action="{% url 'portfolio_detail' portfolio.id %}" method="post" style="display: inline;">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-primary">Like</button>
+        <form action="{% url 'portfolio_detail' portfolio.id %}" method="post" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary">Like</button>
+        </form>
+        {% if portfolio.expert == request.user %}
+          <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
+          <form action="{% url 'delete_portfolio' portfolio.id %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="_method" value="DELETE" />
+            <button type="submit" class="btn btn-danger">Delete</button>
           </form>
-          {% if portfolio.expert == request.user %}
-              <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
-              <form action="{% url 'delete_portfolio' portfolio.id %}" method="post" style="display: inline;">
-                  {% csrf_token %}
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button type="submit" class="btn btn-danger">Delete</button>
-              </form>
-          {% endif %}
+        {% endif %}
       </div>
+    </div>
   </div>
-</div>
-          
 
-<br>
-<br>
-<br>
-<div>
-  <h2>이 전문가의 다른 Portfolio</h2>
-  <br>
-  <br>
-  {% if other_portfolios %}
-    <div class="row" style="margin-left: 150px;">
-      {% for other_portfolio in other_portfolios %}
-        <div class="col-md-4 mb-4">
-          <div class="card h-70" style="max-width: 400px;">
-            <div class="card-img-top" style="max-height: 200px; overflow: hidden;">
-              {{ other_portfolio.htmlcontent|safe }}
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">{{ other_portfolio.title }}</h5>
+  <br />
+  <br />
+  <br />
+  <div>
+    <h2>이 전문가의 다른 Portfolio</h2>
+    <br />
+    <br />
+    {% if other_portfolios %}
+      <div class="row" style="margin-left: 150px;">
+        {% for other_portfolio in other_portfolios %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-70" style="max-width: 400px;">
+              <div class="card-img-top" style="max-height: 200px; overflow: hidden;">{{ other_portfolio.htmlcontent|safe }}</div>
+              <div class="card-body">
+                <h5 class="card-title">{{ other_portfolio.title }}</h5>
 
-              <a href="" class="card-text d-flex align-items-center">
-                <img src="{{ other_portfolio.expert.profile_picture }}" alt="Profile Picture" class="rounded-circle me-2" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
-                {{ other_portfolio.expert.username }}</a>
-                
-                <br>
-                <br>
-              <p class="card-text">Views: {{ other_portfolio.show }}</p>
-              <p class="card-text">Likes: {{ other_portfolio.like }}</p>
-              <a href="{% url 'portfolio_detail' other_portfolio.id %}" class="btn btn-outline-primary">View Portfolio</a>
+                <a href="" class="card-text d-flex align-items-center">
+                  <img src="{{ other_portfolio.expert.profile_picture }}" alt="Profile Picture" class="rounded-circle me-2" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+                  {{ other_portfolio.expert.username }}
+                </a>
+
+                <br />
+                <br />
+                <p class="card-text">Views: {{ other_portfolio.show }}</p>
+                <p class="card-text">Likes: {{ other_portfolio.like }}</p>
+                <a href="{% url 'portfolio_detail' other_portfolio.id %}" class="btn btn-outline-primary">View Portfolio</a>
+              </div>
             </div>
           </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p>이 전문가의 다른 포트폴리오가 없습니다.</p>
-  {% endif %}
-</div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>이 전문가의 다른 포트폴리오가 없습니다.</p>
+    {% endif %}
+  </div>
 {% endblock %}
-
 
 <h2>이 전문가의 다른 Portfolio</h2>
