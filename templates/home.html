@@ -12,16 +12,6 @@
 {% endblock %}
 
 {% block content %}
-
-  {% comment %} 테스트용 코드 {% endcomment %}
-  {% if user.is_authenticated %}
-      <p>Welcome, {{ user.username }}!</p>
-  {% else %}
-      <p>Please log in.</p>
-  {% endif %}
-  {% comment %} 테스트용 코드 {% endcomment %}
-
-  
   <!-- 레이아웃 -->
   <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
     <div class="layout-container">
@@ -30,12 +20,10 @@
       <!-- 콘텐츠 -->
       {% comment %} {% endcomment %}
 
-      <br>
-      <br><br>
+      <br />
+      <br /><br />
       <h1>지금 핫한 포트폴리오</h1>
       {% include 'portfolios/portfolio_cards.html' %}
-
-
     </div>
   </div>
 {% endblock %}
@@ -44,24 +32,22 @@
 
 {% endblock %}
 
-
 {% block page_js %}
-{% csrf_token %}
-<script src="https://pay.nicepay.co.kr/v1/js/"></script> <!-- Server 승인 운영계 -->
-<script>
-  function serverAuth() {
-  
-    AUTHNICE.requestPay({
-      clientId: 'S2_c69537fcca7b470ea19db11a7f5dcf84',
-      method: 'card',
-      orderId: 'c7c1de06-7cc5-44e2-9e8e-7f3ce3a2029e',
-      amount: 1004,
-      goodsName: '나이스페이-상품',
-      returnUrl: 'http://127.0.0.1:8000/serverAuth/', //API를 호출할 Endpoint 입력
-      fnError: function (result) {
-        alert('개발자확인용 : ' + result.errorMsg + '')
-      }
-   });
-  }
+  {% csrf_token %}
+  <script src="https://pay.nicepay.co.kr/v1/js/"></script> <!-- Server 승인 운영계 -->
+  <script>
+    function serverAuth() {
+      AUTHNICE.requestPay({
+        clientId: 'S2_c69537fcca7b470ea19db11a7f5dcf84',
+        method: 'card',
+        orderId: 'c7c1de06-7cc5-44e2-9e8e-7f3ce3a2029e',
+        amount: 1004,
+        goodsName: '나이스페이-상품',
+        returnUrl: 'http://127.0.0.1:8000/serverAuth/', //API를 호출할 Endpoint 입력
+        fnError: function (result) {
+          alert('개발자확인용 : ' + result.errorMsg + '')
+        }
+      })
+    }
   </script>
 {% endblock %}
