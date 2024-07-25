@@ -1,29 +1,42 @@
 from rest_framework import serializers
-from .models import Category, CategoryDetail, Service, PriceOption, Review, ReviewComment
+from .models import (
+    Category,
+    CategoryDetail,
+    Service,
+    PriceOption,
+    Review,
+    ReviewComment,
+)
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = "__all__"
 
+
 class CategoryDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoryDetail
         fields = "__all__"
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
 
+
 class ServiceSerializer(serializers.ModelSerializer):
     price_options = serializers.SerializerMethodField()
-    category_detail_name = serializers.CharField(source="category_detail.name", read_only=True)
+    category_detail_name = serializers.CharField(
+        source="category_detail.name", read_only=True
+    )
     seller_name = serializers.CharField(source="seller.username", read_only=True)
-    
+
     class Meta:
         model = Service
         fields = "__all__"
@@ -33,20 +46,24 @@ class ServiceSerializer(serializers.ModelSerializer):
         serializer = PriceOptionSerializer(price_options, many=True)
         return serializer.data
 
+
 class PriceOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PriceOption
         fields = "__all__"
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = "__all__"
 
+
 class ReviewCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewComment
         fields = "__all__"
+
 
 class ServiceCreateSerializer(serializers.Serializer):
     service_name = serializers.CharField(max_length=255)
@@ -55,8 +72,10 @@ class ServiceCreateSerializer(serializers.Serializer):
     price_option_name = serializers.CharField(max_length=255)
     description = serializers.CharField()
 
+
 class ReviewCreateSerializer(serializers.Serializer):
     content = serializers.CharField()
+
 
 class ReviewCommentCreateSerializer(serializers.Serializer):
     content = serializers.CharField()

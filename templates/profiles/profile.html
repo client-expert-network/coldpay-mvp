@@ -29,27 +29,27 @@
           <div class="col-12">
             <div class="card mb-6">
               <div class="user-profile-header-banner">
-                <img src="../../assets/img/pages/profile-banner.png" alt="Banner image" class="rounded-top" />
+                <img src="{% static 'img/pages/profile-banner.png' %}" alt="Banner image" class="rounded-top" />
               </div>
               <div class="user-profile-header d-flex flex-column flex-lg-row text-sm-start text-center mb-5">
                 <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                  <img src="../../assets/img/avatars/1.png" alt="user image" class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
+                  <img src="{{ profile_user.profile_picture }}" alt="user image" class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
                 </div>
                 <div class="flex-grow-1 mt-3 mt-lg-5">
                   <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4">
                     <div class="user-profile-info">
-                      <h4 class="mb-2 mt-lg-6">{{ user.get_full_name }}</h4>
+                      <h4 class="mb-2 mt-lg-6">{{ profile_user.get_full_name }}</h4>
                       <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
                         <li class="list-inline-item d-flex gap-2 align-items-center">
                           <i class="ti ti-palette ti-lg"></i><span class="fw-medium">{{ profile.display_name }}</span>
                         </li>
                         <li class="list-inline-item d-flex gap-2 align-items-center">
-                          <i class="ti ti-mail ti-lg"></i><span class="fw-medium">{{ user.email }}</span>
+                          <i class="ti ti-mail ti-lg"></i><span class="fw-medium">{{ profile_user.email }}</span>
                         </li>
-                        {% if user.phone_number %}
-                        <li class="list-inline-item d-flex gap-2 align-items-center">
-                          <i class="ti ti-phone ti-lg"></i><span class="fw-medium">{{ user.phone_number }}</span>
-                        </li>
+                        {% if profile_user.phone_number %}
+                          <li class="list-inline-item d-flex gap-2 align-items-center">
+                            <i class="ti ti-phone ti-lg"></i><span class="fw-medium">{{ profile_user.phone_number }}</span>
+                          </li>
                         {% endif %}
                       </ul>
                     </div>
@@ -95,36 +95,46 @@
                 <ul class="list-unstyled my-3 py-1">
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-user ti-lg"></i><span class="fw-medium mx-2">Full Name:</span>
-                    <span>{{ user.get_full_name }}</span>
+                    <span>{{ profile_user.get_full_name }}</span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-check ti-lg"></i><span class="fw-medium mx-2">Expert:</span>
-                    <span>{% if user.is_expert %}인증됨{% else %}인증되지 않음{% endif %}</span>
+                    <span>
+                      {% if profile_user.is_expert %}
+                        인증됨
+                      {% else %}
+                        인증되지 않음
+                      {% endif %}
+                    </span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-crown ti-lg"></i><span class="fw-medium mx-2">Role:</span>
                     <span>촬영감독</span>
                   </li>
-
                 </ul>
                 <small class="card-text text-uppercase text-muted small">Contacts</small>
                 <ul class="list-unstyled my-3 py-1">
-
-                  <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-brand-hipchat ti-lg"></i>
-                    <span class="fw-medium mx-2">채팅하기:</span>
-                    <a href="{% url 'chats:start_chat' user.id %}" class="btn btn-primary btn-sm">
-                      <i class="ti ti-messages me-1"></i>채팅 시작
-                    </a>
-                  </li>
+                  {% if profile_user != user %}
+                    <li class="d-flex align-items-center mb-4">
+                      <i class="ti ti-brand-hipchat ti-lg"></i>
+                      <span class="fw-medium mx-2">채팅하기:</span>
+                      <a href="{% url 'chats:start_chat' profile_user.id %}" class="btn btn-primary btn-sm"><i class="ti ti-messages me-1"></i>채팅 시작</a>
+                    </li>
+                  {% endif %}
 
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-phone-call ti-lg"></i><span class="fw-medium mx-2">Contact:</span>
-                    <span>{% if user.phone_number %}{{ user.phone_number }}{% else %}등록되지 않음{% endif %}</span>
+                    <span>
+                      {% if profile_user.phone_number %}
+                        {{ profile_user.phone_number }}
+                      {% else %}
+                        등록되지 않음
+                      {% endif %}
+                    </span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-mail ti-lg"></i><span class="fw-medium mx-2">Email:</span>
-                    <span>{{ user.email }}</span>
+                    <span>{{ profile_user.email }}</span>
                   </li>
                 </ul>
               </div>
@@ -167,15 +177,17 @@
                       <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card h-100">
                           {% if portfolio.images.first %}
-                            <img class="card-img-top" src="{{ portfolio.images.first.image.url }}" alt="{{ portfolio.title }}">
+                            <img class="card-img-top" src="{{ portfolio.images.first.image.url }}" alt="{{ portfolio.title }}" />
                           {% endif %}
                           <div class="card-body">
-                            <h5 class="card-title">
-                              <a href="{% url 'portfolio_detail' portfolio_id=portfolio.id %}">{{ portfolio.title }}</a>
-                            </h5>
+                            <h5 class="card-title"><a href="{% url 'portfolio_detail' portfolio_id=portfolio.id %}">{{ portfolio.title }}</a></h5>
                             <p class="card-text">{{ portfolio.content|truncatewords:20 }}</p>
-                            <p class="card-text"><small class="text-muted">가격: {{ portfolio.price }}원</small></p>
-                            <p class="card-text"><small class="text-muted">기간: {{ portfolio.portfolio_start|date:"Y-m-d" }} ~ {{ portfolio.portfolio_end|date:"Y-m-d" }}</small></p>
+                            <p class="card-text">
+                              <small class="text-muted">가격: {{ portfolio.price }}원</small>
+                            </p>
+                            <p class="card-text">
+                              <small class="text-muted">기간: {{ portfolio.portfolio_start|date:'Y-m-d' }} ~ {{ portfolio.portfolio_end|date:'Y-m-d' }}</small>
+                            </p>
                           </div>
                           <div class="card-footer">
                             <small class="text-muted">좋아요: {{ portfolio.like }} | 조회수: {{ portfolio.show }}</small>
@@ -203,16 +215,16 @@
                       <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card h-100">
                           <div class="card-body">
-                            <h5 class="card-title">
-                              <a href="{% url 'services:get_service' service_id=service.id %}">{{ service.service_name }}</a>
-                            </h5>
-                            <p class="card-text"><small class="text-muted">카테고리: {{ service.category_detail.category.name }} > {{ service.category_detail.name }}</small></p>
+                            <h5 class="card-title"><a href="{% url 'services:get_service' service_id=service.id %}">{{ service.service_name }}</a></h5>
+                            <p class="card-text">
+                              <small class="text-muted">카테고리: {{ service.category_detail.category.name }} > {{ service.category_detail.name }}</small>
+                            </p>
                             <h6 class="card-subtitle mb-2 text-muted">가격 옵션:</h6>
                             <ul class="list-group list-group-flush">
                               {% for price_option in service.priceoption_set.all %}
                                 <li class="list-group-item">
                                   <strong>{{ price_option.price_option_name }}</strong>: {{ price_option.price }}원
-                                  <br><small>{{ price_option.description }}</small>
+                                  <br /><small>{{ price_option.description }}</small>
                                 </li>
                               {% endfor %}
                             </ul>
@@ -230,9 +242,6 @@
               </div>
             </div>
             <!-- / Services Section -->
-           
-
-
           </div>
         </div>
         <!-- / User Profile Content -->
