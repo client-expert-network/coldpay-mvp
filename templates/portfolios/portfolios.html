@@ -2,126 +2,22 @@
 {% load static %}
 
 {% block vendor_css %}
-<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
-<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
-<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
+
+{% endblock %}
+
+{% block page_css %}
+
 {% endblock %}
 
 {% block content %}
+  {% include 'partials/navbar.html' %}
+  {% include 'portfolios/partials/portfolio_card.html' %}
+{% endblock %}
 
-{% include 'partials/navbar.html' %}
+{% block vendor_js %}
 
+{% endblock %}
 
-{% if write %}
-<div style="text-align: right; margin-top: 30px; margin-right: 270px; margin-bottom: 20px;">
-  <a href="javascript:void(0);" onclick="checkExpertStatus()" class="btn btn-primary btn-lg" style="font-weight: medium;">글쓰기</a>
-</div>
-{% endif %}
-
-
-
-<div class="container px-4 px-lg-5 mt-5">
-  <h3>포트폴리오</h3>
-  <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-    {% for portfolio in portfolios %}
-      <div class="col mb-5">
-        <div class="card h-100">
-          <!-- Product image -->
-          <div class="card-img-top" style="max-height: 350px; overflow: hidden;">
-            {{ portfolio.htmlcontent|safe }}
-          </div>
-          <!-- Product details -->
-          <div class="card-body p-4">
-            <div class="text-left">
-              <!-- Product name -->
-              <h5 class="fw-bolder">{{ portfolio.title }}</h5>
-              <!-- Expert details -->
-              <a href="" class="card-text d-flex align-items-center">
-                <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" class="rounded-circle me-2" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
-                {{ portfolio.expert.username }}
-              </a>
-              <br><br>
-              <!-- Views and Likes -->
-              <p class="card-text">Views: {{ portfolio.show }}</p>
-              <p class="card-text">Likes: {{ portfolio.like }}</p>
-            </div>
-          </div>
-          <!-- Product actions -->
-          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center">
-              <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal" onclick="openPortfolioModal('{% url 'portfolio_detail' portfolio.id %}')">View Portfolio</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    {% empty %}
-      <div class="col-12">
-        <p>No portfolios available.</p>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-
-<div class="modal fade" id="fullscreenModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalFullTitle">Portfolio Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <iframe id="portfolioDetailFrame" src="" style="width:100%; height:80vh;" frameborder="0"></iframe>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<style>
-  @media (min-width: 800px) {
-    .modal-lg {
-      max-width: 80%; 
-    }
-  }
-</style>
-
-
-<script>
-  
-  function checkExpertStatus() {
-  fetch('/portfolios/confirm/')
-    .then(response => {
-      // 응답이 JSON 형식인지 확인
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.indexOf("application/json") !== -1) {
-        return response.json();
-      } else {
-        throw new Error("Received non-JSON response");
-      }
-    })
-    .then(data => {
-      if (data.is_expert) {
-        window.location.href = "{% url 'create_portfolio' %}"; // 전문가일 경우, 포트폴리오 생성 페이지로 이동
-      } else {
-        alert("전문가로 등록해야 Portfolio를 작성할 수 있습니다."); // 전문가가 아닐 경우, 경고 메시지 표시
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert("서버와의 통신 중 오류가 발생했습니다. 나중에 다시 시도해주세요.");
-    });
-}
-
-  // modal 열어주는 함수
-  function openPortfolioModal(url) {
-  document.getElementById('portfolioDetailFrame').src = url;
-}
-
-</script>
-
-
+{% block page_js %}
 
 {% endblock %}

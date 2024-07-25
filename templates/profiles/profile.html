@@ -29,31 +29,60 @@
           <div class="col-12">
             <div class="card mb-6">
               <div class="user-profile-header-banner">
-                <img src="../../assets/img/pages/profile-banner.png" alt="Banner image" class="rounded-top" />
+                <img src="{% static 'img/pages/profile-banner.png' %}" alt="Banner image" class="rounded-top" />
               </div>
               <div class="user-profile-header d-flex flex-column flex-lg-row text-sm-start text-center mb-5">
                 <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                  <img src="../../assets/img/avatars/1.png" alt="user image" class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
+                  <img src="{{ profile_user.profile_picture }}" alt="user image" class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
                 </div>
                 <div class="flex-grow-1 mt-3 mt-lg-5">
                   <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4">
                     <div class="user-profile-info">
-                      <h4 class="mb-2 mt-lg-6">{{ user.get_full_name }}</h4>
+                      <h4 class="mb-2 mt-lg-6">{{ profile_user.get_full_name }}</h4>
                       <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
                         <li class="list-inline-item d-flex gap-2 align-items-center">
                           <i class="ti ti-palette ti-lg"></i><span class="fw-medium">{{ profile.display_name }}</span>
                         </li>
                         <li class="list-inline-item d-flex gap-2 align-items-center">
-                          <i class="ti ti-mail ti-lg"></i><span class="fw-medium">{{ user.email }}</span>
+                          <i class="ti ti-mail ti-lg"></i><span class="fw-medium">{{ profile_user.email }}</span>
                         </li>
-                        {% if user.phone_number %}
-                        <li class="list-inline-item d-flex gap-2 align-items-center">
-                          <i class="ti ti-phone ti-lg"></i><span class="fw-medium">{{ user.phone_number }}</span>
-                        </li>
+                        {% if profile_user.phone_number %}
+                          <li class="list-inline-item d-flex gap-2 align-items-center">
+                            <i class="ti ti-phone ti-lg"></i><span class="fw-medium">{{ profile_user.phone_number }}</span>
+                          </li>
                         {% endif %}
+                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                          <i class="ti ti-users ti-lg"></i>
+                          <span class="fw-medium mx-2">팔로워:</span>
+                          <span hx-get="{% url 'profiles:follower_count' profile_user.id %}" hx-trigger="followToggled from:body" hx-swap="innerHTML">
+                            {{ follower_count }}
+                          </span>
+                        </li>
+                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                          <i class="ti ti-user-plus ti-lg"></i>
+                          <span class="fw-medium mx-2">팔로잉:</span>
+                          <span hx-get="{% url 'profiles:following_count' profile_user.id %}" hx-trigger="followToggled from:body" hx-swap="innerHTML">
+                            {{ following_count }}
+                          </span>
+                        </li>
+
                       </ul>
                     </div>
-                    <a href="javascript:void(0)" class="btn btn-primary mb-1"><i class="ti ti-user-check ti-xs me-2"></i>인증 완료</a>
+
+                      <div class="d-flex gap-2">
+                        {% if user != profile_user %}
+                            <button 
+                            hx-post="{% url 'profiles:follow_unfollow' profile_user.id %}"
+                            hx-swap="outerHTML"
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                            class="btn {% if is_following %}btn-secondary{% else %}btn-primary{% endif %} mb-1 ms-2">
+                            <i class="ti ti-user-plus ti-xs me-2"></i>
+                            {% if is_following %}언팔로우{% else %}팔로우{% endif %}
+                            </button>
+                        {% endif %}
+
+                        <a href="javascript:void(0)" class="btn btn-primary mb-1"><i class="ti ti-user-check ti-xs me-2"></i>인증 완료</a>
+                      </div>
                   </div>
                 </div>
               </div>
@@ -95,40 +124,46 @@
                 <ul class="list-unstyled my-3 py-1">
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-user ti-lg"></i><span class="fw-medium mx-2">Full Name:</span>
-                    <span>{{ user.get_full_name }}</span>
+                    <span>{{ profile_user.get_full_name }}</span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-check ti-lg"></i><span class="fw-medium mx-2">Expert:</span>
-                    <span>{% if user.is_expert %}인증됨{% else %}인증되지 않음{% endif %}</span>
+                    <span>
+                      {% if profile_user.is_expert %}
+                        인증됨
+                      {% else %}
+                        인증되지 않음
+                      {% endif %}
+                    </span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-crown ti-lg"></i><span class="fw-medium mx-2">Role:</span>
                     <span>촬영감독</span>
                   </li>
-
-                  <li class="d-flex align-items-center mb-2">
-                    <i class="ti ti-language ti-lg"></i><span class="fw-medium mx-2">Languages:</span>
-                    <span>English</span>
-                  </li>
                 </ul>
                 <small class="card-text text-uppercase text-muted small">Contacts</small>
                 <ul class="list-unstyled my-3 py-1">
-
-                  <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-brand-hipchat ti-lg"></i>
-                    <span class="fw-medium mx-2">채팅하기:</span>
-                    <a href="{% url 'chats:start_chat' user.id %}" class="btn btn-primary btn-sm">
-                      <i class="ti ti-messages me-1"></i>채팅 시작
-                    </a>
-                  </li>
+                  {% if profile_user != user %}
+                    <li class="d-flex align-items-center mb-4">
+                      <i class="ti ti-brand-hipchat ti-lg"></i>
+                      <span class="fw-medium mx-2">채팅하기:</span>
+                      <a href="{% url 'chats:start_chat' profile_user.id %}" class="btn btn-primary btn-sm"><i class="ti ti-messages me-1"></i>채팅 시작</a>
+                    </li>
+                  {% endif %}
 
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-phone-call ti-lg"></i><span class="fw-medium mx-2">Contact:</span>
-                    <span>{% if user.phone_number %}{{ user.phone_number }}{% else %}등록되지 않음{% endif %}</span>
+                    <span>
+                      {% if profile_user.phone_number %}
+                        {{ profile_user.phone_number }}
+                      {% else %}
+                        등록되지 않음
+                      {% endif %}
+                    </span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
                     <i class="ti ti-mail ti-lg"></i><span class="fw-medium mx-2">Email:</span>
-                    <span>{{ user.email }}</span>
+                    <span>{{ profile_user.email }}</span>
                   </li>
                 </ul>
               </div>
@@ -140,380 +175,108 @@
                 <small class="card-text text-uppercase text-muted small">Overview</small>
                 <ul class="list-unstyled mb-0 mt-3 pt-1">
                   <li class="d-flex align-items-end mb-4">
-                    <i class="ti ti-check ti-lg"></i><span class="fw-medium mx-2">Task Compiled:</span>
-                    <span>13.5k</span>
+                    <i class="ti ti-briefcase ti-lg"></i><span class="fw-medium mx-2">포트폴리오:</span>
+                    <span>{{ portfolio_count }}개</span>
                   </li>
                   <li class="d-flex align-items-end mb-4">
-                    <i class="ti ti-layout-grid ti-lg"></i><span class="fw-medium mx-2">Projects Compiled:</span>
-                    <span>146</span>
+                    <i class="ti ti-shopping-cart ti-lg"></i><span class="fw-medium mx-2">서비스:</span>
+                    <span>{{ service_count }}개</span>
                   </li>
-                  <li class="d-flex align-items-end">
-                    <i class="ti ti-users ti-lg"></i><span class="fw-medium mx-2">Connections:</span>
-                    <span>897</span>
-                  </li>
+                  {% if profile %}
+                    <li class="d-flex align-items-end">
+                      <i class="ti ti-star ti-lg"></i><span class="fw-medium mx-2">전문가 등급:</span>
+                      <span>{{ profile.get_expert_level_display }}</span>
+                    </li>
+                  {% endif %}
                 </ul>
               </div>
             </div>
             <!-- / Profile Overview -->
           </div>
           <div class="col-xl-8 col-lg-7 col-md-7">
-            <!-- Activity Timeline -->
+            <!-- Portfolio Section -->
             <div class="card card-action mb-6">
               <div class="card-header align-items-center">
-                <h5 class="card-action-title mb-0"><i class="ti ti-chart-bar ti-lg text-body me-4"></i>Activity Timeline</h5>
+                <h5 class="card-action-title mb-0"><i class="ti ti-briefcase ti-lg text-body me-4"></i>포트폴리오</h5>
               </div>
-              <div class="card-body pt-3">
-                <ul class="timeline mb-0">
-                  <li class="timeline-item timeline-item-transparent">
-                    <span class="timeline-point timeline-point-primary"></span>
-                    <div class="timeline-event">
-                      <div class="timeline-header mb-3">
-                        <h6 class="mb-0">12 Invoices have been paid</h6>
-                        <small class="text-muted">12 min ago</small>
-                      </div>
-                      <p class="mb-2">Invoices have been paid to the company</p>
-                      <div class="d-flex align-items-center mb-2">
-                        <div class="badge bg-lighter rounded d-flex align-items-center">
-                          <img src="../../assets//img/icons/misc/pdf.png" alt="img" width="15" class="me-2" />
-                          <span class="h6 mb-0 text-body">invoices.pdf</span>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="timeline-item timeline-item-transparent">
-                    <span class="timeline-point timeline-point-success"></span>
-                    <div class="timeline-event">
-                      <div class="timeline-header mb-3">
-                        <h6 class="mb-0">Client Meeting</h6>
-                        <small class="text-muted">45 min ago</small>
-                      </div>
-                      <p class="mb-2">Project meeting with john @10:15am</p>
-                      <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
-                        <div class="d-flex flex-wrap align-items-center mb-50">
-                          <div class="avatar avatar-sm me-3">
-                            <img src="../../assets/img/avatars/1.png" alt="Avatar" class="rounded-circle" />
+              <div class="card-body">
+                {% if portfolios %}
+                  <div class="row">
+                    {% for portfolio in portfolios %}
+                      <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                          {% if portfolio.images.first %}
+                            <img class="card-img-top" src="{{ portfolio.images.first.image.url }}" alt="{{ portfolio.title }}" />
+                          {% endif %}
+                          <div class="card-body">
+                            <h5 class="card-title"><a href="{% url 'portfolio_detail' portfolio_id=portfolio.id %}">{{ portfolio.title }}</a></h5>
+                            <p class="card-text">{{ portfolio.content|truncatewords:20 }}</p>
+                            <p class="card-text">
+                              <small class="text-muted">가격: {{ portfolio.price }}원</small>
+                            </p>
+                            <p class="card-text">
+                              <small class="text-muted">기간: {{ portfolio.portfolio_start|date:'Y-m-d' }} ~ {{ portfolio.portfolio_end|date:'Y-m-d' }}</small>
+                            </p>
                           </div>
-                          <div>
-                            <p class="mb-0 small fw-medium">Lester McCarthy (Client)</p>
-                            <small>CEO of Pixinvent</small>
+                          <div class="card-footer">
+                            <small class="text-muted">좋아요: {{ portfolio.like }} | 조회수: {{ portfolio.show }}</small>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                  <li class="timeline-item timeline-item-transparent">
-                    <span class="timeline-point timeline-point-info"></span>
-                    <div class="timeline-event">
-                      <div class="timeline-header mb-3">
-                        <h6 class="mb-0">Create a new project for client</h6>
-                        <small class="text-muted">2 Day Ago</small>
-                      </div>
-                      <p class="mb-2">6 team members in a project</p>
-                      <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap border-top-0 p-0">
-                          <div class="d-flex flex-wrap align-items-center">
-                            <ul class="list-unstyled users-list d-flex align-items-center avatar-group m-0 me-2">
-                              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" title="Vinnie Mostowy" class="avatar pull-up">
-                                <img class="rounded-circle" src="../../assets/img/avatars/1.png" alt="Avatar" />
-                              </li>
-                              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" title="Allen Rieske" class="avatar pull-up">
-                                <img class="rounded-circle" src="../../assets/img/avatars/4.png" alt="Avatar" />
-                              </li>
-                              <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" title="Julee Rossignol" class="avatar pull-up">
-                                <img class="rounded-circle" src="../../assets/img/avatars/2.png" alt="Avatar" />
-                              </li>
-                              <li class="avatar">
-                                <span class="avatar-initial rounded-circle pull-up text-heading" data-bs-toggle="tooltip" data-bs-placement="bottom" title="3 more">+3</span>
-                              </li>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <p>등록된 포트폴리오가 없습니다.</p>
+                {% endif %}
+              </div>
+            </div>
+            <!-- / Portfolio Section -->
+
+            <!-- Services Section -->
+            <div class="card card-action mb-6">
+              <div class="card-header align-items-center">
+                <h5 class="card-action-title mb-0"><i class="ti ti-shopping-cart ti-lg text-body me-4"></i>서비스</h5>
+              </div>
+              <div class="card-body">
+                {% if services %}
+                  <div class="row">
+                    {% for service in services %}
+                      <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                          <div class="card-body">
+                            <h5 class="card-title"><a href="{% url 'services:get_service' service_id=service.id %}">{{ service.service_name }}</a></h5>
+                            <p class="card-text">
+                              <small class="text-muted">카테고리: {{ service.category_detail.category.name }} > {{ service.category_detail.name }}</small>
+                            </p>
+                            <h6 class="card-subtitle mb-2 text-muted">가격 옵션:</h6>
+                            <ul class="list-group list-group-flush">
+                              {% for price_option in service.priceoption_set.all %}
+                                <li class="list-group-item">
+                                  <strong>{{ price_option.price_option_name }}</strong>: {{ price_option.price }}원
+                                  <br /><small>{{ price_option.description }}</small>
+                                </li>
+                              {% endfor %}
                             </ul>
                           </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <!-- / Activity Timeline -->
-            <div class="row">
-              <!-- Connections -->
-              <div class="col-lg-12 col-xl-6">
-                <div class="card card-action mb-6">
-                  <div class="card-header align-items-center">
-                    <h5 class="card-action-title mb-0">Connections</h5>
-                    <div class="card-action-element">
-                      <div class="dropdown">
-                        <button type="button" class="btn btn-icon btn-text-secondary rounded-pill dropdown-toggle hide-arrow p-0 text-muted" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots-vertical ti-md text-muted"></i></button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                          <li>
-                            <a class="dropdown-item" href="javascript:void(0);">Share connections</a>
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="javascript:void(0);">Suggest edits</a>
-                          </li>
-                          <li>
-                            <hr class="dropdown-divider" />
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="javascript:void(0);">Report bug</a>
-                          </li>
-                        </ul>
+                          <div class="card-footer">
+                            <small class="text-muted">좋아요: {{ service.likes.count }}</small>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    {% endfor %}
                   </div>
-                  <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                      <li class="mb-4">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/avatars/2.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-2">
-                              <h6 class="mb-0">Cecilia Payne</h6>
-                              <small>45 Connections</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <button class="btn btn-label-primary btn-icon"><i class="ti ti-user-check ti-md"></i></button>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="mb-4">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/avatars/3.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-2">
-                              <h6 class="mb-0">Curtis Fletcher</h6>
-                              <small>1.32k Connections</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <button class="btn btn-primary btn-icon"><i class="ti ti-user-x ti-md"></i></button>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="mb-4">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/avatars/10.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-2">
-                              <h6 class="mb-0">Alice Stone</h6>
-                              <small>125 Connections</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <button class="btn btn-primary btn-icon"><i class="ti ti-user-x ti-md"></i></button>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="mb-4">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-2">
-                              <h6 class="mb-0">Darrell Barnes</h6>
-                              <small>456 Connections</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <button class="btn btn-label-primary btn-icon"><i class="ti ti-user-check ti-md"></i></button>
-                          </div>
-                        </div>
-                      </li>
-
-                      <li class="mb-6">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/avatars/12.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-2">
-                              <h6 class="mb-0">Eugenia Moore</h6>
-                              <small>1.2k Connections</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <button class="btn btn-label-primary btn-icon"><i class="ti ti-user-check ti-md"></i></button>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="text-center">
-                        <a href="javascript:;">View all connections</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <!-- / Connections -->
-              <!-- Teams -->
-              <div class="col-lg-12 col-xl-6">
-                <div class="card card-action mb-6">
-                  <div class="card-header align-items-center">
-                    <h5 class="card-action-title mb-0">Teams</h5>
-                    <div class="card-action-element">
-                      <div class="dropdown">
-                        <button type="button" class="btn btn-icon btn-text-secondary dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false"><i class="ti ti-dots-vertical text-muted"></i></button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                          <li>
-                            <a class="dropdown-item" href="javascript:void(0);">Share teams</a>
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="javascript:void(0);">Suggest edits</a>
-                          </li>
-                          <li>
-                            <hr class="dropdown-divider" />
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="javascript:void(0);">Report bug</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                      <li class="mb-4">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/icons/brands/react-label.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-2">
-                              <h6 class="mb-0">React Developers</h6>
-                              <small>72 Members</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <a href="javascript:;"><span class="badge bg-label-danger">Developer</span></a>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="mb-4">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/icons/brands/support-label.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-2">
-                              <h6 class="mb-0">Support Team</h6>
-                              <small>122 Members</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <a href="javascript:;"><span class="badge bg-label-primary">Support</span></a>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="mb-4">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/icons/brands/figma-label.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-2">
-                              <h6 class="mb-0">UI Designers</h6>
-                              <small>7 Members</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <a href="javascript:;"><span class="badge bg-label-info">Designer</span></a>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="mb-4">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/icons/brands/vue-label.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-2">
-                              <h6 class="mb-0">Vue.js Developers</h6>
-                              <small>289 Members</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <a href="javascript:;"><span class="badge bg-label-danger">Developer</span></a>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="mb-6">
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex align-items-center">
-                            <div class="avatar me-2">
-                              <img src="../../assets/img/icons/brands/twitter-label.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                            <div class="me-w">
-                              <h6 class="mb-0">Digital Marketing</h6>
-                              <small>24 Members</small>
-                            </div>
-                          </div>
-                          <div class="ms-auto">
-                            <a href="javascript:;"><span class="badge bg-label-secondary">Marketing</span></a>
-                          </div>
-                        </div>
-                      </li>
-                      <li class="text-center">
-                        <a href="javascript:;">View all teams</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <!-- / Teams -->
-            </div>
-            <!-- Projects table -->
-            <div class="card mb-4">
-              <div class="card-datatable table-responsive">
-                <table class="datatables-projects table border-top">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th></th>
-                      <th>Project</th>
-                      <th>Leader</th>
-                      <th>Team</th>
-                      <th class="w-px-200">Progress</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                </table>
+                {% else %}
+                  <p>등록된 서비스가 없습니다.</p>
+                {% endif %}
               </div>
             </div>
-            <!-- / Projects table -->
+            <!-- / Services Section -->
           </div>
         </div>
         <!-- / User Profile Content -->
       </div>
       <!-- / Content -->
 
-      <!-- Footer -->
-      <footer class="content-footer footer bg-footer-theme">
-        <div class="container-xxl">
-          <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
-            <div class="text-body">
-              ©<script>
-                 document.write(new Date().getFullYear())
-               </script>, made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
-            </div>
-            <div class="d-none d-lg-inline-block">
-              <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank">License</a>
-              <a href="https://1.envato.market/pixinvent_portfolio" target="_blank" class="footer-link me-4">More Themes</a>
-
-              <a href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/" target="_blank" class="footer-link me-4">Documentation</a>
-
-              <a href="https://pixinvent.ticksy.com/" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
-            </div>
-          </div>
-        </div>
-      </footer>
-      <!-- / Footer -->
 
       <div class="content-backdrop fade"></div>
     </div>
