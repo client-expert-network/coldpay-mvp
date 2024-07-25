@@ -16,14 +16,11 @@
   <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
     <div class="layout-container">
       <!-- 네비바 -->
-      {% include 'partials/navbar.html' %}
+      {% comment %} {% include 'partials/navbar.html' %} {% endcomment %}
       <!-- 콘텐츠 -->
       {% comment %} {% endcomment %}
 
-      <br />
-      <br /><br />
-      <h1>지금 핫한 포트폴리오</h1>
-      {% include 'portfolios/portfolio_cards.html' %}
+      {% include 'portfolios/portfolios.html' %}
 
       {% include 'partials/footer.html' %}
     </div>

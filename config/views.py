@@ -11,22 +11,24 @@ from django.core.paginator import Paginator
 @require_http_methods(["GET"])
 def home(request):
     page = request.GET.get("page", 1)
-    portfolios = Portfolio.objects.all().order_by("-created_at")
+    portfolios = Portfolio.objects.all().order_by("-created_at")[:8]
     paginator = Paginator(portfolios, 10)
     paginator_boards = paginator.get_page(page)
 
     return render(
         request,
         "home.html",
-        {"portfolios": paginator_boards},)
-    
-    
+        {"portfolios": paginator_boards, "write": False},
+    )
+
 
 @xframe_options_exempt
-@require_http_methods(["GET", "POST"])  
-def main_portfolio_detail(request, portfolio_id):    # 게시물 READ
+@require_http_methods(["GET", "POST"])
+def main_portfolio_detail(request, portfolio_id):  # 게시물 READ
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
-    other_portfolios = Portfolio.objects.filter(expert=portfolio.expert).exclude(id=portfolio.id)
+    other_portfolios = Portfolio.objects.filter(expert=portfolio.expert).exclude(
+        id=portfolio.id
+    )
     other_portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
     if request.method == "POST":
         # 사용자가 이미 'like'를 눌렀는지 확인하는 세션 키 생성
@@ -40,8 +42,8 @@ def main_portfolio_detail(request, portfolio_id):    # 게시물 READ
             portfolio.like += 1
             request.session[session_key] = True
         portfolio.save()
-        return HttpResponseRedirect(reverse('portfolio_detail', args=[portfolio_id]))
-    
+        return HttpResponseRedirect(reverse("portfolio_detail", args=[portfolio_id]))
+
     else:
         # 사용자가 방문시 조회수 증가를 위한 세션 키 생성
         session_key = f"shown_{portfolio_id}"
@@ -51,7 +53,12 @@ def main_portfolio_detail(request, portfolio_id):    # 게시물 READ
             portfolio.save()
             request.session[session_key] = True  # 세션에 키 설정하여 재방문 추적
 
-        return render(request, 'home.html', 
-        {'portfolio': portfolio,
-        'other_portfolios': other_portfolios,
-        'other_portfolio': other_portfolio,})
+        return render(
+            request,
+            "home.html",
+            {
+                "portfolio": portfolio,
+                "other_portfolios": other_portfolios,
+                "other_portfolio": other_portfolio,
+            },
+        )
