@@ -1,0 +1,31 @@
+<!-- portfolio_cards.html -->
+<div class="container mt-4">
+    <div class="row">
+      {% for portfolio in portfolios %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100">
+            <div class="card-img-top" style="max-height: 350px; overflow: hidden;">
+              {{ portfolio.htmlcontent|safe }}
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ portfolio.title }}</h5>
+  
+              <a href="" class="card-text d-flex align-items-center">
+                <img src="{{ portfolio.expert.profile_picture }}" alt="Profile Picture" class="rounded-circle me-2" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                {{ portfolio.expert.username }}</a>
+                
+                <br>
+                <br>
+              <p class="card-text">Views: {{ portfolio.show }}</p>
+              <p class="card-text">Likes: {{ portfolio.like }}</p>
+              <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal" onclick="openPortfolioModal('{% url 'portfolio_detail' portfolio.id %}')">View Portfolio</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12">
+          <p>No portfolios available.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>

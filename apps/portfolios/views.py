@@ -5,7 +5,7 @@ from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonRespons
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from .forms import PortfolioForm
-from apps.portfolios.models import Portfolio, PortfolioImage, PortfolioVideo
+from apps.portfolios.models import Portfolio
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.urls import reverse
@@ -58,7 +58,18 @@ def get_portfolios(request):
         {"portfolios": paginator_boards},
     )
 
+@xframe_options_exempt
+@require_http_methods(["GET"])
+def get_portfolio_cards(request):
+    page = request.GET.get("page", 1)
+    portfolios = Portfolio.objects.all().order_by("-created_at")
+    paginator = Paginator(portfolios, 10)
+    paginator_boards = paginator.get_page(page)
 
+    return render(
+        request,
+        "home.html",
+        {"portfolios": paginator_boards},)
 
 @require_http_methods(["GET"])
 def get_top_portfolios(request):    
@@ -131,7 +142,6 @@ def update_portfolio(request, portfolio_id):
         'portfolio': portfolio,
         'TINYMCE_API_KEY': settings.TINYMCE_API_KEY,  # TINYMCE_API_KEY를 context에 추가
     }
-    
     return render(request, 'portfolios/update_portfolio.html', context)
 
 
