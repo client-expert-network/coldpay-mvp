@@ -35,6 +35,7 @@ def get_services(request):
 
 @require_http_methods(["GET"])
 def get_service(request, service_id):
+    user_id = request.user.id
     service = Service.objects.get(id=service_id)
     serializers = ServiceSerializer(service)
     reviews = Review.objects.filter(service_id=service.id).select_related("author")
@@ -46,7 +47,7 @@ def get_service(request, service_id):
         author_email = review.author.email
         reviews_with_comments.append({"review": review, "comments": comments, "author_username": author_username, "author_email": author_email})
     return render(request, "services/service_detail.html", {
-        "service": serializers.data, "reviews": reviews, "reviews_with_comments": reviews_with_comments, "seller_email": seller_email})
+        "service": serializers.data, "reviews": reviews, "reviews_with_comments": reviews_with_comments, "seller_email": seller_email, "user_id": user_id})
 
 @csrf_exempt
 @require_http_methods(["GET", "POST"])

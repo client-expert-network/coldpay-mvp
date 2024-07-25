@@ -176,6 +176,7 @@
                       <button type="button" class="btn btn-label-primary w-100"><i class="ti ti-heart"></i>찜하기</button>
                     </div>
                     <button
+                      onclick="serverAuth({{ service }})"
                       class="btn btn-success d-grid w-100"
                       data-bs-toggle="offcanvas"
                       data-bs-target="#addPaymentOffcanvas">
@@ -251,4 +252,20 @@
 
 {% block page_js %}
   <script src="{% static 'js/pages-profile.js' %}"></script>
+  <script src="https://pay.nicepay.co.kr/v1/js/"></script> <!-- Server 승인 운영계 -->
+<script>
+  function serverAuth(service) {
+    AUTHNICE.requestPay({
+      clientId: 'S2_c69537fcca7b470ea19db11a7f5dcf84',
+      method: 'card',
+      orderId: 'test1234',
+      amount: service["price_options"][0]["price"],
+      goodsName: service["service_name"],
+      returnUrl: 'http://127.0.0.1:8000/serverAuth/', //API를 호출할 Endpoint 입력
+      fnError: function (result) {
+        alert('개발자확인용 : ' + result.errorMsg + '')
+      }
+   });
+  }
+  </script>
 {% endblock %}
