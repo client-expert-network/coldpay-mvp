@@ -78,7 +78,7 @@
                 <br>
               <p class="card-text">Views: {{ other_portfolio.show }}</p>
               <p class="card-text">Likes: {{ other_portfolio.like }}</p>
-              <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal" onclick="openPortfolioModal('{% url 'portfolio_detail' other_portfolio.id %}')">View Portfolio</a>
+              <a href="{% url 'portfolio_detail' other_portfolio.id %}" class="btn btn-outline-primary">View Portfolio</a>
             </div>
           </div>
         </div>
