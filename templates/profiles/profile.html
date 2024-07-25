@@ -51,14 +51,14 @@
                             <i class="ti ti-phone ti-lg"></i><span class="fw-medium">{{ profile_user.phone_number }}</span>
                           </li>
                         {% endif %}
-                        <li class="d-flex align-items-center mb-4">
+                        <li class="list-inline-item d-flex gap-2 align-items-center">
                           <i class="ti ti-users ti-lg"></i>
                           <span class="fw-medium mx-2">팔로워:</span>
                           <span hx-get="{% url 'profiles:follower_count' profile_user.id %}" hx-trigger="followToggled from:body" hx-swap="innerHTML">
                             {{ follower_count }}
                           </span>
                         </li>
-                        <li class="d-flex align-items-center mb-4">
+                        <li class="list-inline-item d-flex gap-2 align-items-center">
                           <i class="ti ti-user-plus ti-lg"></i>
                           <span class="fw-medium mx-2">팔로잉:</span>
                           <span hx-get="{% url 'profiles:following_count' profile_user.id %}" hx-trigger="followToggled from:body" hx-swap="innerHTML">
@@ -277,27 +277,6 @@
       </div>
       <!-- / Content -->
 
-      <!-- Footer -->
-      <footer class="content-footer footer bg-footer-theme">
-        <div class="container-xxl">
-          <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
-            <div class="text-body">
-              ©<script>
-                 document.write(new Date().getFullYear())
-               </script>, made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
-            </div>
-            <div class="d-none d-lg-inline-block">
-              <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank">License</a>
-              <a href="https://1.envato.market/pixinvent_portfolio" target="_blank" class="footer-link me-4">More Themes</a>
-
-              <a href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/" target="_blank" class="footer-link me-4">Documentation</a>
-
-              <a href="https://pixinvent.ticksy.com/" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
-            </div>
-          </div>
-        </div>
-      </footer>
-      <!-- / Footer -->
 
       <div class="content-backdrop fade"></div>
     </div>
