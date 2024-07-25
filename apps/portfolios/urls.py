@@ -6,7 +6,6 @@ from .views import *
 urlpatterns = [
     path("portfolios/create/", create_portfolio, name="create_portfolio"),
     path("portfolios/", get_portfolios, name="portfolios_index"),
-    path("portfolios/cards", get_portfolio_cards, name="portfolio_cards"),
     path("portfolios/top/", get_top_portfolios, name="top_portfolios"),
     path("portfolios/read/<str:portfolio_id>/", portfolio_detail, name="portfolio_detail"),
     path("portfolios/update/<str:portfolio_id>/", update_portfolio, name="update_portfolio"),

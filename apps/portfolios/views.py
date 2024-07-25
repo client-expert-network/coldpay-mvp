@@ -58,19 +58,6 @@ def get_portfolios(request):
         {"portfolios": paginator_boards},
     )
 
-@xframe_options_exempt
-@require_http_methods(["GET"])
-def get_portfolio_cards(request):
-    page = request.GET.get("page", 1)
-    portfolios = Portfolio.objects.all().order_by("-created_at")
-    paginator = Paginator(portfolios, 10)
-    paginator_boards = paginator.get_page(page)
-
-    return render(
-        request,
-        "home.html",
-        {"portfolios": paginator_boards},)
-
 @require_http_methods(["GET"])
 def get_top_portfolios(request):    
     top_portfolios = Portfolio.objects.annotate(
