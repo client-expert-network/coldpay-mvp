@@ -23,8 +23,8 @@
             <!-- Logo -->
             <div class="app-brand justify-content-center mb-6">
               <a href="{% url 'home' %}" class="app-brand-link">
-                <span class="app-brand-logo demo">로고</span>
-                <span class="app-brand-text demo text-heading fw-bold">Coldpay</span>
+                <img src="{% static 'img/logo/coldpay_logo.png' %}" alt="logo" height="32" width="32" />
+                <span class="fs-4 demo menu-text fw-bold text-black">ColdPay</span>
               </a>
             </div>
             <!-- /Logo -->
@@ -117,7 +117,7 @@
       const lastNameField = document.getElementById('last_name')
       const firstNameField = document.getElementById('first_name')
       let verifyComplete = false
-      let debounceTimer;
+      let debounceTimer
     
       const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase())
     
@@ -139,36 +139,38 @@
           displayMessage('오류가 발생했습니다. 다시 시도해주세요.')
         }
       }
-
+    
       const debounce = (func, delay) => {
         return (...args) => {
-          clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(() => func.apply(this, args), delay);
-        };
-      };
+          clearTimeout(debounceTimer)
+          debounceTimer = setTimeout(() => func.apply(this, args), delay)
+        }
+      }
     
       const checkUserExists = async (email) => {
-        const data = await fetchData(`{% url 'accounts:check-user-exists' %}?email=${email}`);
+        const data = await fetchData(`{% url 'accounts:check-user-exists' %}?email=${email}`)
         if (data?.exists) {
-          displayMessage('이미 가입한 계정이 있습니다.');
-          return true;
+          displayMessage('이미 가입한 계정이 있습니다.')
+          return true
         } else {
-          messageDiv.style.display = 'none';
-          messageDiv.innerText = '';
-          return false;
+          messageDiv.style.display = 'none'
+          messageDiv.innerText = ''
+          return false
         }
-      };
+      }
     
       // 이메일 필드 검증
-      emailField.addEventListener('input', debounce(() => {
-        const email = emailField.value;
-        // 형식이 맞으면
-        if (validateEmail(email)) {
-          // 이미 가입한 계정이 있는지 확인
-          checkUserExists(email);
-        }
-      }, 500)); // 500ms 지연
-    
+      emailField.addEventListener(
+        'input',
+        debounce(() => {
+          const email = emailField.value
+          // 형식이 맞으면
+          if (validateEmail(email)) {
+            // 이미 가입한 계정이 있는지 확인
+            checkUserExists(email)
+          }
+        }, 500)
+      ) // 500ms 지연
     
       // 인증 메일 발송
       sendBtn.addEventListener('click', async () => {
@@ -207,23 +209,20 @@
           verifyBtn.disabled = true
           emailField.readOnly = true
           verifyComplete = true
-          checkFormValidity();  
+          checkFormValidity()
         } else {
           displayMessage('인증번호가 올바르지 않습니다.')
           submitBtn.disabled = true
         }
       })
-
-      
+    
       const checkFormValidity = () => {
-        const isNameFilled = lastNameField.value.trim() !== '' && firstNameField.value.trim() !== '';
-        submitBtn.disabled = !(verifyComplete && isNameFilled);
-      };
-      
-      lastNameField.addEventListener('input', checkFormValidity);
-      firstNameField.addEventListener('input', checkFormValidity);
-
-
+        const isNameFilled = lastNameField.value.trim() !== '' && firstNameField.value.trim() !== ''
+        submitBtn.disabled = !(verifyComplete && isNameFilled)
+      }
+    
+      lastNameField.addEventListener('input', checkFormValidity)
+      firstNameField.addEventListener('input', checkFormValidity)
     })
   </script>
 {% endblock %}

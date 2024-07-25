@@ -1,9 +1,10 @@
+{% load static %}
 <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
   <div class="container-xxl">
     <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
       <a href="{% url 'home' %}" class="app-brand-link">
-        <span class="app-brand-logo demo">로고</span>
-        <span class="app-brand-text demo menu-text fw-bold">ColdPay</span>
+        <img src="{% static 'img/logo/coldpay_logo.png' %}" alt="logo" height="32" width="32" />
+        <span class="fs-4 demo menu-text fw-bold">ColdPay</span>
       </a>
 
       <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none"><i class="ti ti-x ti-md align-middle"></i></a>
@@ -328,7 +329,7 @@
           </li>
         {% else %}
           <div>
-            <span><a href="{% url 'accounts:login' %}">로그인</a></span>
+            <span><a href="{% url 'accounts:login' %}">로그인</a></span> |
             <span><a href="{% url 'accounts:signup' %}">회원가입</a></span>
           </div>
         {% endif %}
