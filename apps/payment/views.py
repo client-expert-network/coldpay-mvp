@@ -6,6 +6,10 @@ import requests
 from requests.auth import HTTPBasicAuth
 import uuid
 import json
+from apps.services.models import Order, Service
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 clientId = 'S2_c69537fcca7b470ea19db11a7f5dcf84'
 secretKey = 'fef1725500514b5e96605e5d82ab1c0b'
@@ -21,6 +25,10 @@ def cancel(request):
 
 @csrf_exempt
 def server_auth(request):
+    print(request.body)
+    created_order = Order.objects.create(
+        id=uuid.uuid4()
+    )
     if request.method == 'POST':
         try:
             print('https://sandbox-api.nicepay.co.kr/v1/payments/' + request.POST['tid'])
@@ -38,12 +46,22 @@ def server_auth(request):
 
             res_dict = response.json()
             print(res_dict)
+            customer_id = res_dict['buyerName']
+            service_name = res_dict['goodsName']
+            update_order = Order.objects.get(id=created_order.id)
+            update_order.total_price = res_dict['amount']
+            update_order.payment_method = res_dict['payMethod']
+            update_order.customer = User.objects.get(id=customer_id)
+            update_order.service = Service.objects.get(service_name=service_name)
+            update_order.purchase_complete = True
+            update_order.save()
 
             return render(request, 'payment/response.html', {
                 'resultMsg': res_dict['resultMsg']
             })
 
         except requests.exceptions.RequestException as e:
+            Order.objects.get(id=created_order.id).delete()
             return HttpResponse(str(e), status=500)
     return HttpResponse(status=405)
 
@@ -81,3 +99,12 @@ def hook(request):
         print(request.body)
         return HttpResponse("ok", status=200)
     return HttpResponse(status=405)
+
+@csrf_exempt
+def create_order(request):
+    order = Order.objects.create(
+        order_id=uuid.uuid4()
+    )
+    return JsonResponse({
+        'order_id': order.order_id
+    })

@@ -175,14 +175,9 @@
                       <a href="/get/all/" class="btn btn-label-secondary w-100 me-4">뒤로 가기</a>
                       <button type="button" class="btn btn-label-primary w-100"><i class="ti ti-heart"></i>찜하기</button>
                     </div>
-                    <button
-                      onclick="serverAuth({{ service }})"
-                      class="btn btn-success d-grid w-100"
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#addPaymentOffcanvas">
-                      <span class="d-flex align-items-center justify-content-center text-nowrap"
-                        ><i class="ti ti-currency-dollar ti-xs me-1"></i>결제하기</span
-                      >
+                    {{ service|json_script:'service'}}
+                    <button onclick="serverAuth(JSON.parse(document.getElementById('service').textContent), '{{user_id}}')" class="btn btn-success d-grid w-100" data-bs-toggle="offcanvas" data-bs-target="#addPaymentOffcanvas">
+                      <span class="d-flex align-items-center justify-content-center text-nowrap"><i class="ti ti-currency-dollar ti-xs me-1"></i>결제하기</span>
                     </button>
                   </div>
                 </div>
@@ -254,13 +249,16 @@
   <script src="{% static 'js/pages-profile.js' %}"></script>
   <script src="https://pay.nicepay.co.kr/v1/js/"></script> <!-- Server 승인 운영계 -->
 <script>
-  function serverAuth(service) {
+  function serverAuth(service, user_id) {
+    console.log(service);
+    console.log(user_id); 
     AUTHNICE.requestPay({
       clientId: 'S2_c69537fcca7b470ea19db11a7f5dcf84',
       method: 'card',
-      orderId: 'test1234',
+      orderId: "test11116",
       amount: service["price_options"][0]["price"],
       goodsName: service["service_name"],
+      buyerName: user_id,
       returnUrl: 'http://127.0.0.1:8000/serverAuth/', //API를 호출할 Endpoint 입력
       fnError: function (result) {
         alert('개발자확인용 : ' + result.errorMsg + '')
