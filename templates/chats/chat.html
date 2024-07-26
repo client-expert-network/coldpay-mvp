@@ -142,7 +142,6 @@
                   <h6 class="text-muted mb-0">No Chats Found</h6>
                 </li>
               {% endif %}
-
               {% comment %} <li class="chat-contact-list-item active mb-1">
                 <a class="d-flex align-items-center">
                   <div class="flex-shrink-0 avatar avatar-offline">
@@ -173,7 +172,7 @@
               </li> {% endcomment %}
             </ul>
             <!-- 연락처 -->
-            <ul class="list-unstyled chat-contact-list mb-0 py-2" id="contact-list">
+            {% comment %} <ul class="list-unstyled chat-contact-list mb-0 py-2" id="contact-list">
               <li class="chat-contact-list-item chat-contact-list-item-title mt-0">
                 <h5 class="text-primary mb-0">Contacts</h5>
               </li>
@@ -301,7 +300,7 @@
                   </div>
                 </a>
               </li>
-            </ul>
+            </ul> {% endcomment %}
           </div>
         </div>
         <!-- /Chat contacts -->

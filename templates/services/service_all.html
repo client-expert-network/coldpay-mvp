@@ -1,150 +1,265 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block vendor_css %}
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/node-waves/node-waves.css' %}"
+/>
 
-{% block vendor_css %}
-  <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}"
+/>
+{% endblock %} {% block page_css %}
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/css/pages/page-profile.css' %}"
+/>
+{% endblock %} {% block content %} {% include 'partials/navbar.html' %}
+<!-- Layout wrapper -->
+<div
+  class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu"
+>
+  <div class="layout-container">
+    <!-- Layout container -->
+    <div class="layout-page">
+      <!-- Content wrapper -->
+      <div class="content-wrapper">
+        <!-- Content -->
 
-  <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
-{% endblock %}
+        <div class="container-xxl flex-grow-1 container-p-y">
+          <div class="app-academy">
+            <div class="card p-0 mb-6">
+              <div class="card mb-6">
+                <div
+                  class="card-header d-flex flex-wrap justify-content-between gap-4"
+                >
+                  <div class="card-title mb-0 me-1">
+                    <h5 class="mb-0">All Services</h5>
+                    <p class="mb-0">
+                      Coldpay에서는 창작자들이 제공하는 다양한 서비스를 확인하실
+                      수 있습니다.
+                    </p>
+                  </div>
+                  <div
+                    class="d-flex justify-content-md-end align-items-center column-gap-6"
+                  >
+                    <select class="form-select">
+                      <option value="">전체 카테고리</option>
+                      {% for category in category_details %}
+                      <option value="{{ category.id }}">
+                        {{ category.name }}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
 
-{% block page_css %}
-  <link rel="stylesheet" href="{% static 'vendor/css/pages/page-profile.css' %}" />
-{% endblock %}
+                <!-- 컨텐츠들 -->
+                <div class="card-body">
+                  <div class="row gy-6 mb-6">
+                    {% for service in services %}
+                    <div class="col-sm-6 col-lg-4">
+                      <div class="card p-2 h-100 shadow-none border">
+                        <div
+                          class="rounded-2 text-center mb-4"
+                          style="
+                            height: 100px;
+                            background-image: url('/static/test_image.png');
+                            background-size: cover;
+                            background-position: center;
+                            border-radius: 0.5rem;
+                          "
+                        >
+                          <a
+                            href="{% url 'services:get_service' service_id=service.id %}"
+                          ></a>
+                        </div>
+                        <div class="card-body p-4 pt-2">
+                          <div
+                            class="d-flex justify-content-between align-items-center mb-4"
+                          >
+                            <span class="badge bg-label-primary"
+                              >{{ service.category_detail_name }}</span
+                            >
+                            <p
+                              class="d-flex align-items-center justify-content-center fw-medium gap-1 mb-0"
+                            >
+                              4.4
+                              <span class="text-warning"
+                                ><i
+                                  class="ti ti-star-filled ti-lg me-1"
+                                ></i></span
+                              ><span class="fw-normal">(1.23k)</span>
+                            </p>
+                          </div>
+                          <a
+                            href="{% url 'services:get_service' service_id=service.id %}"
+                            class="h5"
+                            >{{ service.service_name }}</a
+                          >
+                          <p class="mt-1">{{ service.seller_name }}</p>
+                          <p class="d-flex align-items-center mb-1">
+                            <i class="ti ti-currency-dollar me-1"></i
+                            >{{service.price_options.0.price}}
+                          </p>
+                          <div
+                            class="d-flex flex-column flex-md-row gap-4 text-nowrap flex-wrap flex-md-nowrap flex-lg-wrap flex-xxl-nowrap"
+                          >
+                            <a
+                              class="w-100 btn btn-label-primary d-flex align-items-center"
+                              href="{% url 'services:get_service' service_id=service.id %}"
+                            >
+                              <span class="me-2">View</span
+                              ><i
+                                class="ti ti-chevron-right ti-xs scaleX-n1-rtl"
+                              ></i>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  <nav
+                    aria-label="Page navigation"
+                    class="d-flex align-items-center justify-content-center"
+                  >
+                    <ul class="pagination mb-0 pagination-rounded">
+                      <li class="page-item first">
+                        <a class="page-link" href="javascript:void(0);"
+                          ><i
+                            class="ti ti-chevrons-left ti-md scaleX-n1-rtl"
+                          ></i
+                        ></a>
+                      </li>
+                      <li class="page-item prev">
+                        <a class="page-link" href="javascript:void(0);"
+                          ><i class="ti ti-chevron-left ti-md scaleX-n1-rtl"></i
+                        ></a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="javascript:void(0);">1</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="javascript:void(0);">2</a>
+                      </li>
+                      <li class="page-item active">
+                        <a class="page-link" href="javascript:void(0);">3</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="javascript:void(0);">4</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="javascript:void(0);">5</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="javascript:void(0);">6</a>
+                      </li>
+                      <li class="page-item next">
+                        <a class="page-link" href="javascript:void(0);"
+                          ><i
+                            class="ti ti-chevron-right ti-md scaleX-n1-rtl"
+                          ></i
+                        ></a>
+                      </li>
+                      <li class="page-item last">
+                        <a class="page-link" href="javascript:void(0);"
+                          ><i
+                            class="ti ti-chevrons-right ti-md scaleX-n1-rtl"
+                          ></i
+                        ></a>
+                      </li>
+                    </ul>
+                  </nav>
+                  <a
+                    href="{% url 'services:create_service' %}"
+                    class="btn btn-outline-primary"
+                    >Create Service</a
+                  >
+                </div>
+              </div>
+            </div>
+            <!--/ Content -->
 
-{% block content %}
-  {% include 'partials/navbar.html' %}
-  <!-- Layout wrapper -->
-  <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
-	<div class="layout-container">
+            <!-- Footer -->
+            {% comment %} <footer class="content-footer footer bg-footer-theme">
+              <div class="container-xxl">
+                <div
+                  class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column"
+                >
+                  <div class="text-body">
+                    ©
+                    <script>
+                      document.write(new Date().getFullYear());
+                    </script>
+                    , made with ❤️ by
+                    <a
+                      href="https://pixinvent.com"
+                      target="_blank"
+                      class="footer-link"
+                      >Pixinvent</a
+                    >
+                  </div>
+                  <div class="d-none d-lg-inline-block">
+                    <a
+                      href="https://themeforest.net/licenses/standard"
+                      class="footer-link me-4"
+                      target="_blank"
+                      >License</a
+                    >
+                    <a
+                      href="https://1.envato.market/pixinvent_portfolio"
+                      target="_blank"
+                      class="footer-link me-4"
+                      >More Themes</a
+                    >
 
-	  <!-- Layout container -->
-	  <div class="layout-page">
-		<!-- Content wrapper -->
-		<div class="content-wrapper">
-		  <!-- Content -->
+                    <a
+                      href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
+                      target="_blank"
+                      class="footer-link me-4"
+                      >Documentation</a
+                    >
 
-		  <div class="container-xxl flex-grow-1 container-p-y">
-			<div class="app-academy">
-			  <div class="card p-0 mb-6">
+                    <a
+                      href="https://pixinvent.ticksy.com/"
+                      target="_blank"
+                      class="footer-link d-none d-sm-inline-block"
+                      >Support</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </footer> {% endcomment %}
+            {% include 'partials/footer.html' %}
+            <!-- / Footer -->
 
-			  <div class="card mb-6">
-				<div class="card-header d-flex flex-wrap justify-content-between gap-4">
-				  <div class="card-title mb-0 me-1">
-					<h5 class="mb-0">All Services</h5>
-					<p class="mb-0">Coldpay에서는 창작자들이 제공하는 다양한 서비스를 확인하실 수 있습니다.</p>
-				  </div>
-				  <div class="d-flex justify-content-md-end align-items-center column-gap-6">
-					<select class="form-select">
-					  <option value="">전체 카테고리</option>
-					  {% for category in category_details %}
-					  <option value={{ category.id }}>{{ category.name }}</option>
-					  {% endfor %}
-					</select>
-
-				  </div>
-				</div>
-
-				<!-- 컨텐츠들 -->
-				<div class="card-body">
-				  <div class="row gy-6 mb-6">
-					{% for service in services %}
-						<div class="col-sm-6 col-lg-4">
-							<div class="card p-2 h-100 shadow-none border">
-								<div class="rounded-2 text-center mb-4" style="height: 100px; background-image: url('/static/test_image.png'); background-size: cover; background-position: center; border-radius: .5rem;">
-									<a href="{% url 'services:get_service' service_id=service.id %}"></a>
-								</div>
-							<div class="card-body p-4 pt-2">
-								<div class="d-flex justify-content-between align-items-center mb-4">
-								<span class="badge bg-label-primary">{{ service.category_detail_name }}</span>
-								<p class="d-flex align-items-center justify-content-center fw-medium gap-1 mb-0">
-									4.4 <span class="text-warning"><i class="ti ti-star-filled ti-lg me-1"></i></span
-									><span class="fw-normal">(1.23k)</span>
-								</p>
-								</div>
-								<a href="{% url 'services:get_service' service_id=service.id %}" class="h5">{{ service.service_name }}</a>
-								<p class="mt-1">{{ service.seller_name }}</p>
-								<p class="d-flex align-items-center mb-1"><i class="ti ti-currency-dollar me-1"></i>{{ service.price_options.0.price}}</p>
-								<div
-								class="d-flex flex-column flex-md-row gap-4 text-nowrap flex-wrap flex-md-nowrap flex-lg-wrap flex-xxl-nowrap">
-								<a
-									class="w-100 btn btn-label-primary d-flex align-items-center"
-									href="{% url 'services:get_service' service_id=service.id %}">
-									<span class="me-2">View</span
-									><i class="ti ti-chevron-right ti-xs scaleX-n1-rtl"></i>
-								</a>
-								</div>
-							</div>
-							</div>
-					  </div>
-					{% endfor %}
-				  </div>
-				  <nav aria-label="Page navigation" class="d-flex align-items-center justify-content-center">
-					<ul class="pagination mb-0 pagination-rounded">
-					  <li class="page-item first">
-						<a class="page-link" href="javascript:void(0);"
-						  ><i class="ti ti-chevrons-left ti-md scaleX-n1-rtl"></i
-						></a>
-					  </li>
-					  <li class="page-item prev">
-						<a class="page-link" href="javascript:void(0);"
-						  ><i class="ti ti-chevron-left ti-md scaleX-n1-rtl"></i
-						></a>
-					  </li>
-					  <li class="page-item">
-						<a class="page-link" href="javascript:void(0);">1</a>
-					  </li>
-					  <li class="page-item">
-						<a class="page-link" href="javascript:void(0);">2</a>
-					  </li>
-					  <li class="page-item active">
-						<a class="page-link" href="javascript:void(0);">3</a>
-					  </li>
-					  <li class="page-item">
-						<a class="page-link" href="javascript:void(0);">4</a>
-					  </li>
-					  <li class="page-item">
-						<a class="page-link" href="javascript:void(0);">5</a>
-					  </li>
-					  <li class="page-item">
-						<a class="page-link" href="javascript:void(0);">6</a>
-					  </li>
-					  <li class="page-item next">
-						<a class="page-link" href="javascript:void(0);"
-						  ><i class="ti ti-chevron-right ti-md scaleX-n1-rtl"></i
-						></a>
-					  </li>
-					  <li class="page-item last">
-						<a class="page-link" href="javascript:void(0);"
-						  ><i class="ti ti-chevrons-right ti-md scaleX-n1-rtl"></i
-						></a>
-					  </li>
-					</ul>
-				</nav>
-				<a href="{% url 'services:create_service' %}" class="btn btn-outline-primary">Create Service</a>
-			  </div>
-			</div>
-		  </div>
-		  <!--/ Content -->
-
-
-		  <div class="content-backdrop fade"></div>
-		</div>
-		<!--/ Content wrapper -->
-	  </div>
-
-	  <!--/ Layout container -->
-	</div>
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!--/ Content wrapper -->
+        </div>
+        <!--/ Layout container -->
+      </div>
+    </div>
+    {% endblock %} {% block vendor_js %}
+    <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+    {% endblock %} {% block page_js %}
+    <script src="{% static 'js/pages-profile.js' %}"></script>
+    {% endblock %}
   </div>
-{% endblock %}
-
-{% block vendor_js %}
-  <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
-{% endblock %}
-
-{% block page_js %}
-  <script src="{% static 'js/pages-profile.js' %}"></script>
-{% endblock %}
+</div>

@@ -17,110 +17,104 @@
 
 {% block content %}
   {% include 'partials/navbar.html' %}
-<!-- Layout wrapper -->
-<div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
     <div class="layout-container">
+      <!-- Content -->
 
-
-          <!-- Content -->
-
-          <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="row g-6">
-              <div class="col-lg-8">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-6 gap-2">
-                      <div class="me-1">
-                        <h5 class="mb-0">{{ service.service_name }}</h5>
-                        <p class="mb-0">Prof. <span class="fw-medium text-heading"> {{ service.seller_name }} </span></p>
-                        {% if request.user.email == seller_email %}
-                            <a href="{% url 'services:update_service' service_id=service.id %}" class="btn btn-outline-primary btn-sm mt-4">Update</a>
-                            <a href="{% url 'services:delete_service' service_id=service.id %}" class="btn btn-outline-danger btn-sm mt-4">Delete</a>
-                        {% endif %}
-                      
+      <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row g-6">
+          <div class="col-lg-8">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center flex-wrap mb-6 gap-2">
+                  <div class="me-1">
+                    <h5 class="mb-0">{{ service.service_name }}</h5>
+                    <p class="mb-0">
+                      Prof. <span class="fw-medium text-heading">{{ service.seller_name }}</span>
+                    </p>
+                    {% if request.user.email == seller_email %}
+                      <a href="{% url 'services:update_service' service_id=service.id %}" class="btn btn-outline-primary btn-sm mt-4">Update</a>
+                      <a href="{% url 'services:delete_service' service_id=service.id %}" class="btn btn-outline-danger btn-sm mt-4">Delete</a>
+                    {% endif %}
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span class="badge bg-label-danger">{{ service.category_detail_name }}</span>
+                    <i class="ti ti-share ti-lg mx-4"></i>
+                    <i class="ti ti-bookmarks ti-lg"></i>
+                  </div>
+                </div>
+                <div class="card academy-content shadow-none border">
+                  <div class="p-2">
+                    <div class="cursor-pointer">
+                      <video class="w-100" poster="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg" id="plyr-video-player" playsinline controls>
+                        <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" />
+                      </video>
+                    </div>
+                  </div>
+                  <div class="card-body pt-4">
+                    <h5>About this Service</h5>
+                    <div class="d-flex flex-wrap row-gap-2">
+                      <div class="me-12">
+                        <p class="text-nowrap mb-2">
+                          <i class="ti ti-check me-2 align-bottom"></i>세부 카테고리 : {{ service.category_detail_name }}
+                        </p>
+                        <p class="text-nowrap mb-2">
+                          <i class="ti ti-users me-2 align-top"></i>가격 : {{ service.price_options.0.price }}￦
+                        </p>
+                        <p class="text-nowrap mb-2">
+                          <i class="ti ti-world me-2 align-bottom"></i>Price Option Name : {{ service.price_options.0.price_option_name }}
+                        </p>
+                        <p class="text-nowrap mb-0">
+                          <i class="ti ti-file me-2 align-bottom"></i>아이콘은 아직 수정 안 했습니다.
+                        </p>
                       </div>
-                      <div class="d-flex align-items-center">
-                        <span class="badge bg-label-danger">{{ service.category_detail_name }}</span>
-                        <i class="ti ti-share ti-lg mx-4"></i>
-                        <i class="ti ti-bookmarks ti-lg"></i>
+                      <div>
+                        <p class="text-nowrap mb-2">
+                          <i class="ti ti-video me-2 align-top ms-50"></i>Likes : {{ service.likes }}
+                        </p>
+                        <p class="text-nowrap mb-0">
+                          <i class="ti ti-clock me-2 align-top"></i>Seller : {{ service.seller_name }}
+                        </p>
                       </div>
                     </div>
-                    <div class="card academy-content shadow-none border">
-                      <div class="p-2">
-                        <div class="cursor-pointer">
-                          <video
-                            class="w-100"
-                            poster="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg"
-                            id="plyr-video-player"
-                            playsinline
-                            controls>
-                            <source
-                              src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-                              type="video/mp4" />
-                          </video>
+
+                    <hr class="my-6" />
+                    <h5>Instructor</h5>
+                    <div class="d-flex justify-content-start align-items-center user-name">
+                      <div class="avatar-wrapper">
+                        <div class="avatar me-4">
+                          <img src="../../assets/img/avatars/11.png" alt="Avatar" class="rounded-circle" />
                         </div>
                       </div>
-                      <div class="card-body pt-4">
-                        <h5>About this Service</h5>
-                        <div class="d-flex flex-wrap row-gap-2">
-                          <div class="me-12">
-                            <p class="text-nowrap mb-2">
-                              <i class="ti ti-check me-2 align-bottom"></i>세부 카테고리 : {{ service.category_detail_name }}
-                            </p>
-                            <p class="text-nowrap mb-2"><i class="ti ti-users me-2 align-top"></i>가격 : {{ service.price_options.0.price }}￦</p>
-                            <p class="text-nowrap mb-2">
-                              <i class="ti ti-world me-2 align-bottom"></i>Price Option Name : {{ service.price_options.0.price_option_name }}
-                            </p>
-                            <p class="text-nowrap mb-0"><i class="ti ti-file me-2 align-bottom"></i>아이콘은 아직 수정 안 했습니다.</p>
-                          </div>
-                          <div>
-                            <p class="text-nowrap mb-2">
-                              <i class="ti ti-video me-2 align-top ms-50"></i>Likes : {{ service.likes }}
-                            </p>
-                            <p class="text-nowrap mb-0">
-                              <i class="ti ti-clock me-2 align-top"></i>Seller : {{ service.seller_name }}
-                            </p>
-                          </div>
-                        </div>
-
-                        <hr class="my-6" />
-                        <h5>Instructor</h5>
-                        <div class="d-flex justify-content-start align-items-center user-name">
-                          <div class="avatar-wrapper">
-                            <div class="avatar me-4">
-                              <img src="../../assets/img/avatars/11.png" alt="Avatar" class="rounded-circle" />
-                            </div>
-                          </div>
-                          <div class="d-flex flex-column">
-                            <h6 class="mb-1">{{ service.seller_name }}</h6>
-                            <small>Web Developer, Designer, and Teacher</small>
-                          </div>
-                        </div>
-
-                        <hr class="my-6" />
-                        <h5>Price Description</h5>
-                        <p class="mb-6">
-                          {{ service.price_options.0.description }}
-                        </p>
-
-                        <hr class="my-6" />
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                          <h5>Reviews</h5>
-                          <div>
-                              <a href="{% url 'services:create_review' service_id=service.id %}" class="btn btn-outline-primary">Create a Review</a>
-                          </div>
+                      <div class="d-flex flex-column">
+                        <h6 class="mb-1">{{ service.seller_name }}</h6>
+                        <small>Web Developer, Designer, and Teacher</small>
                       </div>
-                        {% for review in reviews_with_comments %}
-                        <div class="d-flex justify-content-start align-items-start user-name mb-6">
-                          <div class="avatar-wrapper">
-                            <div class="avatar me-4">
-                              <img src="../../assets/img/avatars/11.png" alt="Avatar" class="rounded-circle" />
-                            </div>
+                    </div>
+
+                    <hr class="my-6" />
+                    <h5>Price Description</h5>
+                    <p class="mb-6">{{ service.price_options.0.description }}</p>
+
+                    <hr class="my-6" />
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <h5>Reviews</h5>
+                      <div>
+                        <a href="{% url 'services:create_review' service_id=service.id %}" class="btn btn-outline-primary">Create a Review</a>
+                      </div>
+                    </div>
+                    {% for review in reviews_with_comments %}
+                      <div class="d-flex justify-content-start align-items-start user-name mb-6">
+                        <div class="avatar-wrapper">
+                          <div class="avatar me-4">
+                            <img src="../../assets/img/avatars/11.png" alt="Avatar" class="rounded-circle" />
                           </div>
-                          <div class="d-flex flex-column w-100">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                              <h6 class="mb-1">{{ review.author_username }}</h6>
-                              {% if request.user.email == review.author_email %}
+                        </div>
+                        <div class="d-flex flex-column w-100">
+                          <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h6 class="mb-1">{{ review.author_username }}</h6>
+                            {% if request.user.email == review.author_email %}
                               <div style="display: flex; justify-content: flex-end;">
                                 {% if request.user.email == seller_email %}
                                   <a href="{% url 'services:create_comment' review_id=review.review.id %}" style="margin-right: 10px; font-size: smaller; color: black;">Comment</a>
@@ -128,112 +122,83 @@
                                 <a href="{% url 'services:update_review' review_id=review.review.id %}" style="margin-right: 10px; font-size: smaller;">Modify</a>
                                 <a href="{% url 'services:delete_review' review_id=review.review.id %}" style="font-size: smaller; color: red;">Delete</a>
                               </div>
-                              {% endif %}
-                            </div>
-                            <small>{{ review.review.content }}</small>
-                            
-                            {% if review.comments %}
+                            {% endif %}
+                          </div>
+                          <small>{{ review.review.content }}</small>
+
+                          {% if review.comments %}
                             <div style="margin-left: 20px; margin-top: 10px;">
                               <h6>Comments:</h6>
                               {% for comment in review.comments %}
-                              <div style="border-left: 2px solid #ccc; padding-left: 10px; margin-bottom: 10px;">
-                                <small>{{ comment.content }}</small>
-                                {% if request.user.email == seller_email %}
-                                <div style="display: flex; margin-top: 5px;">
-                                  <a href="{% url 'services:update_comment' comment_id=comment.id %}" style="margin-right: 10px; font-size: smaller;">Modify</a>
-                                  <a href="{% url 'services:delete_comment' comment_id=comment.id %}" style="font-size: smaller; color: red;">Delete</a>
+                                <div style="border-left: 2px solid #ccc; padding-left: 10px; margin-bottom: 10px;">
+                                  <small>{{ comment.content }}</small>
+                                  {% if request.user.email == seller_email %}
+                                    <div style="display: flex; margin-top: 5px;">
+                                      <a href="{% url 'services:update_comment' comment_id=comment.id %}" style="margin-right: 10px; font-size: smaller;">Modify</a>
+                                      <a href="{% url 'services:delete_comment' comment_id=comment.id %}" style="font-size: smaller; color: red;">Delete</a>
+                                    </div>
+                                  {% endif %}
                                 </div>
-                                {% endif %}
-                              </div>
                               {% endfor %}
                             </div>
-                            {% endif %}
-                          </div>
+                          {% endif %}
                         </div>
-                        {% endfor %}
-
                       </div>
-                    </div>
+                    {% endfor %}
                   </div>
                 </div>
               </div>
-
-              <!-- Sidebar -->
-              <!-- Invoice Actions -->
-              <div class="col-lg-3 col-12 invoice-actions">
-                <div class="card mb-6">
-                  <div class="card-body">
-                    <button
-                      class="btn btn-primary d-grid w-100"
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#sendInvoiceOffcanvas">
-                      <span class="d-flex align-items-center justify-content-center text-nowrap"
-                        ><i class="ti ti-send ti-xs me-2"></i>문의하기</span
-                      >
-                    </button>
-                    <div class="d-flex my-4">
-                      <a href="/get/all/" class="btn btn-label-secondary w-100 me-4">뒤로 가기</a>
-                      <button type="button" class="btn btn-label-primary w-100"><i class="ti ti-heart"></i>찜하기</button>
-                    </div>
-                    <button
-                      class="btn btn-success d-grid w-100"
-                      data-bs-toggle="offcanvas"
-                      data-bs-target="#addPaymentOffcanvas">
-                      <span class="d-flex align-items-center justify-content-center text-nowrap"
-                        ><i class="ti ti-currency-dollar ti-xs me-1"></i>결제하기</span
-                      >
-                    </button>
-                  </div>
-                </div>
-                
-              </div>
-              <!-- /Invoice Actions -->
             </div>
-          <!--/ Content -->
+          </div>
 
-          <!-- Footer -->
-          <footer class="content-footer footer bg-footer-theme">
-            <div class="container-xxl">
-              <div
-                class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
-                <div class="text-body">
-                  ©
-                  <script>
-                    document.write(new Date().getFullYear());
-                  </script>
-                  , made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
+          <!-- Sidebar -->
+          <!-- Invoice Actions -->
+          <div class="col-lg-3 col-12 invoice-actions">
+            <div class="card mb-6">
+              <div class="card-body">
+                <button class="btn btn-primary d-grid w-100" data-bs-toggle="offcanvas" data-bs-target="#sendInvoiceOffcanvas"><span class="d-flex align-items-center justify-content-center text-nowrap"><i class="ti ti-send ti-xs me-2"></i>문의하기</span></button>
+                <div class="d-flex my-4">
+                  <a href="/get/all/" class="btn btn-label-secondary w-100 me-4">뒤로 가기</a>
+                  <button type="button" class="btn btn-label-primary w-100"><i class="ti ti-heart"></i>찜하기</button>
                 </div>
-                <div class="d-none d-lg-inline-block">
-                  <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank"
-                    >License</a
-                  >
-                  <a href="https://1.envato.market/pixinvent_portfolio" target="_blank" class="footer-link me-4"
-                    >More Themes</a
-                  >
-
-                  <a
-                    href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Documentation</a
-                  >
-
-                  <a href="https://pixinvent.ticksy.com/" target="_blank" class="footer-link d-none d-sm-inline-block"
-                    >Support</a
-                  >
-                </div>
+                {{ service|json_script:'service' }}
+                <button onclick="createOrder(JSON.parse(document.getElementById('service').textContent), '{{ user_id }}')" class="btn btn-success d-grid w-100" data-bs-toggle="offcanvas" data-bs-target="#addPaymentOffcanvas"><span class="d-flex align-items-center justify-content-center text-nowrap"><i class="ti ti-currency-dollar ti-xs me-1"></i>결제하기</span></button>
               </div>
             </div>
-          </footer>
-          <!-- / Footer -->
-
-          <div class="content-backdrop fade"></div>
+          </div>
+          <!-- /Invoice Actions -->
         </div>
-        <!--/ Content wrapper -->
-      </div>
+        <!-- / Content -->
 
-      <!--/ Layout container -->
+        <!-- Footer -->
+        {% comment %} <footer class="content-footer footer bg-footer-theme">
+          <div class="container-xxl">
+            <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
+              <div class="text-body">
+                ©<script>
+                   document.write(new Date().getFullYear())
+                 </script>, made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
+              </div>
+              <div class="d-none d-lg-inline-block">
+                <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank">License</a>
+                <a href="https://1.envato.market/pixinvent_portfolio" target="_blank" class="footer-link me-4">More Themes</a>
+
+                <a href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/" target="_blank" class="footer-link me-4">Documentation</a>
+
+                <a href="https://pixinvent.ticksy.com/" target="_blank" class="footer-link d-none d-sm-inline-block">Support</a>
+              </div>
+            </div>
+          </div>
+        </footer> {% endcomment %}
+        {% include 'partials/footer.html' %}
+        <!-- / Footer -->
+
+        <div class="content-backdrop fade"></div>
+      </div>
+      <!-- / Content wrapper -->
     </div>
+
+    <!-- / Layout container -->
   </div>
 
   <!-- Overlay -->
@@ -242,7 +207,7 @@
   <!-- Drag Target Area To SlideIn Menu On Small Screens -->
   <div class="drag-target"></div>
 
-  <!--/ Layout wrapper -->
+  <!-- / Layout wrapper -->
 {% endblock %}
 
 {% block vendor_js %}
@@ -251,4 +216,46 @@
 
 {% block page_js %}
   <script src="{% static 'js/pages-profile.js' %}"></script>
+  <script src="https://pay.nicepay.co.kr/v1/js/"></script> <!-- Server 승인 운영계 -->
+  <script>
+    function createOrder(service, user_id) {
+      fetch(`http://127.0.0.1:8000/order/create/${service.id}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const order_id = data.order_id
+          console.log('ORDER_ID:', order_id)
+          if (order_id != null) {
+            serverAuth(service, user_id, order_id)
+          } else {
+            alert('주문 생성에 실패했습니다.')
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+        })
+    }
+    function serverAuth(service, user_id, order_id) {
+      console.log(service)
+      console.log(user_id)
+      console.log(order_id)
+      AUTHNICE.requestPay({
+        clientId: 'S2_c69537fcca7b470ea19db11a7f5dcf84',
+        method: 'card',
+        orderId: order_id,
+        amount: service['price_options'][0]['price'],
+        goodsName: service['service_name'],
+        buyerName: user_id,
+        returnUrl: 'http://127.0.0.1:8000/serverAuth/', //API를 호출할 Endpoint 입력
+        fnError: function (result) {
+          alert('개발자확인용 : ' + result.errorMsg + '')
+        }
+      })
+    }
+  </script>
 {% endblock %}

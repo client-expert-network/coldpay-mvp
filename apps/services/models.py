@@ -76,3 +76,13 @@ class Payment(models.Model):
     @property
     def service(self):
         return self.price_option.service
+
+class Order(models.Model):
+    id = ShortUUIDField(primary_key=True, editable=False, max_length=128)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    total_price = models.IntegerField(blank=True, null=True)
+    purchase_complete = models.BooleanField(default=False, blank=True, null=True)
+    payment_method = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)

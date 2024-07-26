@@ -87,3 +87,16 @@ def start_chat_view(request, user_id):
         chatroom.members.add(other_user, request.user)
 
     return redirect("chats:chatroom", chatroom.group_name)
+
+
+@login_required
+def leave_chat_view(request, chatroom_name):
+    chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
+    if request.user not in chat_group.members.all():
+        raise Http404()
+
+    if request.method == "POST":
+        print("aaaa")
+        chat_group.members.remove(request.user)
+        print("asd")
+        return redirect("home")
