@@ -10,6 +10,7 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
+
 @login_required
 def profile_view(request, username=None):
     if username:
@@ -33,7 +34,7 @@ def profile_view(request, username=None):
     is_following = request.user.is_following(user) if request.user != user else None
     follower_count = user.followers.count()
     following_count = user.following.count()
-    
+
     context = {
         "profile_user": user,
         "profile": profile,
@@ -42,9 +43,9 @@ def profile_view(request, username=None):
         "services": services,
         "portfolio_count": portfolio_count,
         "service_count": service_count,
-        'is_following': is_following,
-        'follower_count': follower_count,
-        'following_count': following_count,
+        "is_following": is_following,
+        "follower_count": follower_count,
+        "following_count": following_count,
     }
     return render(request, "profiles/profile.html", context)
 
@@ -54,7 +55,9 @@ def profile_view(request, username=None):
 def follow_unfollow(request, user_id):
     user_to_follow = get_object_or_404(User, id=user_id)
     if request.user == user_to_follow:
-        return JsonResponse({'status': 'error', 'message': '자기 자신을 팔로우할 수 없습니다.'})
+        return JsonResponse(
+            {"status": "error", "message": "자기 자신을 팔로우할 수 없습니다."}
+        )
 
     if request.user.is_following(user_to_follow):
         request.user.unfollow(user_to_follow)
@@ -64,19 +67,23 @@ def follow_unfollow(request, user_id):
         is_following = True
 
     context = {
-        'profile_user': user_to_follow,
-        'is_following': is_following,
-        'user': request.user,
+        "profile_user": user_to_follow,
+        "is_following": is_following,
+        "user": request.user,
     }
-    
-    button_html = render_to_string('profiles/follow_button.html', context, request=request)
+
+    button_html = render_to_string(
+        "profiles/follow_button.html", context, request=request
+    )
     response = HttpResponse(button_html)
-    response['HX-Trigger'] = 'followToggled'
+    response["HX-Trigger"] = "followToggled"
     return response
+
 
 def follower_count(request, user_id):
     user = get_object_or_404(User, id=user_id)
     return HttpResponse(str(user.followers.count()))
+
 
 def following_count(request, user_id):
     user = get_object_or_404(User, id=user_id)
