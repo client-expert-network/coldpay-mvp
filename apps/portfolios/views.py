@@ -9,7 +9,6 @@ from apps.portfolios.models import Portfolio
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.urls import reverse
-from django.views.decorators.clickjacking import xframe_options_exempt
 
 
 User = get_user_model()
@@ -46,7 +45,6 @@ def confirm_expert(request):
         return JsonResponse({"is_expert": True})
 
 
-@xframe_options_exempt
 @require_http_methods(["GET"])
 def get_portfolios(request):
     page = request.GET.get("page", 1)
@@ -73,7 +71,6 @@ def get_top_portfolios(request):
     )
 
 
-@xframe_options_exempt
 @require_http_methods(["GET", "POST"])
 def portfolio_detail(request, portfolio_id):  # 게시물 READ
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
@@ -114,7 +111,6 @@ def portfolio_detail(request, portfolio_id):  # 게시물 READ
         )
 
 
-@xframe_options_exempt
 @require_http_methods(["GET", "POST"])  # 게시물 UPDATE 수정
 def update_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)
@@ -140,7 +136,6 @@ def update_portfolio(request, portfolio_id):
     return render(request, "portfolios/update_portfolio.html", context)
 
 
-@xframe_options_exempt
 @require_http_methods(["POST"])  # 게시물 DELETE
 def delete_portfolio(request, portfolio_id):
     portfolio = get_object_or_404(Portfolio, pk=portfolio_id)

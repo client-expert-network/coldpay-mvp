@@ -17,6 +17,7 @@
 </div>
 {% endif %}
 
+{% load static %}
 <div class="container px-4 px-lg-5 mt-5">
   <h3>포트폴리오</h3>
   <div
@@ -35,9 +36,9 @@
             <!-- Product name -->
             <h5 class="fw-bolder">{{ portfolio.title }}</h5>
             <!-- Expert details -->
-            <a href="" class="card-text d-flex align-items-center">
+            <a href="{% url 'profiles:user_profile' portfolio.expert.username %}" class="card-text d-flex align-items-center">
               <img
-                src="{{ portfolio.expert.profile_picture }}"
+                src="{% if portfolio.expert.profile_picture %}{{ portfolio.expert.profile_picture }}{% else %}{% static 'img/front-pages/icons/user.png' %}{% endif %}"
                 alt="Profile Picture"
                 class="rounded-circle me-2"
                 style="
@@ -59,11 +60,8 @@
         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
           <div class="text-center">
             <a
-              href="javascript:void(0);"
+              href="{% url 'portfolio_detail' portfolio.id %}"
               class="btn btn-outline-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#fullscreenModal"
-              onclick="openPortfolioModal('{% url 'portfolio_detail' portfolio.id %}')"
               >View Portfolio</a
             >
           </div>
@@ -77,47 +75,6 @@
     {% endfor %}
   </div>
 </div>
-
-<div class="modal fade" id="fullscreenModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalFullTitle">Portfolio Details</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <iframe
-          id="portfolioDetailFrame"
-          src=""
-          style="width: 100%; height: 80vh"
-          frameborder="0"
-        ></iframe>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-label-secondary"
-          data-bs-dismiss="modal"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<style>
-  @media (min-width: 800px) {
-    .modal-lg {
-      max-width: 80%;
-    }
-  }
-</style>
 
 <script>
   function checkExpertStatus() {
@@ -144,10 +101,5 @@
           "서버와의 통신 중 오류가 발생했습니다. 나중에 다시 시도해주세요."
         );
       });
-  }
-
-  // modal 열어주는 함수
-  function openPortfolioModal(url) {
-    document.getElementById("portfolioDetailFrame").src = url;
   }
 </script>
