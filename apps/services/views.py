@@ -240,3 +240,10 @@ def create_order(request, service_id):
 
     )
     return JsonResponse({"order_id": created_order.id}, safe=False)
+
+@require_http_methods(["GET"])
+def get_orders(request):
+    user = User.objects.get(email=request.user)
+    orders = Order.objects.select_related('service').filter(customer=user)
+    print(orders)
+    return render(request, "services/orders.html", {"orders": orders})
