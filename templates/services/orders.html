@@ -29,7 +29,11 @@
   rel="stylesheet"
   href="{% static 'vendor/css/pages/page-profile.css' %}"
 />
-{% endblock %} {% block content %} {% include 'partials/navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
 <!-- Layout wrapper -->
 <div
   class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu"
