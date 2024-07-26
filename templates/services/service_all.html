@@ -197,7 +197,7 @@
             <!--/ Content -->
 
             <!-- Footer -->
-            <footer class="content-footer footer bg-footer-theme">
+            {% comment %} <footer class="content-footer footer bg-footer-theme">
               <div class="container-xxl">
                 <div
                   class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column"
@@ -245,7 +245,8 @@
                   </div>
                 </div>
               </div>
-            </footer>
+            </footer> {% endcomment %}
+            {% include 'partials/footer.html' %}
             <!-- / Footer -->
 
             <div class="content-backdrop fade"></div>
