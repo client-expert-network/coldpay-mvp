@@ -11,7 +11,6 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 
 
-@login_required
 def profile_view(request, username=None):
     if username:
         user = get_object_or_404(User, username=username)
@@ -31,7 +30,11 @@ def profile_view(request, username=None):
     portfolio_count = portfolios.count()
     service_count = services.count()
 
-    is_following = request.user.is_following(user) if request.user != user else None
+    if request.user.is_authenticated:
+        is_following = request.user.is_following(user) if request.user != user else None
+    else:
+        is_following = None
+
     follower_count = user.followers.count()
     following_count = user.following.count()
 
