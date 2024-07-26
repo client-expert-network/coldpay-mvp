@@ -1,7 +1,4 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block vendor_css %}
+{% extends 'base.html' %} {% load static %} {% block vendor_css %}
   <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
 
   <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
@@ -9,13 +6,9 @@
   <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
-{% endblock %}
-
-{% block page_css %}
+{% endblock %} {% block page_css %}
   <link rel="stylesheet" href="{% static 'vendor/css/pages/page-profile.css' %}" />
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
   {% include 'partials/navbar.html' %}
   <!-- Layout wrapper -->
   <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
@@ -24,7 +17,7 @@
 
       <div class="container-xxl flex-grow-1 container-p-y">
         <div class="card">
-          <h3 class="card-header">Create Comment</h3>
+          <h3 class="card-header">코멘트 작성하기</h3>
           <div class="card-body">
             <form method="post" action="{% url 'services:create_comment' review_id=review.id %}">
               {% csrf_token %}
@@ -33,7 +26,7 @@
                 <label for="content" class="form-label">Comment</label>
                 <textarea class="form-control" id="content" name="content" rows="3"></textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Create</button>
+              <button type="submit" class="btn btn-primary">작성</button>
             </form>
           </div>
         </div>
@@ -58,12 +51,8 @@
   <div class="drag-target"></div>
 
   <!-- / Layout wrapper -->
-{% endblock %}
-
-{% block vendor_js %}
+{% endblock %} {% block vendor_js %}
   <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
-{% endblock %}
-
-{% block page_js %}
+{% endblock %} {% block page_js %}
   <script src="{% static 'js/pages-profile.js' %}"></script>
 {% endblock %}

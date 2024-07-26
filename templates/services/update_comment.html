@@ -1,7 +1,4 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block vendor_css %}
+{% extends 'base.html' %} {% load static %} {% block vendor_css %}
   <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
 
   <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
@@ -9,13 +6,9 @@
   <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
-{% endblock %}
-
-{% block page_css %}
+{% endblock %} {% block page_css %}
   <link rel="stylesheet" href="{% static 'vendor/css/pages/page-profile.css' %}" />
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
   {% include 'partials/navbar.html' %}
   <!-- Layout wrapper -->
   <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
@@ -24,7 +17,7 @@
 
       <div class="container-xxl flex-grow-1 container-p-y">
         <div class="card">
-          <h3 class="card-header">Update Comment</h3>
+          <h3 class="card-header">코멘트 수정</h3>
           <div class="card-body">
             <form method="post" action="{% url 'services:update_comment' comment_id=comment.id %}">
               {% csrf_token %}
@@ -33,7 +26,7 @@
                 <label for="content" class="form-label">Comment</label>
                 <textarea class="form-control" id="content" name="content" rows="3">{{ comment.content }}</textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Update</button>
+              <button type="submit" class="btn btn-primary">수정</button>
             </form>
           </div>
         </div>
@@ -41,13 +34,15 @@
       <!-- / Content -->
 
       <!-- Footer -->
-      {% comment %} <footer class="content-footer footer bg-footer-theme">
+      {% comment %}
+      <footer class="content-footer footer bg-footer-theme">
         <div class="container-xxl">
           <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
             <div class="text-body">
               ©<script>
                  document.write(new Date().getFullYear())
-               </script>, made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
+               </script>, made with ❤️ by
+              <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
             </div>
             <div class="d-none d-lg-inline-block">
               <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank">License</a>
@@ -59,8 +54,8 @@
             </div>
           </div>
         </div>
-      </footer> {% endcomment %}
-      {% include 'partials/footer.html' %}
+      </footer>
+      {% endcomment %} {% include 'partials/footer.html' %}
       <!-- / Footer -->
 
       <div class="content-backdrop fade"></div>
@@ -77,12 +72,8 @@
   <div class="drag-target"></div>
 
   <!-- / Layout wrapper -->
-{% endblock %}
-
-{% block vendor_js %}
+{% endblock %} {% block vendor_js %}
   <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
-{% endblock %}
-
-{% block page_js %}
+{% endblock %} {% block page_js %}
   <script src="{% static 'js/pages-profile.js' %}"></script>
 {% endblock %}

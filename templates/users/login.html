@@ -1,19 +1,13 @@
-{% extends 'base.html' %}
-{% load socialaccount %}
-{% load static %}
+{% extends 'base.html' %} {% load socialaccount %} {% load static %}
 
 {% block vendor_css %}
   <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/@form-validation/form-validation.css' %}" />
-{% endblock %}
-
-{% block page_css %}
+{% endblock %} {% block page_css %}
   <link rel="stylesheet" href="{% static 'vendor/css/pages/page-auth.css' %}" />
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
   {% include 'partials/navbar.html' %}
 
   <div class="container-xxl">
@@ -31,8 +25,8 @@
             </div>
             <!-- /Logo -->
 
-            <h4 class="mb-1">Welcome to Coldpay! 👋</h4>
-            <p class="mb-6">Please sign-in to your account and start the adventure</p>
+            <h4 class="mb-1">Coldpay에 오신 것을 환영합니다! 👋</h4>
+            <p class="mb-6">계정에 로그인하고 Coldpay를 둘러보세요.</p>
 
             <form id="formAuthentication" class="mb-4" action="{% url 'accounts:login' %}" method="POST">
               {% csrf_token %}
@@ -63,7 +57,7 @@
 
             <p class="text-center">
               <span>New on our platform?</span>
-              <a href="{% url 'accounts:signup' %}"><span>Create an account</span></a>
+              <a href="{% url 'accounts:signup' %}"><span>회원가입 하기</span></a>
             </p>
 
             <div class="divider my-6">
@@ -85,14 +79,10 @@
       </div>
     </div>
   </div>
-{% endblock %}
-
-{% block vendor_js %}
+{% endblock %} {% block vendor_js %}
   <script src="{% static 'vendor/libs/@form-validation/popular.js' %}"></script>
   <script src="{% static 'vendor/libs/@form-validation/bootstrap5.js' %}"></script>
   <script src="{% static 'vendor/libs/@form-validation/auto-focus.js' %}"></script>
-{% endblock %}
-
-{% block page_js %}
+{% endblock %} {% block page_js %}
   <script src="{% static 'js/pages-auth.js' %}"></script>
 {% endblock %}

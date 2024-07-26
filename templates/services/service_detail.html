@@ -1,7 +1,4 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block vendor_css %}
+{% extends 'base.html' %} {% load static %} {% block vendor_css %}
   <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
 
   <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
@@ -9,13 +6,9 @@
   <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
-{% endblock %}
-
-{% block page_css %}
+{% endblock %} {% block page_css %}
   <link rel="stylesheet" href="{% static 'vendor/css/pages/page-profile.css' %}" />
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
   {% include 'partials/navbar.html' %}
   <!-- Layout wrapper -->
   <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
@@ -31,11 +24,12 @@
                   <div class="me-1">
                     <h5 class="mb-0">{{ service.service_name }}</h5>
                     <p class="mb-0">
-                      Prof. <span class="fw-medium text-heading">{{ service.seller_name }}</span>
+                      제작자 :
+                      <span class="fw-medium text-heading">{{ service.seller_name }}</span>
                     </p>
                     {% if request.user.email == seller_email %}
-                      <a href="{% url 'services:update_service' service_id=service.id %}" class="btn btn-outline-primary btn-sm mt-4">Update</a>
-                      <a href="{% url 'services:delete_service' service_id=service.id %}" class="btn btn-outline-danger btn-sm mt-4">Delete</a>
+                      <a href="{% url 'services:update_service' service_id=service.id %}" class="btn btn-outline-primary btn-sm mt-4">수정</a>
+                      <a href="{% url 'services:delete_service' service_id=service.id %}" class="btn btn-outline-danger btn-sm mt-4">삭제</a>
                     {% endif %}
                   </div>
                   <div class="d-flex align-items-center">
@@ -53,17 +47,18 @@
                     </div>
                   </div>
                   <div class="card-body pt-4">
-                    <h5>About this Service</h5>
+                    <h5>서비스에 대하여</h5>
                     <div class="d-flex flex-wrap row-gap-2">
                       <div class="me-12">
                         <p class="text-nowrap mb-2">
                           <i class="ti ti-check me-2 align-bottom"></i>세부 카테고리 : {{ service.category_detail_name }}
                         </p>
                         <p class="text-nowrap mb-2">
-                          <i class="ti ti-users me-2 align-top"></i>가격 : {{ service.price_options.0.price }}￦
+                          <i class="ti ti-users me-2 align-top"></i>
+                          가격 : {{ service.price_options.0.price }}￦
                         </p>
                         <p class="text-nowrap mb-2">
-                          <i class="ti ti-world me-2 align-bottom"></i>Price Option Name : {{ service.price_options.0.price_option_name }}
+                          <i class="ti ti-world me-2 align-bottom"></i>가격 옵션 이름 : {{ service.price_options.0.price_option_name }}
                         </p>
                         <p class="text-nowrap mb-0">
                           <i class="ti ti-file me-2 align-bottom"></i>아이콘은 아직 수정 안 했습니다.
@@ -71,16 +66,18 @@
                       </div>
                       <div>
                         <p class="text-nowrap mb-2">
-                          <i class="ti ti-video me-2 align-top ms-50"></i>Likes : {{ service.likes }}
+                          <i class="ti ti-video me-2 align-top ms-50"></i>좋아요 :
+                          {{ service.likes }}
                         </p>
                         <p class="text-nowrap mb-0">
-                          <i class="ti ti-clock me-2 align-top"></i>Seller : {{ service.seller_name }}
+                          <i class="ti ti-clock me-2 align-top"></i>
+                          판매자 : {{ service.seller_name }}
                         </p>
                       </div>
                     </div>
 
                     <hr class="my-6" />
-                    <h5>Instructor</h5>
+                    <h5>제작자</h5>
                     <div class="d-flex justify-content-start align-items-center user-name">
                       <div class="avatar-wrapper">
                         <div class="avatar me-4">
@@ -94,14 +91,18 @@
                     </div>
 
                     <hr class="my-6" />
-                    <h5>Price Description</h5>
+                    <h5>가격 설명</h5>
                     <p class="mb-6">{{ service.price_options.0.description }}</p>
 
                     <hr class="my-6" />
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                      <h5>Reviews</h5>
+                    <div style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                    ">
+                      <h5>리뷰</h5>
                       <div>
-                        <a href="{% url 'services:create_review' service_id=service.id %}" class="btn btn-outline-primary">Create a Review</a>
+                        <a href="{% url 'services:create_review' service_id=service.id %}" class="btn btn-outline-primary">리뷰 작성하기</a>
                       </div>
                     </div>
                     {% for review in reviews_with_comments %}
@@ -112,30 +113,42 @@
                           </div>
                         </div>
                         <div class="d-flex flex-column w-100">
-                          <div style="display: flex; justify-content: space-between; align-items: center;">
+                          <div style="
+                          display: flex;
+                          justify-content: space-between;
+                          align-items: center;
+                        ">
                             <h6 class="mb-1">{{ review.author_username }}</h6>
                             {% if request.user.email == review.author_email %}
-                              <div style="display: flex; justify-content: flex-end;">
+                              <div style="display: flex; justify-content: flex-end">
                                 {% if request.user.email == seller_email %}
-                                  <a href="{% url 'services:create_comment' review_id=review.review.id %}" style="margin-right: 10px; font-size: smaller; color: black;">Comment</a>
+                                  <a href="{% url 'services:create_comment' review_id=review.review.id %}" style="
+                              margin-right: 10px;
+                              font-size: smaller;
+                              color: black;
+                            ">코멘트 작성</a>
                                 {% endif %}
-                                <a href="{% url 'services:update_review' review_id=review.review.id %}" style="margin-right: 10px; font-size: smaller;">Modify</a>
-                                <a href="{% url 'services:delete_review' review_id=review.review.id %}" style="font-size: smaller; color: red;">Delete</a>
+                                <a href="{% url 'services:update_review' review_id=review.review.id %}" style="margin-right: 10px; font-size: smaller">수정</a>
+                                <a href="{% url 'services:delete_review' review_id=review.review.id %}" style="font-size: smaller; color: red">삭제</a>
                               </div>
                             {% endif %}
                           </div>
                           <small>{{ review.review.content }}</small>
 
                           {% if review.comments %}
-                            <div style="margin-left: 20px; margin-top: 10px;">
+                            <div style="margin-left: 20px; margin-top: 10px">
                               <h6>Comments:</h6>
                               {% for comment in review.comments %}
-                                <div style="border-left: 2px solid #ccc; padding-left: 10px; margin-bottom: 10px;">
+                                <div style="
+                            border-left: 2px solid #ccc;
+                            padding-left: 10px;
+                            margin-bottom: 10px;
+                          ">
                                   <small>{{ comment.content }}</small>
                                   {% if request.user.email == seller_email %}
-                                    <div style="display: flex; margin-top: 5px;">
-                                      <a href="{% url 'services:update_comment' comment_id=comment.id %}" style="margin-right: 10px; font-size: smaller;">Modify</a>
-                                      <a href="{% url 'services:delete_comment' comment_id=comment.id %}" style="font-size: smaller; color: red;">Delete</a>
+                                    <div style="display: flex; margin-top: 5px">
+                                      <a href="{% url 'services:update_comment' comment_id=comment.id %}" style="margin-right: 10px; font-size: smaller">수정</a>
+                                      <a href="{% url 'services:delete_comment' comment_id=comment.id %}" style="font-size: smaller; color: red">삭제</a>
                                     </div>
                                   {% endif %}
                                 </div>
@@ -171,13 +184,15 @@
         <!-- / Content -->
 
         <!-- Footer -->
-        {% comment %} <footer class="content-footer footer bg-footer-theme">
+        {% comment %}
+        <footer class="content-footer footer bg-footer-theme">
           <div class="container-xxl">
             <div class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
               <div class="text-body">
                 ©<script>
                    document.write(new Date().getFullYear())
-                 </script>, made with ❤️ by <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
+                 </script>, made with ❤️ by
+                <a href="https://pixinvent.com" target="_blank" class="footer-link">Pixinvent</a>
               </div>
               <div class="d-none d-lg-inline-block">
                 <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank">License</a>
@@ -189,8 +204,8 @@
               </div>
             </div>
           </div>
-        </footer> {% endcomment %}
-        {% include 'partials/footer.html' %}
+        </footer>
+        {% endcomment %} {% include 'partials/footer.html' %}
         <!-- / Footer -->
 
         <div class="content-backdrop fade"></div>
@@ -208,15 +223,12 @@
   <div class="drag-target"></div>
 
   <!-- / Layout wrapper -->
-{% endblock %}
-
-{% block vendor_js %}
+{% endblock %} {% block vendor_js %}
   <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
-{% endblock %}
-
-{% block page_js %}
+{% endblock %} {% block page_js %}
   <script src="{% static 'js/pages-profile.js' %}"></script>
-  <script src="https://pay.nicepay.co.kr/v1/js/"></script> <!-- Server 승인 운영계 -->
+  <script src="https://pay.nicepay.co.kr/v1/js/"></script>
+  <!-- Server 승인 운영계 -->
   <script>
     function createOrder(service, user_id) {
       fetch(`http://127.0.0.1:8000/order/create/${service.id}/`, {

@@ -26,17 +26,17 @@
 
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="card">
-                <h3 class="card-header">Update Service</h3>
+                <h3 class="card-header">서비스 수정</h3>
                 <div class="card-body">
                     <form method="post" action="{% url 'services:update_service' service_id=service.id%}">
                         {% csrf_token %}
                             <div class="mb-4">
-                                <label for="serviceName" class="form-label">Service Name</label>
+                                <label for="serviceName" class="form-label">서비스 이름</label>
                                 <input type="text" class="form-control" id="serviceName" name="service_name" aria-describedby="serviceNameHelp" value="{{ service.service_name }}" />
                             </div>
 
                             <div class="mb-4">
-                                <label for="categoryDetail" class="form-label">Category Detail</label>
+                                <label for="categoryDetail" class="form-label">세부 카테고리</label>
                                 <select id="categoryDetail" class="form-control" name="category_detail">
                                     <option>세부 카테고리를 선택해주세요.</option>
                                     {% for detail in category_detail %}
@@ -46,20 +46,20 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="price" class="form-label">Price</label>
+                                <label for="price" class="form-label">가격</label>
                                 <input type="number" class="form-control" id="price" name="price" placeholder="10000" value="{{ price_option.price }}"/>
                             </div>
 
                             <div class="mb-4">
-                                <label for="priceOptionName" class="form-label">Price Option Name</label>
+                                <label for="priceOptionName" class="form-label">가격 옵션 이름</label>
                                 <input type="text" class="form-control" id="priceOptionName" name="price_option_name" value="{{ price_option.price_option_name }}"/>
                             </div>
 
                             <div class="mb-4">
-                                <label for="description" class="form-label">Description</label>
+                                <label for="description" class="form-label">설명</label>
                                 <textarea class="form-control" id="description" name="description" rows="3">{{ price_option.description }}</textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="submit" class="btn btn-primary">수정</button>
                         </form>
                   </div>
               </div>
