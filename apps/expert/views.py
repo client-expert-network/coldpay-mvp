@@ -3,14 +3,15 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import ExpertConversionForm
-from .models import Expert
+from .models import ApplyExpert
 from django.shortcuts import get_object_or_404
 from .models import ApplyExpert
+
 
 @login_required
 @require_http_methods(["GET", "POST"])
 def convert_to_expert(request):
-    if hasattr(request.user, 'applyexpert'):
+    if hasattr(request.user, "applyexpert"):
         return HttpResponse("이미 전문가 전환 신청을 하셨습니다.")
 
     form = ExpertConversionForm(request.POST or None, request.FILES or None)
@@ -21,11 +22,13 @@ def convert_to_expert(request):
             expert = form.save(commit=False)
             expert.user = request.user
             expert.save()
-            return HttpResponse("전문가 전환 신청이 완료되었습니다. 관리자 승인 후 전환됩니다.")
+            return HttpResponse(
+                "전문가 전환 신청이 완료되었습니다. 관리자 승인 후 전환됩니다."
+            )
     else:
         # 지원서 작성 form - 수정 필요
         form = ExpertConversionForm()
-    
+
     context = {"form": form}
     # 임시 주소로 return, html 작성 필요
     return render(request, "expert/convert_to_expert.html", context)
