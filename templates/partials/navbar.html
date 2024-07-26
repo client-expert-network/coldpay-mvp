@@ -290,9 +290,15 @@
               <li>
                 <a class="dropdown-item" href="{% url 'profiles:profile' %}"><i class="ti ti-user me-3 ti-md"></i><span class="align-middle">프로필 관리</span></a>
               </li>
+              {% if not user.is_expert %}
+                <li>
+                  <a class="dropdown-item" href="{% url 'experts:convert_to_expert' %}"><i class="ti ti-settings me-3 ti-md"></i><span class="align-middle">전문가 신청하기</span></a>
+                </li>
+              {% endif %}
               <li>
                 <a class="dropdown-item" href="pages-account-settings-account.html"><i class="ti ti-settings me-3 ti-md"></i><span class="align-middle">설정</span></a>
               </li>
+
               {% comment %} <li>
                 <a class="dropdown-item" href="pages-account-settings-billing.html">
                   <span class="d-flex align-items-center align-middle">
