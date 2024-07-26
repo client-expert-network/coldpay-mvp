@@ -40,9 +40,9 @@
                     <div class="user-profile-info">
                       <h4 class="mb-2 mt-lg-6">{{ profile_user.get_full_name }}</h4>
                       <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-4 my-2">
-                        <li class="list-inline-item d-flex gap-2 align-items-center">
+                        {% comment %} <li class="list-inline-item d-flex gap-2 align-items-center">
                           <i class="ti ti-palette ti-lg"></i><span class="fw-medium">{{ profile.display_name }}</span>
-                        </li>
+                        </li> {% endcomment %}
                         <li class="list-inline-item d-flex gap-2 align-items-center">
                           <i class="ti ti-mail ti-lg"></i><span class="fw-medium">{{ profile_user.email }}</span>
                         </li>
@@ -97,17 +97,17 @@
             <div class="nav-align-top">
               <ul class="nav nav-pills flex-column flex-sm-row mb-6 gap-2 gap-lg-0">
                 <li class="nav-item">
-                  <a class="nav-link active" href="javascript:void(0);"><i class="ti-sm ti ti-user-check me-1_5"></i> Profile</a>
+                  <a class="nav-link active" href="javascript:void(0);"><i class="ti-sm ti ti-user-check me-1_5"></i> 프로필</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="pages-profile-teams.html"><i class="ti-sm ti ti-users me-1_5"></i> Teams</a>z
+                {% comment %} <li class="nav-item">
+                  <a class="nav-link" href="pages-profile-teams.html"><i class="ti-sm ti ti-users me-1_5"></i> Teams</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="pages-profile-projects.html"><i class="ti-sm ti ti-layout-grid me-1_5"></i> Projects</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="pages-profile-connections.html"><i class="ti-sm ti ti-link me-1_5"></i> Connections</a>
-                </li>
+                </li> {% endcomment %}
               </ul>
             </div>
           </div>
@@ -123,11 +123,11 @@
                 <small class="card-text text-uppercase text-muted small">About</small>
                 <ul class="list-unstyled my-3 py-1">
                   <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-user ti-lg"></i><span class="fw-medium mx-2">Full Name:</span>
+                    <i class="ti ti-user ti-lg"></i><span class="fw-medium mx-2">이름:</span>
                     <span>{{ profile_user.get_full_name }}</span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-check ti-lg"></i><span class="fw-medium mx-2">Expert:</span>
+                    <i class="ti ti-check ti-lg"></i><span class="fw-medium mx-2">전문가:</span>
                     <span>
                       {% if profile_user.is_expert %}
                         인증됨
@@ -137,7 +137,7 @@
                     </span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-crown ti-lg"></i><span class="fw-medium mx-2">Role:</span>
+                    <i class="ti ti-crown ti-lg"></i><span class="fw-medium mx-2">직업:</span>
                     <span>촬영감독</span>
                   </li>
                 </ul>
@@ -152,7 +152,7 @@
                   {% endif %}
 
                   <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-phone-call ti-lg"></i><span class="fw-medium mx-2">Contact:</span>
+                    <i class="ti ti-phone-call ti-lg"></i><span class="fw-medium mx-2">연락처:</span>
                     <span>
                       {% if profile_user.phone_number %}
                         {{ profile_user.phone_number }}
@@ -162,7 +162,7 @@
                     </span>
                   </li>
                   <li class="d-flex align-items-center mb-4">
-                    <i class="ti ti-mail ti-lg"></i><span class="fw-medium mx-2">Email:</span>
+                    <i class="ti ti-mail ti-lg"></i><span class="fw-medium mx-2">이메일:</span>
                     <span>{{ profile_user.email }}</span>
                   </li>
                 </ul>
