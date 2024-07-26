@@ -6,10 +6,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict, inlineformset_factory
 from django.contrib import messages
-from .models import Category, CategoryDetail, Service, PriceOption, Review, ReviewComment
+from .models import Category, CategoryDetail, Service, PriceOption, Review, ReviewComment, Order
 from .serializers import *
 from .forms import *
 import json
+from datetime import datetime
 
 User = get_user_model()
 
@@ -35,7 +36,7 @@ def get_services(request):
 
 @require_http_methods(["GET"])
 def get_service(request, service_id):
-    user_id = request.user.id
+    user_id = request.user.username
     service = Service.objects.get(id=service_id)
     serializers = ServiceSerializer(service)
     reviews = Review.objects.filter(service_id=service.id).select_related("author")
@@ -221,3 +222,21 @@ def delete_comment(request, comment_id):
         return JsonResponse({"message": "You are not the owner of this comment"}, safe=False, status=403)
     comment.delete()
     return redirect("services:get_service", service_id=comment.review.service.id)
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def create_order(request, service_id):
+    user = User.objects.get(email=request.user)
+    service = Service.objects.get(id=service_id)
+    
+    created_order = Order.objects.create(
+        customer=user,
+        service=service,
+        total_price=service.priceoption_set.first().price,
+        purchase_complete=False,
+        payment_method="",
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+
+    )
+    return JsonResponse({"order_id": created_order.id}, safe=False)

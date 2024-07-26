@@ -26,9 +26,6 @@ def cancel(request):
 @csrf_exempt
 def server_auth(request):
     print(request.body)
-    created_order = Order.objects.create(
-        id=uuid.uuid4()
-    )
     if request.method == 'POST':
         try:
             print('https://sandbox-api.nicepay.co.kr/v1/payments/' + request.POST['tid'])
@@ -48,10 +45,10 @@ def server_auth(request):
             print(res_dict)
             customer_id = res_dict['buyerName']
             service_name = res_dict['goodsName']
-            update_order = Order.objects.get(id=created_order.id)
+            update_order = Order.objects.get(id=res_dict['orderId'])
             update_order.total_price = res_dict['amount']
             update_order.payment_method = res_dict['payMethod']
-            update_order.customer = User.objects.get(id=customer_id)
+            update_order.customer = User.objects.get(username=customer_id)
             update_order.service = Service.objects.get(service_name=service_name)
             update_order.purchase_complete = True
             update_order.save()
@@ -61,7 +58,6 @@ def server_auth(request):
             })
 
         except requests.exceptions.RequestException as e:
-            Order.objects.get(id=created_order.id).delete()
             return HttpResponse(str(e), status=500)
     return HttpResponse(status=405)
 
@@ -99,12 +95,3 @@ def hook(request):
         print(request.body)
         return HttpResponse("ok", status=200)
     return HttpResponse(status=405)
-
-@csrf_exempt
-def create_order(request):
-    order = Order.objects.create(
-        order_id=uuid.uuid4()
-    )
-    return JsonResponse({
-        'order_id': order.order_id
-    })

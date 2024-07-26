@@ -21,4 +21,5 @@ urlpatterns = [
     path("comment/create/<str:review_id>/", create_comment, name="create_comment"),
     path("comment/update/<str:comment_id>/", update_comment, name="update_comment"),
     path("comment/delete/<str:comment_id>/", delete_comment, name="delete_comment"),
+    path("order/create/<str:service_id>/", create_order, name="create_order"),
 ] 
