@@ -1,69 +1,88 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block vendor_css %}
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/node-waves/node-waves.css' %}"
+/>
 
-{% block vendor_css %}
-  <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}"
+/>
+{% endblock %} {% block page_css %}
+<link
+  rel="stylesheet"
+  href="{% static 'vendor/css/pages/page-profile.css' %}"
+/>
+{% endblock %} {% block content %} {% include 'partials/navbar.html' %}
+<!-- Layout wrapper -->
+<div
+  class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu"
+>
+  <div class="layout-container">
+    <!-- Content -->
 
-  <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
-  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
-{% endblock %}
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <div class="card">
+        <h3 class="card-header">코멘트 작성하기</h3>
+        <div class="card-body">
+          <form
+            method="post"
+            action="{% url 'services:create_comment' review_id=review.id %}"
+          >
+            {% csrf_token %}
 
-{% block page_css %}
-  <link rel="stylesheet" href="{% static 'vendor/css/pages/page-profile.css' %}" />
-{% endblock %}
-
-{% block content %}
-  {% include 'partials/navbar.html' %}
-  <!-- Layout wrapper -->
-  <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
-    <div class="layout-container">
-      <!-- Content -->
-
-      <div class="container-xxl flex-grow-1 container-p-y">
-        <div class="card">
-          <h3 class="card-header">Create Comment</h3>
-          <div class="card-body">
-            <form method="post" action="{% url 'services:create_comment' review_id=review.id %}">
-              {% csrf_token %}
-
-              <div class="mb-4">
-                <label for="content" class="form-label">Comment</label>
-                <textarea class="form-control" id="content" name="content" rows="3"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Create</button>
-            </form>
-          </div>
+            <div class="mb-4">
+              <label for="content" class="form-label">Comment</label>
+              <textarea
+                class="form-control"
+                id="content"
+                name="content"
+                rows="3"
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">작성</button>
+          </form>
         </div>
       </div>
-      <!-- / Content -->
-
-      <!-- Footer -->
-      {% include 'partials/footer.html' %}
-      <!-- / Footer -->
-
-      <div class="content-backdrop fade"></div>
     </div>
-    <!-- / Content wrapper -->
+    <!-- / Content -->
+
+    <!-- Footer -->
+    {% include 'partials/footer.html' %}
+    <!-- / Footer -->
+
+    <div class="content-backdrop fade"></div>
   </div>
+  <!-- / Content wrapper -->
+</div>
 
-  <!-- / Layout container -->
+<!-- / Layout container -->
 
-  <!-- Overlay -->
-  <div class="layout-overlay layout-menu-toggle"></div>
+<!-- Overlay -->
+<div class="layout-overlay layout-menu-toggle"></div>
 
-  <!-- Drag Target Area To SlideIn Menu On Small Screens -->
-  <div class="drag-target"></div>
+<!-- Drag Target Area To SlideIn Menu On Small Screens -->
+<div class="drag-target"></div>
 
-  <!-- / Layout wrapper -->
-{% endblock %}
-
-{% block vendor_js %}
-  <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
-{% endblock %}
-
-{% block page_js %}
-  <script src="{% static 'js/pages-profile.js' %}"></script>
+<!-- / Layout wrapper -->
+{% endblock %} {% block vendor_js %}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+{% endblock %} {% block page_js %}
+<script src="{% static 'js/pages-profile.js' %}"></script>
 {% endblock %}
