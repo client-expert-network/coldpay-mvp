@@ -67,6 +67,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_expert = models.BooleanField(default=False)
+    
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
+
 
     objects = CustomUserManager()
 
@@ -79,3 +82,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         full_name = f"{self.first_name} {self.last_name}"
         return full_name.strip()
+
+    def follow(self, user):
+        if user != self:
+            self.following.add(user)
+
+    def unfollow(self, user):
+        self.following.remove(user)
+
+    def is_following(self, user):
+        return self.following.filter(id=user.id).exists()

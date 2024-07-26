@@ -1,0 +1,8 @@
+<button 
+  hx-post="{% url 'profiles:follow_unfollow' profile_user.id %}"
+  hx-swap="outerHTML"
+  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+  class="btn {% if is_following %}btn-secondary{% else %}btn-primary{% endif %} mb-1 ms-2">
+  <i class="ti ti-user-plus ti-xs me-2"></i>
+  {% if is_following %}언팔로우{% else %}팔로우{% endif %}
+</button>

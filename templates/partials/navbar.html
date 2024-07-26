@@ -1,10 +1,10 @@
-{{ user.email }}
+{% load static %}
 <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
   <div class="container-xxl">
     <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
       <a href="{% url 'home' %}" class="app-brand-link">
-        <span class="app-brand-logo demo">로고</span>
-        <span class="app-brand-text demo menu-text fw-bold">ColdPay</span>
+        <img src="{% static 'img/logo/coldpay_logo.png' %}" alt="logo" height="32" width="32" />
+        <span class="fs-4 demo menu-text fw-bold">ColdPay</span>
       </a>
 
       <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none"><i class="ti ti-x ti-md align-middle"></i></a>
@@ -29,8 +29,8 @@
             <div class="dropdown-menu dropdown-menu-end p-0">
               <div class="dropdown-menu-header border-bottom">
                 <div class="dropdown-header d-flex align-items-center py-3">
-                  <h6 class="mb-0 me-auto">Shortcuts</h6>
-                  <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-shortcuts-add" data-bs-toggle="tooltip" data-bs-placement="top" title="Add shortcuts"><i class="ti ti-plus text-heading"></i></a>
+                  <h6 class="mb-0 me-auto">바로가기</h6>
+                  {% comment %} <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-shortcuts-add" data-bs-toggle="tooltip" data-bs-placement="top" title="Add shortcuts"><i class="ti ti-plus text-heading"></i></a> {% endcomment %}
                 </div>
               </div>
               <div class="dropdown-shortcuts-list scrollable-container">
@@ -43,43 +43,19 @@
                   <div class="dropdown-shortcuts-item col">
                     <span class="dropdown-shortcuts-icon rounded-circle mb-3"><i class="ti ti-file-dollar ti-26px text-heading"></i></span>
                     <a href="{% url 'chats:chat' %}" class="stretched-link">채팅</a>
-                    <small>Manage Accounts</small>
+                    <small>전문가와 채팅하기</small>
                   </div>
                 </div>
                 <div class="row row-bordered overflow-visible g-0">
                   <div class="dropdown-shortcuts-item col">
                     <span class="dropdown-shortcuts-icon rounded-circle mb-3"><i class="ti ti-user ti-26px text-heading"></i></span>
-                    <a href="app-user-list.html" class="stretched-link">User App</a>
-                    <small>Manage Users</small>
+                    <a href="{% url 'portfolios_index' %}" class="stretched-link">포트폴리오</a>
+                    <small>전문가의 작품 보기</small>
                   </div>
                   <div class="dropdown-shortcuts-item col">
                     <span class="dropdown-shortcuts-icon rounded-circle mb-3"><i class="ti ti-users ti-26px text-heading"></i></span>
-                    <a href="{% url 'services:get_all_services'%}" class="stretched-link">서비스</a>
+                    <a href="{% url 'services:get_all_services' %}" class="stretched-link">서비스</a>
                     <small>제공 서비스 보기</small>
-                  </div>
-                </div>
-                <div class="row row-bordered overflow-visible g-0">
-                  <div class="dropdown-shortcuts-item col">
-                    <span class="dropdown-shortcuts-icon rounded-circle mb-3"><i class="ti ti-device-desktop-analytics ti-26px text-heading"></i></span>
-                    <a href="index.html" class="stretched-link">Dashboard</a>
-                    <small>User Dashboard</small>
-                  </div>
-                  <div class="dropdown-shortcuts-item col">
-                    <span class="dropdown-shortcuts-icon rounded-circle mb-3"><i class="ti ti-settings ti-26px text-heading"></i></span>
-                    <a href="pages-account-settings-account.html" class="stretched-link">Setting</a>
-                    <small>Account Settings</small>
-                  </div>
-                </div>
-                <div class="row row-bordered overflow-visible g-0">
-                  <div class="dropdown-shortcuts-item col">
-                    <span class="dropdown-shortcuts-icon rounded-circle mb-3"><i class="ti ti-help ti-26px text-heading"></i></span>
-                    <a href="pages-faq.html" class="stretched-link">FAQs</a>
-                    <small>FAQs & Articles</small>
-                  </div>
-                  <div class="dropdown-shortcuts-item col">
-                    <span class="dropdown-shortcuts-icon rounded-circle mb-3"><i class="ti ti-square ti-26px text-heading"></i></span>
-                    <a href="modal-examples.html" class="stretched-link">Modals</a>
-                    <small>Useful Popups</small>
                   </div>
                 </div>
               </div>
@@ -91,12 +67,12 @@
         <!-- Notification -->
         {% if user.is_authenticated %}
           <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
-            <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+            {% comment %} <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
               <span class="position-relative">
                 <i class="ti ti-bell ti-md"></i>
                 <span class="badge rounded-pill bg-danger badge-dot badge-notifications border"></span>
               </span>
-            </a>
+            </a> {% endcomment %}
             <ul class="dropdown-menu dropdown-menu-end p-0">
               <li class="dropdown-menu-header border-bottom">
                 <div class="dropdown-header d-flex align-items-center py-3">
@@ -288,7 +264,7 @@
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
               <div class="avatar avatar-online">
-                <img src="../../assets/img/avatars/1.png" alt class="rounded-circle" />
+                <img src="{{ user.profile_picture }}" alt class="rounded-circle" />
               </div>
             </a>
             <!-- 유저 아바타 이미지 드롭다운 -->
@@ -298,12 +274,12 @@
                   <div class="d-flex align-items-center">
                     <div class="flex-shrink-0 me-2">
                       <div class="avatar avatar-online">
-                        <img src="../../assets/img/avatars/1.png" alt class="rounded-circle" />
+                        <img src="{{ user.profile_picture }}" alt class="rounded-circle" />
                       </div>
                     </div>
                     <div class="flex-grow-1">
-                      <h6 class="mb-0">John Doe</h6>
-                      <small class="text-muted">Admin</small>
+                      <h6 class="mb-0">{{ user.username }}</h6>
+                      <small class="text-muted">{{ user.first_name }} {{ user.last_name }}</small>
                     </div>
                   </div>
                 </a>
@@ -312,25 +288,25 @@
                 <div class="dropdown-divider my-1 mx-n2"></div>
               </li>
               <li>
-                <a class="dropdown-item" href="{% url 'profiles:profile' %}"><i class="ti ti-user me-3 ti-md"></i><span class="align-middle">My Profile</span></a>
+                <a class="dropdown-item" href="{% url 'profiles:profile' %}"><i class="ti ti-user me-3 ti-md"></i><span class="align-middle">프로필 관리</span></a>
               </li>
               <li>
-                <a class="dropdown-item" href="pages-account-settings-account.html"><i class="ti ti-settings me-3 ti-md"></i><span class="align-middle">Settings</span></a>
+                <a class="dropdown-item" href="pages-account-settings-account.html"><i class="ti ti-settings me-3 ti-md"></i><span class="align-middle">설정</span></a>
               </li>
-              <li>
+              {% comment %} <li>
                 <a class="dropdown-item" href="pages-account-settings-billing.html">
                   <span class="d-flex align-items-center align-middle">
                     <i class="flex-shrink-0 ti ti-file-dollar me-3 ti-md"></i><span class="flex-grow-1 align-middle">Billing</span>
                     <span class="flex-shrink-0 badge bg-danger d-flex align-items-center justify-content-center">4</span>
                   </span>
                 </a>
-              </li>
+              </li> {% endcomment %}
               <li>
                 <div class="dropdown-divider my-1 mx-n2"></div>
               </li>
-              <li>
+              {% comment %} <li>
                 <a class="dropdown-item" href="pages-pricing.html"><i class="ti ti-currency-dollar me-3 ti-md"></i><span class="align-middle">Pricing</span></a>
-              </li>
+              </li> {% endcomment %}
               <li>
                 <a class="dropdown-item" href="pages-faq.html"><i class="ti ti-question-mark me-3 ti-md"></i><span class="align-middle">FAQ</span></a>
               </li>
@@ -339,7 +315,7 @@
                   <form action="{% url 'accounts:logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-danger d-flex w-100">
-                      <small class="align-middle">Logout</small>
+                      <small class="align-middle">로그아웃</small>
                       <i class="ti ti-logout ms-2 ti-14px"></i>
                     </button>
                   </form>
@@ -353,7 +329,7 @@
           </li>
         {% else %}
           <div>
-            <span><a href="{% url 'accounts:login' %}">로그인</a></span>
+            <span><a href="{% url 'accounts:login' %}">로그인</a></span> |
             <span><a href="{% url 'accounts:signup' %}">회원가입</a></span>
           </div>
         {% endif %}
