@@ -15,6 +15,7 @@ urlpatterns = [
         name="send-verification-email",
     ),
     path("accounts/verify-code/", verify_code, name="verify-code"),
+    path("accounts/search/", search, name="search"),
 ] + [
     path("accounts/check-user-exists/", check_user_exists, name="check-user-exists"),
 ]

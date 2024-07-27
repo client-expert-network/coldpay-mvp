@@ -12,6 +12,8 @@ from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.hashers import make_password
 from django.utils.timezone import now
 from oauth.utils import generate_random_korean_nickname
+from apps.services.models import Service
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -123,3 +125,37 @@ def check_user_exists(request):
         user_exists = User.objects.filter(email=email).exists()
         return JsonResponse({"exists": user_exists})
     return JsonResponse({"exists": False})
+
+def search(request):
+    query = request.GET.get('q', '')
+    
+    users = User.objects.filter(
+        Q(username__icontains=query) | 
+        Q(first_name__icontains=query) |
+        Q(last_name__icontains=query)
+    )[:4]
+
+    services = Service.objects.filter(
+        Q(service_name__icontains=query) |
+        Q(seller__username__icontains=query)
+    )[:4]
+
+    users_data = [{
+        "name": user.username,
+        "subtitle": user.get_full_name(),
+        "src": user.profile_picture if user.profile_picture else "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+        "url": f"/profile/{user.username}"
+    } for user in users]
+
+    services_data = [{
+        "name": service.service_name,
+        "subtitle": f"by {service.seller.username}",
+        "src": "img/icons/misc/search-doc.png",
+        "meta": str(service.priceoption_set.first().price) if service.priceoption_set.exists() else 'N/A',
+        "url": f"/get/{service.id}"
+    } for service in services]
+
+    return JsonResponse({
+        "files": services_data,
+        "members": users_data
+    })
