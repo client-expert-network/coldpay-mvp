@@ -6,7 +6,20 @@
   <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
   <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
-{% endblock %}
+  <style>
+    .card-body img {
+      max-width: 100%;
+      max-height: 100%;
+      height: auto;
+    }
+
+    .card-body iframe {
+      max-width: 100%;
+      max-height: 100%;
+      height: 315px;
+    }
+  </style>
+  {% endblock %}
 
 {% block content %}
   {% include 'partials/navbar.html' %}
@@ -25,6 +38,7 @@
           <span>프로젝트 기간:</span> {{ portfolio.portfolio_start }} - {{ portfolio.portfolio_end }} <br />
           <span>프로젝트 예산:</span> {{ portfolio.price|intcomma }}원 <br />
         </div>
+        <br>
         <div>
           {% if portfolio.expert == user %}
             <a href="{% url 'update_portfolio' portfolio.id %}" class="btn btn-secondary">Edit</a>
@@ -51,7 +65,7 @@
               <div class="card-body">
                 <h2 class="card-title"><a href="{% url 'portfolio_detail' other_portfolio.id %}">{{ other_portfolio.title }}</a></h2>
                 <div class="text-truncate">
-                  <p class="card-text">{{ other_portfolio.htmlcontent|truncatechars:100|safe }}</p>
+                  <p class="card-text">{{ other_portfolio.htmlcontent|safe }}</p>
                 </div>
               </div>
             </div>
@@ -142,4 +156,23 @@
       <p>이 전문가의 다른 포트폴리오가 없습니다.</p>
     {% endif %}
   </div> {% endcomment %}
+{% endblock %}
+{% block vendor_js %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var htmlContent = document.querySelector('.htmlcontent');
+      var images = htmlContent.getElementsByTagName('img');
+      var iframes = htmlContent.getElementsByTagName('iframe');
+
+      for (var i = 0; i < images.length; i++) {
+        images[i].style.maxWidth = '100%';
+        images[i].style.height = 'auto';
+      }
+
+      for (var j = 0; j < iframes.length; j++) {
+        iframes[j].style.maxWidth = '100%';
+        iframes[j].style.height = 'auto';
+      }
+    });
+  </script>
 {% endblock %}
