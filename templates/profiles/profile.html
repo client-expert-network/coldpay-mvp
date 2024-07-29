@@ -33,7 +33,7 @@
               </div>
               <div class="user-profile-header d-flex flex-column flex-lg-row text-sm-start text-center mb-5">
                 <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                  <img src="{{ profile_user.profile_picture }}" alt="user image" class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img" />
+                  <img src="{{ profile_user.profile_picture }}" alt="user image" class="d-block h-auto ms-0 ms-sm-6 rounded user-profile-img border-0" />
                 </div>
                 <div class="flex-grow-1 mt-3 mt-lg-5">
                   <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-5 flex-md-row flex-column gap-4">
@@ -100,9 +100,11 @@
                 <li class="nav-item">
                   <a class="nav-link active" href="javascript:void(0);"><i class="ti-sm ti ti-user-check me-1_5"></i> 프로필</a>
                 </li>
+                {% if user == profile_user %}
                 <li class="nav-item">
                   <a class="nav-link active" href="{% url 'services:get_orders'%}"><i class="ti-sm ti ti-file-dollar me-1_5"></i> 결제 내역</a>
                 </li>
+                {% endif %}
                 {% comment %} <li class="nav-item">
                   <a class="nav-link" href="pages-profile-teams.html"><i class="ti-sm ti ti-users me-1_5"></i> Teams</a>
                 </li>
