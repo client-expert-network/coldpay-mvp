@@ -1,79 +1,76 @@
-{% extends 'base.html' %} {% load static %} {% block vendor_css %}
-<link
-  rel="stylesheet"
-  href="{% static 'vendor/libs/node-waves/node-waves.css' %}"
-/>
-<link
-  rel="stylesheet"
-  href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}"
-/>
-<link
-  rel="stylesheet"
-  href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}"
-/>
-
+{% extends 'base.html' %}
+{% load static %}
+{% block vendor_css %}
+  <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+  <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
 {% endblock %} {% block page_css %}
-<style>
-  .card {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
-  .errors {
-    background: #ffdddd;
-    border-left: 4px solid #f44336;
-    margin-bottom: 20px;
-    padding: 10px;
-  }
-  .errors ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-  }
-  .btn-primary {
-    background-color: #ff6a00;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .btn-primary:hover {
-    background-color: #ee0979;
-  }
-</style>
-{% endblock %} {% block content %} {% include 'partials/navbar.html' %}
-<div class="layout-page">
-  <div class="container mt-4">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <h2>전문가 신청하기</h2>
+  <style>
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .errors {
+      background: #ffdddd;
+      border-left: 4px solid #f44336;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
+    .errors ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+    .btn-primary {
+      background-color: #ff6a00;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      background-color: #ee0979;
+    }
+  </style>
+{% endblock %} {% block content %}
+  {% include 'partials/navbar.html' %}
+  <div class="layout-page">
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <h2>전문가 신청하기</h2>
 
-          <!-- Display form errors, if any -->
-          {% if form.errors %}
-          <div class="errors">
-            <p>Please correct the errors below:</p>
-            <ul>
-              {% for field in form %} {% for error in field.errors %}
-              <li>{{ error }}</li>
-              {% endfor %} {% endfor %} {% for error in form.non_field_errors %}
-              <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
+            <!-- Display form errors, if any -->
+            {% if form.errors %}
+              <div class="errors">
+                <p>Please correct the errors below:</p>
+                <ul>
+                  {% for field in form %}
+                    {% for error in field.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  {% endfor %} {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            <!-- Expert Conversion Form -->
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %} {{ form.as_p }}
+              <button type="submit" class="btn btn-primary w-100">신청하기</button>
+            </form>
           </div>
-          {% endif %}
-
-          <!-- Expert Conversion Form -->
-          <form method="post" enctype="multipart/form-data">
-            {% csrf_token %} {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
         </div>
       </div>
     </div>
   </div>
-</div>
-{% endblock %} {% block vendor_scripts %} {% endblock %}
+{% endblock %} {% block vendor_scripts %}
+
+{% endblock %}

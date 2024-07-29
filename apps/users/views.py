@@ -34,7 +34,9 @@ def signup_view(request):
                 if not User.objects.filter(username=username).exists():
                     user.username = username
                     break
-
+            user.profile_picture = (
+                "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+            )
             user.set_password(form.cleaned_data["password"])
             user.save()
 
@@ -126,36 +128,47 @@ def check_user_exists(request):
         return JsonResponse({"exists": user_exists})
     return JsonResponse({"exists": False})
 
+
 def search(request):
-    query = request.GET.get('q', '')
-    
+    query = request.GET.get("q", "")
+
     users = User.objects.filter(
-        Q(username__icontains=query) | 
-        Q(first_name__icontains=query) |
-        Q(last_name__icontains=query)
+        Q(username__icontains=query)
+        | Q(first_name__icontains=query)
+        | Q(last_name__icontains=query)
     )[:4]
 
     services = Service.objects.filter(
-        Q(service_name__icontains=query) |
-        Q(seller__username__icontains=query)
+        Q(service_name__icontains=query) | Q(seller__username__icontains=query)
     )[:4]
 
-    users_data = [{
-        "name": user.username,
-        "subtitle": user.get_full_name(),
-        "src": user.profile_picture if user.profile_picture else "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-        "url": f"/profile/{user.username}"
-    } for user in users]
+    users_data = [
+        {
+            "name": user.username,
+            "subtitle": user.get_full_name(),
+            "src": (
+                user.profile_picture
+                if user.profile_picture
+                else "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+            ),
+            "url": f"/profile/{user.username}",
+        }
+        for user in users
+    ]
 
-    services_data = [{
-        "name": service.service_name,
-        "subtitle": f"by {service.seller.username}",
-        "src": "img/icons/misc/search-doc.png",
-        "meta": str(service.priceoption_set.first().price) if service.priceoption_set.exists() else 'N/A',
-        "url": f"/get/{service.id}"
-    } for service in services]
+    services_data = [
+        {
+            "name": service.service_name,
+            "subtitle": f"by {service.seller.username}",
+            "src": "img/icons/misc/search-doc.png",
+            "meta": (
+                str(service.priceoption_set.first().price)
+                if service.priceoption_set.exists()
+                else "N/A"
+            ),
+            "url": f"/get/{service.id}",
+        }
+        for service in services
+    ]
 
-    return JsonResponse({
-        "files": services_data,
-        "members": users_data
-    })
+    return JsonResponse({"files": services_data, "members": users_data})
